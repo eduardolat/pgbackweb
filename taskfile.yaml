@@ -1,0 +1,57 @@
+version: "3"
+
+dotenv: [".env"]
+
+tasks:
+  on:
+    cmds:
+      - docker compose up -d --build
+      - docker compose exec app /bin/bash
+
+  off:
+    cmd: docker compose down
+
+  dev:
+    cmd: air -c .air.toml
+
+  build:
+    deps:
+      - clean
+      - gen-css
+    cmds:
+      - task fmt
+      - go build -o ./dist/app ./cmd/app/.
+
+  serve:
+    cmd: ./dist/app
+
+  run:
+    cmds:
+      - task build
+      - task serve
+
+  gen-css:
+    cmd: >
+      npm run tailwindcss --
+      --config ./tailwind.config.js
+      --input ./internal/view/static/css/tailwind.css
+      --output ./internal/view/static/css/style.css --minify
+
+  tidy:
+    cmd: go mod tidy
+
+  fmt:
+    cmd: go fmt ./...
+
+  test:
+    cmds:
+      - task fmt
+      - go test ./...
+
+  clean:
+    cmds:
+      - rm -rf ./tmp
+      - rm -rf ./dist
+
+  fixperms: # Fixes the permissions of the files in the project
+    cmd: ./scripts/fixperms.sh
