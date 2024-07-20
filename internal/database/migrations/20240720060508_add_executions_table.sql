@@ -3,13 +3,16 @@
 CREATE TABLE IF NOT EXISTS executions (
   id UUID NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
 
-  ok BOOLEAN NOT NULL,
+  status TEXT NOT NULL CHECK (
+    status IN ('running', 'success', 'failed', 'deleted')
+  ) DEFAULT 'running',
   message TEXT NOT NULL,
   backup_uri TEXT,
 
   started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ,
-  finished_at TIMESTAMPTZ
+  finished_at TIMESTAMPTZ,
+  deleted_at TIMESTAMPTZ
 );
 
 CREATE TRIGGER executions_change_updated_at
