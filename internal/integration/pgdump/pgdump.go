@@ -8,26 +8,55 @@ import (
 	"github.com/orsinium-labs/enum"
 )
 
-const (
-	pgDump13 string = "/usr/lib/postgresql/13/bin/pg_dump"
-	pgDump14 string = "/usr/lib/postgresql/14/bin/pg_dump"
-	pgDump15 string = "/usr/lib/postgresql/15/bin/pg_dump"
-	pgDump16 string = "/usr/lib/postgresql/16/bin/pg_dump"
-)
+type version struct {
+	version string
+	pgDump  string
+	psql    string
+}
 
-type PGVersion enum.Member[string]
+type PGVersion enum.Member[version]
 
 var (
-	PG13 = PGVersion{pgDump13}
-	PG14 = PGVersion{pgDump14}
-	PG15 = PGVersion{pgDump15}
-	PG16 = PGVersion{pgDump16}
+	PG13 = PGVersion{version{
+		version: "13",
+		pgDump:  "/usr/lib/postgresql/13/bin/pg_dump",
+		psql:    "/usr/lib/postgresql/13/bin/psql",
+	}}
+	PG14 = PGVersion{version{
+		version: "14",
+		pgDump:  "/usr/lib/postgresql/14/bin/pg_dump",
+		psql:    "/usr/lib/postgresql/14/bin/psql",
+	}}
+	PG15 = PGVersion{version{
+		version: "15",
+		pgDump:  "/usr/lib/postgresql/15/bin/pg_dump",
+		psql:    "/usr/lib/postgresql/15/bin/psql",
+	}}
+	PG16 = PGVersion{version{
+		version: "16",
+		pgDump:  "/usr/lib/postgresql/16/bin/pg_dump",
+		psql:    "/usr/lib/postgresql/16/bin/psql",
+	}}
 )
 
 type Client struct{}
 
 func New() *Client {
 	return &Client{}
+}
+
+// Ping tests the connection to the PostgreSQL database
+func (Client) Ping(version PGVersion, connString string) error {
+	cmd := exec.Command(version.Value.psql, connString, "-c", "SELECT 1;")
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf(
+			"error running psql v%s: %s",
+			version.Value.version, output,
+		)
+	}
+
+	return nil
 }
 
 // DumpParams contains the parameters for the pg_dump command
@@ -92,10 +121,13 @@ func (Client) Dump(
 		args = append(args, "--no-comments")
 	}
 
-	cmd := exec.Command(version.Value, args...)
+	cmd := exec.Command(version.Value.pgDump, args...)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return nil, fmt.Errorf("error running pg_dump: %s", output)
+		return nil, fmt.Errorf(
+			"error running pg_dump v%s: %s",
+			version.Value.version, output,
+		)
 	}
 
 	return output, nil
