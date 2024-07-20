@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .normal-width {
+    @apply container mx-auto px-4 max-w-[1920px];
+  }
+}
+
+/* General */
+html {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* For AlpineJS */
+[x-cloak] {
+  display: none !important;
+}
+
+/* For HTMX */
+.htmx-indicator {
+  display: none;
+}
+
+.htmx-request .htmx-indicator {
+  display: block;
+}
+
+.htmx-request.htmx-indicator {
+  display: block;
+}
+
+/* For the custom scrollbar */
+*::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+  @apply bg-gray-500;
+  border-radius: 3px;
+}
+
+/* For Gomponents Lucide */
+svg[data-glucide="icon"]:not([class*="size-"]) {
+  @apply size-4;
+}
