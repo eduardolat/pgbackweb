@@ -4,6 +4,7 @@ go 1.22.5
 
 require (
 	github.com/aws/aws-sdk-go v1.54.20
+	github.com/joho/godotenv v1.5.1
 	github.com/maragudk/gomponents v0.20.4
 	github.com/orsinium-labs/enum v1.4.0
 	github.com/stretchr/testify v1.9.0
