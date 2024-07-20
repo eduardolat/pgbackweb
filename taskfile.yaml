@@ -17,6 +17,7 @@ tasks:
   build:
     deps:
       - clean
+      - gen-db
       - gen-css
     cmds:
       - task fmt
@@ -32,6 +33,12 @@ tasks:
 
   goose:
     cmd: eval $(go run ./cmd/goose/. {{.CLI_ARGS}})
+
+  gen-db:
+    cmd: sqlc generate
+
+  reset-db:
+    cmd: go run ./cmd/resetdb/.
 
   gen-css:
     cmd: >
@@ -58,6 +65,3 @@ tasks:
 
   fixperms: # Fixes the permissions of the files in the project
     cmd: ./scripts/fixperms.sh
-
-  reset-db:
-    cmd: go run ./cmd/resetdb/.
