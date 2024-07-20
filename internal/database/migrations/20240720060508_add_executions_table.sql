@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS executions (
     status IN ('running', 'success', 'failed', 'deleted')
   ) DEFAULT 'running',
   message TEXT NOT NULL,
-  backup_uri TEXT,
+  path TEXT,
 
   started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ,
