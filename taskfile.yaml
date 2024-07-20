@@ -30,6 +30,9 @@ tasks:
       - task build
       - task serve
 
+  goose:
+    cmd: eval $(go run ./cmd/goose/. {{.CLI_ARGS}})
+
   gen-css:
     cmd: >
       npm run tailwindcss --
