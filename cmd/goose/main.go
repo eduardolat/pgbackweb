@@ -24,7 +24,7 @@ func main() {
 		gooseCmd += arg + " "
 	}
 
-	env := config.GetEnv()
+	env := config.GetEnv(true)
 
 	cmd := fmt.Sprintf(
 		"goose -dir %s postgres \"%s\" %s",
