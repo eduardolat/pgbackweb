@@ -6,34 +6,34 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateHash(t *testing.T) {
+func TestCreateBcryptHash(t *testing.T) {
 	password := "mysecretpassword"
 
-	hash, err := CreateHash(password)
+	hash, err := CreateBcryptHash(password)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, hash)
 }
 
-func TestVerifyHash(t *testing.T) {
+func TestVerifyBcryptHash(t *testing.T) {
 	password := "mysecretpassword"
 
-	hash, err := CreateHash(password)
+	hash, err := CreateBcryptHash(password)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, hash)
 
-	err = VerifyHash(password, hash)
+	err = VerifyBcryptHash(password, hash)
 	assert.NoError(t, err)
 }
 
-func TestVerifyHash_InvalidPassword(t *testing.T) {
+func TestVerifyBcryptHash_InvalidPassword(t *testing.T) {
 	password := "mysecretpassword"
 	invalidPassword := "invalidpassword"
 
-	hash, err := CreateHash(password)
+	hash, err := CreateBcryptHash(password)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, hash)
 
-	err = VerifyHash(invalidPassword, hash)
+	err = VerifyBcryptHash(invalidPassword, hash)
 	assert.Error(t, err)
 	assert.Equal(t, "invalid password", err.Error())
 }
