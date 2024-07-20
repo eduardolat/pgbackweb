@@ -59,6 +59,17 @@ RUN wget https://github.com/cosmtrek/air/releases/download/v1.52.3/air_1.52.3_li
     mv ./air /usr/local/bin/air && \
     chmod 777 /usr/local/bin/air
 
+# Install goose
+RUN wget https://github.com/pressly/goose/releases/download/v3.21.1/goose_linux_x86_64 && \
+    mv ./goose_linux_x86_64 /usr/local/bin/goose && \
+    chmod 777 /usr/local/bin/goose
+
+# Install sqlc
+RUN wget https://github.com/sqlc-dev/sqlc/releases/download/v1.26.0/sqlc_1.26.0_linux_amd64.tar.gz && \
+    tar -xzf sqlc_1.26.0_linux_amd64.tar.gz && \
+    mv ./sqlc /usr/local/bin/sqlc && \
+    chmod 777 /usr/local/bin/sqlc
+
 # Delete the temporary directory and go to the app directory
 WORKDIR /app
 RUN rm -rf /app/temp
