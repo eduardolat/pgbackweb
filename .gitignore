@@ -1,6 +1,7 @@
 # Environment
 .env
 .env.*
+!.env.dev
 !.env.example
 
 # NodeJS
