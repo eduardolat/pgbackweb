@@ -12,7 +12,7 @@ func Connect(env *config.Env) *sql.DB {
 	db, err := sql.Open("postgres", *env.PBW_POSTGRES_CONN_STRING)
 	if err != nil {
 		logger.FatalError(
-			"Could not connect to DB",
+			"could not connect to DB",
 			logger.KV{
 				"error": err,
 			},
@@ -22,7 +22,7 @@ func Connect(env *config.Env) *sql.DB {
 	err = db.Ping()
 	if err != nil {
 		logger.FatalError(
-			"Could not ping DB",
+			"could not ping DB",
 			logger.KV{
 				"error": err,
 			},
@@ -30,7 +30,7 @@ func Connect(env *config.Env) *sql.DB {
 	}
 
 	db.SetMaxOpenConns(10)
-	logger.Info("Connected to DB")
+	logger.Info("connected to DB")
 
 	return db
 }
