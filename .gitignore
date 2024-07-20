@@ -1,3 +1,8 @@
+# Environment
+.env
+.env.*
+!.env.example
+
 # NodeJS
 node_modules/
 
