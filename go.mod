@@ -10,6 +10,7 @@ require (
 	github.com/maragudk/gomponents v0.20.4
 	github.com/orsinium-labs/enum v1.4.0
 	github.com/stretchr/testify v1.9.0
+	golang.org/x/crypto v0.25.0
 )
 
 require (
