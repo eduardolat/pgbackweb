@@ -1,0 +1,12 @@
+{
+  "name": "pgbackweb",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "tailwindcss": "tailwindcss"
+  },
+  "devDependencies": {
+    "daisyui": "4.12.10",
+    "tailwindcss": "3.4.6"
+  }
+}
