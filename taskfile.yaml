@@ -55,3 +55,6 @@ tasks:
 
   fixperms: # Fixes the permissions of the files in the project
     cmd: ./scripts/fixperms.sh
+
+  reset-db:
+    cmd: go run ./cmd/resetdb/.
