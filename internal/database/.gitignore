@@ -1,0 +1,2 @@
+# Ignore the generated files to avoid git conflicts
+dbgen/
