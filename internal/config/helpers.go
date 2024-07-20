@@ -4,6 +4,8 @@ import (
 	"errors"
 	"os"
 	"strconv"
+
+	"github.com/eduardolat/pgbackweb/internal/logger"
 )
 
 type getEnvAsStringParams struct {
@@ -22,10 +24,11 @@ func getEnvAsString(params getEnvAsStringParams) *string { //nolint:all
 	value, err := getEnvAsStringFunc(params)
 
 	if err != nil {
-		logFatalError(
-			"error getting env variable",
-			"name", params.name,
-			"error", err,
+		logger.FatalError(
+			"error getting env variable", logger.KV{
+				"name":  params.name,
+				"error": err,
+			},
 		)
 	}
 
@@ -65,10 +68,11 @@ func getEnvAsInt(params getEnvAsIntParams) *int { //nolint:all
 	value, err := getEnvAsIntFunc(params)
 
 	if err != nil {
-		logFatalError(
-			"error getting env variable",
-			"name", params.name,
-			"error", err,
+		logger.FatalError(
+			"error getting env variable", logger.KV{
+				"name":  params.name,
+				"error": err,
+			},
 		)
 	}
 
@@ -114,10 +118,11 @@ func getEnvAsBool(params getEnvAsBoolParams) *bool { //nolint:all
 	value, err := getEnvAsBoolFunc(params)
 
 	if err != nil {
-		logFatalError(
-			"error getting env variable",
-			"name", params.name,
-			"error", err,
+		logger.FatalError(
+			"error getting env variable", logger.KV{
+				"name":  params.name,
+				"error": err,
+			},
 		)
 	}
 

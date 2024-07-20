@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/joho/godotenv"
 )
 
@@ -15,7 +16,7 @@ type Env struct {
 func GetEnv() *Env {
 	err := godotenv.Load()
 	if err == nil {
-		logInfo("using .env file")
+		logger.Info("using .env file")
 	}
 
 	env := &Env{
