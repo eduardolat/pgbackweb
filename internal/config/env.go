@@ -13,9 +13,11 @@ type Env struct {
 // GetEnv returns the environment variables.
 //
 // If there is an error, it will log it and exit the program.
-func GetEnv() *Env {
+func GetEnv(disableLogs ...bool) *Env {
+	pickedDisableLogs := len(disableLogs) > 0 && disableLogs[0]
+
 	err := godotenv.Load()
-	if err == nil {
+	if err == nil && !pickedDisableLogs {
 		logger.Info("using .env file")
 	}
 
