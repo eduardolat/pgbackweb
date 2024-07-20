@@ -1,0 +1,19 @@
+{
+  "If error return error": {
+    "prefix": "rerr",
+    "body": [
+      "if err != nil {",
+      "\treturn err",
+      "}",
+      ""
+    ],
+    "description": "Inserts code to check for error and return it"
+  },
+  "Get request context": {
+    "prefix": "grc",
+    "body": [
+      "ctx := c.Request().Context()"
+    ],
+    "description": "Get's the request from echo context"
+  }
+}
