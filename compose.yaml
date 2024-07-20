@@ -1,0 +1,20 @@
+name: pgbackweb-dev
+
+services:
+  app:
+    container_name: pgbw_app
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.dev
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./:/app
+      - pgbw_vol_app_ssh:/root/.ssh
+      - pgbw_vol_app_gh:/root/.config/gh
+      - pgbw_vol_app_go_mod_cache:/root/go/pkg/mod
+
+volumes:
+  pgbw_vol_app_ssh:
+  pgbw_vol_app_gh:
+  pgbw_vol_app_go_mod_cache:

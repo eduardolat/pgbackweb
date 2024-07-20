@@ -1,0 +1,76 @@
+# To make sure we have the node, npm, and golang binaries
+FROM node:21.5.0-slim AS node
+FROM golang:1.22.5 AS golang
+
+# This is the actual image we will use
+FROM ubuntu:24.04
+
+# Copy node and npm binaries from the node image
+COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
+
+# Copy the golang binaries from the golang image
+COPY --from=golang /usr/local/go /usr/local/go
+ENV PATH "$PATH:/usr/local/go/bin"
+
+# Set general environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y wget git gnupg2 lsb-release && \
+    rm -rf /var/lib/apt/lists/*
+
+# Add PostgreSQL repository and key
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+
+# Install supported PostgreSQL client versions
+RUN apt-get update && \
+    apt-get install -y postgresql-client-13 postgresql-client-14 \
+                       postgresql-client-15 postgresql-client-16 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create aliases for the different PostgreSQL client versions
+RUN echo 'alias pg_dump_13="/usr/lib/postgresql/13/bin/pg_dump"' >> /etc/bash.bashrc && \
+    echo 'alias pg_dump_14="/usr/lib/postgresql/14/bin/pg_dump"' >> /etc/bash.bashrc && \
+    echo 'alias pg_dump_15="/usr/lib/postgresql/15/bin/pg_dump"' >> /etc/bash.bashrc && \
+    echo 'alias pg_dump_16="/usr/lib/postgresql/16/bin/pg_dump"' >> /etc/bash.bashrc
+
+# Move to temporary directory to install additional tools
+WORKDIR /app/temp
+
+# Install task
+RUN wget https://github.com/go-task/task/releases/download/v3.37.2/task_linux_amd64.tar.gz && \
+    tar -xzf task_linux_amd64.tar.gz && \
+    mv ./task /usr/local/bin/task && \
+    chmod 777 /usr/local/bin/task
+
+# Install GitHub CLI
+RUN wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz && \
+    tar -xzf gh_2.52.0_linux_amd64.tar.gz && \
+    mv gh_2.52.0_linux_amd64/bin/gh /usr/local/bin/gh && \
+    chmod 777 /usr/local/bin/gh
+
+# Install air
+RUN wget https://github.com/cosmtrek/air/releases/download/v1.52.3/air_1.52.3_linux_amd64.tar.gz && \
+    tar -xzf air_1.52.3_linux_amd64.tar.gz && \
+    mv ./air /usr/local/bin/air && \
+    chmod 777 /usr/local/bin/air
+
+# Delete the temporary directory and go to the app directory
+WORKDIR /app
+RUN rm -rf /app/temp
+
+##############
+# START HERE #
+##############
+
+# Add the startup script on every bash session
+COPY scripts/startup.sh /usr/local/bin/startup.sh
+RUN echo "\n\n" >> /root/.bashrc && \
+    cat /usr/local/bin/startup.sh >> /root/.bashrc
+
+# Command just to keep the container running
+CMD ["tail", "-f", "/dev/null"]
