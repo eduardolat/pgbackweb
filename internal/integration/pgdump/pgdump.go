@@ -68,7 +68,7 @@ func (Client) Ping(version PGVersion, connString string) error {
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf(
-			"error running psql v%s: %s",
+			"error running psql ping v%s: %s",
 			version.Value.version, output,
 		)
 	}
