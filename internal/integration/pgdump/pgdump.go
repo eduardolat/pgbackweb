@@ -45,6 +45,23 @@ func New() *Client {
 	return &Client{}
 }
 
+// ParseVersion returns the PGVersion enum member for the given PostgreSQL
+// version as a string.
+func ParseVersion(version string) (PGVersion, error) {
+	switch version {
+	case "13":
+		return PG13, nil
+	case "14":
+		return PG14, nil
+	case "15":
+		return PG15, nil
+	case "16":
+		return PG16, nil
+	default:
+		return PGVersion{}, fmt.Errorf("pg version not allowed: %s", version)
+	}
+}
+
 // Ping tests the connection to the PostgreSQL database
 func (Client) Ping(version PGVersion, connString string) error {
 	cmd := exec.Command(version.Value.psql, connString, "-c", "SELECT 1;")
