@@ -31,7 +31,8 @@ func New() (*Cron, error) {
 // UpsertJob adds a new job to the scheduler and it deletes the job first if
 // it already exists.
 func (c *Cron) UpsertJob(
-	id uuid.UUID, timeZone string, cronExpression string, job func(),
+	id uuid.UUID, timeZone string, cronExpression string,
+	function any, parameters ...any,
 ) error {
 	if err := c.RemoveJob(id); err != nil {
 		return err
@@ -40,7 +41,7 @@ func (c *Cron) UpsertJob(
 	exp := fmt.Sprintf("CRON_TZ=%s %s", timeZone, cronExpression)
 	_, err := c.scheduler.NewJob(
 		gocron.CronJob(exp, false),
-		gocron.NewTask(job),
+		gocron.NewTask(function, parameters),
 		gocron.WithIdentifier(id),
 		gocron.WithSingletonMode(gocron.LimitModeReschedule),
 	)
