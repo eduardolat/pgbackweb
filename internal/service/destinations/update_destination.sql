@@ -6,7 +6,6 @@ SET
   access_key = @access_key,
   secret_key = @secret_key,
   region = @region,
-  endpoint = @endpoint,
-  updated_at = NOW()
+  endpoint = @endpoint
 WHERE id = @id
 RETURNING *;
