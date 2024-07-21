@@ -9,5 +9,14 @@ import (
 func (s *Service) UpdateBackup(
 	ctx context.Context, params dbgen.BackupsServiceUpdateBackupParams,
 ) (dbgen.Backup, error) {
-	return s.dbgen.BackupsServiceUpdateBackup(ctx, params)
+	backup, err := s.dbgen.BackupsServiceUpdateBackup(ctx, params)
+	if err != nil {
+		return backup, err
+	}
+
+	if !backup.IsActive {
+		return backup, s.jobRemove(backup.ID)
+	}
+
+	return backup, s.jobUpsert(backup.ID, backup.TimeZone, backup.CronExpression)
 }

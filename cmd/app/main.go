@@ -13,7 +13,7 @@ import (
 func main() {
 	env := config.GetEnv()
 
-	_, err := cron.New()
+	cr, err := cron.New()
 	if err != nil {
 		logger.FatalError("error initializing cron scheduler", logger.KV{"error": err})
 	}
@@ -23,5 +23,5 @@ func main() {
 	dbgen := dbgen.New(db)
 
 	ints := integration.New()
-	_ = service.New(env, dbgen, ints)
+	_ = service.New(env, dbgen, cr, ints)
 }

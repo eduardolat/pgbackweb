@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/eduardolat/pgbackweb/internal/config"
+	"github.com/eduardolat/pgbackweb/internal/cron"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/integration"
 	"github.com/eduardolat/pgbackweb/internal/service/auth"
@@ -22,14 +23,15 @@ type Service struct {
 }
 
 func New(
-	env *config.Env, dbgen *dbgen.Queries, ints *integration.Integration,
+	env *config.Env, dbgen *dbgen.Queries,
+	cr *cron.Cron, ints *integration.Integration,
 ) *Service {
 	authService := auth.New(env, dbgen)
-	backupsService := backups.New(dbgen)
 	databasesService := databases.New(env, dbgen)
 	destinationsService := destinations.New(env, dbgen)
 	executionsService := executions.New(env, dbgen, ints)
 	usersService := users.New(dbgen)
+	backupsService := backups.New(dbgen, cr, executionsService)
 
 	return &Service{
 		AuthService:         authService,
