@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS executions (
   status TEXT NOT NULL CHECK (
     status IN ('running', 'success', 'failed', 'deleted')
   ) DEFAULT 'running',
-  message TEXT NOT NULL,
+  message TEXT,
   path TEXT,
 
   started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
