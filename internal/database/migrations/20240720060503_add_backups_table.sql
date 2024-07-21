@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS backups (
 
   name TEXT NOT NULL,
   cron_expression TEXT NOT NULL UNIQUE,
+  time_zone TEXT NOT NULL,
   is_active BOOLEAN NOT NULL DEFAULT FALSE,
   dest_dir TEXT NOT NULL,
 
