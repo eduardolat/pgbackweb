@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS databases (
 
   name TEXT NOT NULL UNIQUE,
   connection_string TEXT NOT NULL,
+  pg_version TEXT NOT NULL CHECK (pg_version in ('13', '14', '15', '16')),
 
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ
