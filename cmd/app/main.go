@@ -4,6 +4,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/config"
 	"github.com/eduardolat/pgbackweb/internal/database"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
+	"github.com/eduardolat/pgbackweb/internal/integration"
 	"github.com/eduardolat/pgbackweb/internal/service"
 )
 
@@ -14,5 +15,6 @@ func main() {
 	defer db.Close()
 	dbgen := dbgen.New(db)
 
-	_ = service.New(env, dbgen)
+	ints := integration.New()
+	_ = service.New(env, dbgen, ints)
 }
