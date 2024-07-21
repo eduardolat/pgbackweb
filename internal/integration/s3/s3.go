@@ -3,6 +3,7 @@ package s3
 import (
 	"bytes"
 	"fmt"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -17,10 +18,10 @@ func New() *Client {
 	return &Client{}
 }
 
-// Ping tests the connection to S3
-func (c *Client) Ping(
-	accessKey, secretKey, region, endpoint, bucketName string,
-) error {
+// createS3Client creates a new S3 client
+func createS3Client(
+	accessKey, secretKey, region, endpoint string,
+) (*s3.S3, error) {
 	sess, err := session.NewSession(&aws.Config{
 		Credentials:      credentials.NewStaticCredentials(accessKey, secretKey, ""),
 		Region:           aws.String(region),
@@ -28,10 +29,22 @@ func (c *Client) Ping(
 		S3ForcePathStyle: aws.Bool(true),
 	})
 	if err != nil {
-		return fmt.Errorf("failed to create aws session: %w", err)
+		return nil, fmt.Errorf("failed to create aws session: %w", err)
 	}
 
-	s3Client := s3.New(sess)
+	return s3.New(sess), nil
+}
+
+// Ping tests the connection to S3
+func (Client) Ping(
+	accessKey, secretKey, region, endpoint, bucketName string,
+) error {
+	s3Client, err := createS3Client(
+		accessKey, secretKey, region, endpoint,
+	)
+	if err != nil {
+		return err
+	}
 
 	_, err = s3Client.HeadBucket(&s3.HeadBucketInput{
 		Bucket: aws.String(bucketName),
@@ -44,21 +57,17 @@ func (c *Client) Ping(
 }
 
 // Upload uploads a file to S3
-func (c *Client) Upload(
+func (Client) Upload(
 	accessKey, secretKey, region, endpoint, bucketName, key string,
 	fileContent []byte,
 ) (string, error) {
-	sess, err := session.NewSession(&aws.Config{
-		Credentials:      credentials.NewStaticCredentials(accessKey, secretKey, ""),
-		Region:           aws.String(region),
-		Endpoint:         aws.String(endpoint),
-		S3ForcePathStyle: aws.Bool(true),
-	})
+	s3Client, err := createS3Client(
+		accessKey, secretKey, region, endpoint,
+	)
 	if err != nil {
-		return "", fmt.Errorf("failed to create aws session: %w", err)
+		return "", err
 	}
 
-	s3Client := s3.New(sess)
 	reader := bytes.NewReader(fileContent)
 	key = strutil.RemoveLeadingSlash(key)
 	contentType := strutil.GetContentTypeFromFileName(key)
@@ -77,20 +86,16 @@ func (c *Client) Upload(
 }
 
 // Delete deletes a file from S3
-func (c *Client) Delete(
+func (Client) Delete(
 	accessKey, secretKey, region, endpoint, bucketName, key string,
 ) error {
-	sess, err := session.NewSession(&aws.Config{
-		Credentials:      credentials.NewStaticCredentials(accessKey, secretKey, ""),
-		Region:           aws.String(region),
-		Endpoint:         aws.String(endpoint),
-		S3ForcePathStyle: aws.Bool(true),
-	})
+	s3Client, err := createS3Client(
+		accessKey, secretKey, region, endpoint,
+	)
 	if err != nil {
-		return fmt.Errorf("failed to create aws session: %w", err)
+		return err
 	}
 
-	s3Client := s3.New(sess)
 	key = strutil.RemoveLeadingSlash(key)
 
 	_, err = s3Client.DeleteObject(&s3.DeleteObjectInput{
@@ -102,4 +107,30 @@ func (c *Client) Delete(
 	}
 
 	return nil
+}
+
+// GetDownloadLink generates a presigned URL for downloading a file from S3
+func (Client) GetDownloadLink(
+	accessKey, secretKey, region, endpoint, bucketName, key string,
+	expiration time.Duration,
+) (string, error) {
+	s3Client, err := createS3Client(
+		accessKey, secretKey, region, endpoint,
+	)
+	if err != nil {
+		return "", err
+	}
+
+	key = strutil.RemoveLeadingSlash(key)
+	req, _ := s3Client.GetObjectRequest(&s3.GetObjectInput{
+		Bucket: aws.String(bucketName),
+		Key:    aws.String(key),
+	})
+
+	url, err := req.Presign(expiration)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate presigned URL: %w", err)
+	}
+
+	return url, nil
 }
