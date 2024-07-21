@@ -6,7 +6,6 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 )
 
-// CreateDestination creates a new destination entry.
 func (s *Service) CreateDestination(
 	ctx context.Context, params dbgen.DestinationsServiceCreateDestinationParams,
 ) (dbgen.Destination, error) {
