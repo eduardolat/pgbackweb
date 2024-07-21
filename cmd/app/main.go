@@ -23,5 +23,9 @@ func main() {
 	dbgen := dbgen.New(db)
 
 	ints := integration.New()
-	_ = service.New(env, dbgen, cr, ints)
+	servs := service.New(env, dbgen, cr, ints)
+
+	if err := servs.BackupsService.ScheduleAll(); err != nil {
+		logger.FatalError("error scheduling all backups", logger.KV{"error": err})
+	}
 }
