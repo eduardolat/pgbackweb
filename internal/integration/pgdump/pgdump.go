@@ -47,7 +47,7 @@ func New() *Client {
 
 // ParseVersion returns the PGVersion enum member for the given PostgreSQL
 // version as a string.
-func ParseVersion(version string) (PGVersion, error) {
+func (Client) ParseVersion(version string) (PGVersion, error) {
 	switch version {
 	case "13":
 		return PG13, nil
