@@ -3,6 +3,7 @@ package cron
 import (
 	"fmt"
 
+	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/go-co-op/gocron/v2"
 	"github.com/google/uuid"
 )
@@ -19,6 +20,8 @@ func New() (*Cron, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	logger.Info("cron scheduler initialized")
 
 	return &Cron{
 		scheduler: scheduler,
