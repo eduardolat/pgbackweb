@@ -10,6 +10,11 @@ import (
 // GetDatabase retrieves a database entry by ID.
 func (s *Service) GetDatabase(
 	ctx context.Context, id uuid.UUID,
-) (dbgen.Database, error) {
-	return s.dbgen.DatabasesServiceGetDatabase(ctx, id)
+) (dbgen.DatabasesServiceGetDatabaseRow, error) {
+	return s.dbgen.DatabasesServiceGetDatabase(
+		ctx, dbgen.DatabasesServiceGetDatabaseParams{
+			ID:            id,
+			EncryptionKey: *s.env.PBW_ENCRYPTION_KEY,
+		},
+	)
 }

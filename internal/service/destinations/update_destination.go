@@ -9,5 +9,6 @@ import (
 func (s *Service) UpdateDestination(
 	ctx context.Context, params dbgen.DestinationsServiceUpdateDestinationParams,
 ) (dbgen.Destination, error) {
+	params.EncryptionKey = *s.env.PBW_ENCRYPTION_KEY
 	return s.dbgen.DestinationsServiceUpdateDestination(ctx, params)
 }

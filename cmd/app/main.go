@@ -14,5 +14,5 @@ func main() {
 	defer db.Close()
 	dbgen := dbgen.New(db)
 
-	_ = service.New(dbgen)
+	_ = service.New(env, dbgen)
 }

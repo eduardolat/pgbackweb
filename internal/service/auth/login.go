@@ -23,10 +23,11 @@ func (s *Service) Login(
 
 	session, err := s.dbgen.AuthServiceLoginCreateSession(
 		ctx, dbgen.AuthServiceLoginCreateSessionParams{
-			UserID:    user.ID,
-			Token:     uuid.NewString(),
-			Ip:        ip,
-			UserAgent: userAgent,
+			UserID:        user.ID,
+			Ip:            ip,
+			UserAgent:     userAgent,
+			Token:         uuid.NewString(),
+			EncryptionKey: *s.env.PBW_ENCRYPTION_KEY,
 		},
 	)
 	if err != nil {

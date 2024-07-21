@@ -9,6 +9,6 @@ import (
 // ListDatabases lists all database entries.
 func (s *Service) ListDatabases(
 	ctx context.Context,
-) ([]dbgen.Database, error) {
-	return s.dbgen.DatabasesServiceListDatabases(ctx)
+) ([]dbgen.DatabasesServiceListDatabasesRow, error) {
+	return s.dbgen.DatabasesServiceListDatabases(ctx, *s.env.PBW_ENCRYPTION_KEY)
 }

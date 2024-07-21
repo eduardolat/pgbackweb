@@ -5,5 +5,5 @@ SELECT * FROM users WHERE email = @email;
 INSERT INTO sessions (
   user_id, token, ip, user_agent
 ) VALUES (
-  @user_id, @token, @ip, @user_agent
+  @user_id, pgp_sym_encrypt(@token, @encryption_key), @ip, @user_agent
 ) RETURNING *;

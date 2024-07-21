@@ -8,6 +8,8 @@ import (
 
 func (s *Service) ListDestinations(
 	ctx context.Context,
-) ([]dbgen.Destination, error) {
-	return s.dbgen.DestinationsServiceListDestinations(ctx)
+) ([]dbgen.DestinationsServiceListDestinationsRow, error) {
+	return s.dbgen.DestinationsServiceListDestinations(
+		ctx, *s.env.PBW_ENCRYPTION_KEY,
+	)
 }

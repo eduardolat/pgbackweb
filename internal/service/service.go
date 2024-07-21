@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/eduardolat/pgbackweb/internal/config"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/service/auth"
 	"github.com/eduardolat/pgbackweb/internal/service/backups"
@@ -19,11 +20,11 @@ type Service struct {
 	UsersService        *users.Service
 }
 
-func New(dbgen *dbgen.Queries) *Service {
-	authService := auth.New(dbgen)
+func New(env *config.Env, dbgen *dbgen.Queries) *Service {
+	authService := auth.New(env, dbgen)
 	backupsService := backups.New(dbgen)
-	databasesService := databases.New(dbgen)
-	destinationsService := destinations.New(dbgen)
+	databasesService := databases.New(env, dbgen)
+	destinationsService := destinations.New(env, dbgen)
 	executionsService := executions.New(dbgen)
 	usersService := users.New(dbgen)
 

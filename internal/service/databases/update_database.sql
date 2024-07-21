@@ -2,6 +2,6 @@
 UPDATE databases
 SET
   name = @name,
-  connection_string = @connection_string
+  connection_string = pgp_sym_encrypt(@connection_string, @encryption_key)
 WHERE id = @id
 RETURNING *;
