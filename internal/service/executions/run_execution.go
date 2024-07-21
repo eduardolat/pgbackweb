@@ -33,7 +33,8 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	}
 
 	ex, err := s.CreateExecution(ctx, dbgen.ExecutionsServiceCreateExecutionParams{
-		Status: "running",
+		BackupID: backupID,
+		Status:   "running",
 	})
 	if err != nil {
 		return err

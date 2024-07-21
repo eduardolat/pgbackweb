@@ -1,4 +1,4 @@
 -- name: ExecutionsServiceCreateExecution :one
-INSERT INTO executions (status, message, path)
-VALUES (@status, @message, @path)
+INSERT INTO executions (backup_id, status, message, path)
+VALUES (@backup_id, @status, @message, @path)
 RETURNING *;
