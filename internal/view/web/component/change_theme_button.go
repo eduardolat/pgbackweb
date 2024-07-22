@@ -4,10 +4,13 @@ import (
 	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/maragudk/gomponents"
+	"github.com/maragudk/gomponents/components"
 	"github.com/maragudk/gomponents/html"
 )
 
-func ChangeThemeButton() gomponents.Node {
+func ChangeThemeButton(
+	position dropdownPosition, alignsToEnd bool,
+) gomponents.Node {
 	return html.Div(
 		alpine.XData(`{
 			theme: "",
@@ -32,7 +35,14 @@ func ChangeThemeButton() gomponents.Node {
 		alpine.XOn("click", "getCurrentTheme()"),
 		alpine.XOn("click.outside", "getCurrentTheme()"),
 
-		html.Class("dropdown dropdown-end"),
+		components.Classes{
+			"dropdown":        true,
+			"dropdown-end":    alignsToEnd,
+			"dropdown-right":  position == DropdownPositionRight,
+			"dropdown-left":   position == DropdownPositionLeft,
+			"dropdown-top":    position == DropdownPositionTop,
+			"dropdown-bottom": position == DropdownPositionBottom,
+		},
 		html.Div(
 			html.TabIndex("0"),
 			html.Role("button"),
@@ -50,9 +60,12 @@ func ChangeThemeButton() gomponents.Node {
 		),
 		html.Ul(
 			html.TabIndex("0"),
-			html.Class(
-				"dropdown-content bg-base-300 rounded z-[1] w-[150px] p-2 space-y-2 mt-2",
-			),
+			components.Classes{
+				"dropdown-content":                   true,
+				"bg-base-100":                        true,
+				"rounded-btn shadow-md":              true,
+				"z-[1] w-[150px] p-2 space-y-2 my-2": true,
+			},
 			html.Li(
 				html.Button(
 					html.Data("set-theme", ""),

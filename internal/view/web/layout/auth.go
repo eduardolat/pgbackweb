@@ -1,6 +1,7 @@
 package layout
 
 import (
+	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/maragudk/gomponents"
 	"github.com/maragudk/gomponents/components"
 	"github.com/maragudk/gomponents/html"
@@ -49,13 +50,13 @@ func Auth(params AuthParams) gomponents.Node {
 				"grid grid-cols-1 place-items-center": true,
 				"bg-base-300 overflow-y-auto":         true,
 			},
-			html.Main(
-				components.Classes{
-					"w-full max-w-[600px]":  true,
-					"rounded-box shadow-md": true,
-					"bg-base-100 p-4":       true,
-				},
-				gomponents.Group(params.Body),
+			html.Div(
+				html.Class("w-full max-w-[600px] space-y-4"),
+				html.Main(
+					html.Class("rounded-box shadow-md bg-base-100 p-4"),
+					gomponents.Group(params.Body),
+				),
+				component.ChangeThemeButton(component.DropdownPositionTop, false),
 			),
 		},
 	})
