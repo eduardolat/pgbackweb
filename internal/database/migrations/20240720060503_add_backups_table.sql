@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS backups (
   time_zone TEXT NOT NULL,
   is_active BOOLEAN NOT NULL DEFAULT FALSE,
   dest_dir TEXT NOT NULL,
+  retention_days SMALLINT NOT NULL DEFAULT 0,
 
   opt_data_only BOOLEAN NOT NULL DEFAULT FALSE,
   opt_schema_only BOOLEAN NOT NULL DEFAULT FALSE,

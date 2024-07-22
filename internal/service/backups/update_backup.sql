@@ -6,6 +6,7 @@ SET
   time_zone = COALESCE(time_zone, @time_zone),
   is_active = COALESCE(is_active, @is_active),
   dest_dir = COALESCE(dest_dir, @dest_dir),
+  retention_days = COALESCE(retention_days, @retention_days),
   opt_data_only = COALESCE(opt_data_only, @opt_data_only),
   opt_schema_only = COALESCE(opt_schema_only, @opt_schema_only),
   opt_clean = COALESCE(opt_clean, @opt_clean),
