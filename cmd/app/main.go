@@ -17,6 +17,7 @@ func main() {
 	if err != nil {
 		logger.FatalError("error initializing cron scheduler", logger.KV{"error": err})
 	}
+	cr.Start()
 	defer cr.Shutdown()
 
 	db := database.Connect(env)
