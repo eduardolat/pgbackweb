@@ -1,18 +1,32 @@
 package executions
 
-import "context"
+import (
+	"context"
 
-func (s *Service) SoftDeleteExpiredExecutions(ctx context.Context) error {
+	"github.com/eduardolat/pgbackweb/internal/logger"
+)
+
+func (s *Service) SoftDeleteExpiredExecutions() {
+	ctx := context.Background()
+
 	expiredExecutions, err := s.dbgen.ExecutionsServiceGetExpiredExecutions(ctx)
 	if err != nil {
-		return err
+		logger.Error(
+			"error soft deleting expired executions",
+			logger.KV{"error": err},
+		)
+		return
 	}
 
 	for _, execution := range expiredExecutions {
 		if err := s.SoftDeleteExecution(ctx, execution.ID); err != nil {
-			return err
+			logger.Error(
+				"error soft deleting expired executions",
+				logger.KV{"id": execution.ID.String(), "error": err},
+			)
+			return
 		}
 	}
 
-	return nil
+	logger.Info("expired executions soft deleted")
 }
