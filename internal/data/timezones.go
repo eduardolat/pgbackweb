@@ -15,6 +15,12 @@ var Timezones = []Timezone{
 		Utc:    "+00:00",
 	},
 	{
+		Label:  "GMT (GMT+00:00)",
+		TzCode: "GMT",
+		Name:   "(GMT+00:00) GMT",
+		Utc:    "+00:00",
+	},
+	{
 		Label:  "Pacific/Midway (GMT-11:00)",
 		TzCode: "Pacific/Midway",
 		Name:   "(GMT-11:00) Midway",
