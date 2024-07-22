@@ -36,7 +36,11 @@ func PaginateXYZ(
 )
 ```
 
-### Notes
+### Example
+
+Refer to `internal/service/backups/paginate_backups.go` for an example of how to use the `paginateutil` package.
+
+## Notes
 
 - **Default Values:** Ensure to set reasonable default values for pagination parameters (`page` and `limit`) if they are not provided.
 - **Common Response Structure:** Use `CreatePaginateResponse` to generate a common response structure that includes information about pagination, such as the total number of items, the current page, and the number of items per page.
