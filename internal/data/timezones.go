@@ -9,6 +9,12 @@ type Timezone struct {
 
 var Timezones = []Timezone{
 	{
+		Label:  "UTC (GMT+00:00)",
+		TzCode: "UTC",
+		Name:   "(GMT+00:00) UTC",
+		Utc:    "+00:00",
+	},
+	{
 		Label:  "Pacific/Midway (GMT-11:00)",
 		TzCode: "Pacific/Midway",
 		Name:   "(GMT-11:00) Midway",
