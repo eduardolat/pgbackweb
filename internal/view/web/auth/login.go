@@ -23,35 +23,21 @@ func loginPage() gomponents.Node {
 		html.Form(
 			html.Class("mt-4 space-y-2"),
 
-			html.Label(
-				html.Class("form-control w-full"),
-				html.Div(
-					html.Class("label"),
-					component.SpanText("Email"),
-				),
-				html.Input(
-					html.Class("input input-bordered w-full"),
-					html.Type("email"),
-					html.Name("email"),
-					html.Required(),
-					html.Placeholder("john@example.com"),
-				),
-			),
+			component.InputControl(component.InputControlParams{
+				Name:        "email",
+				Label:       "Email",
+				Placeholder: "john@example.com",
+				Required:    true,
+				Type:        component.InputTypeEmail,
+			}),
 
-			html.Label(
-				html.Class("form-control w-full"),
-				html.Div(
-					html.Class("label"),
-					component.SpanText("Password"),
-				),
-				html.Input(
-					html.Class("input input-bordered w-full"),
-					html.Type("password"),
-					html.Name("password"),
-					html.Required(),
-					html.Placeholder("******"),
-				),
-			),
+			component.InputControl(component.InputControlParams{
+				Name:        "password",
+				Label:       "Password",
+				Placeholder: "******",
+				Required:    true,
+				Type:        component.InputTypePassword,
+			}),
 
 			html.Div(
 				html.Class("pt-2 grid place-items-end"),
