@@ -19,7 +19,7 @@ func initSchedule(cr *cron.Cron, servs *service.Service) {
 		Schedules
 	*/
 
-	err := cr.UpsertJob(uuid.New(), "UTC", "* * * * *", func() {
+	err := cr.UpsertJob(uuid.New(), "UTC", "*/10 * * * *", func() {
 		servs.ExecutionsService.SoftDeleteExpiredExecutions()
 	})
 	if err != nil {
@@ -29,7 +29,7 @@ func initSchedule(cr *cron.Cron, servs *service.Service) {
 		)
 	}
 
-	err = cr.UpsertJob(uuid.New(), "UTC", "* * * * *", func() {
+	err = cr.UpsertJob(uuid.New(), "UTC", "*/10 * * * *", func() {
 		servs.AuthService.DeleteOldSessions()
 	})
 	if err != nil {
