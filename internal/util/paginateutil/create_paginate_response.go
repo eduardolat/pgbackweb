@@ -2,14 +2,14 @@ package paginateutil
 
 // PaginateResponse is the response for a paginated request.
 type PaginateResponse struct {
-	TotalItems      int  `json:"totalItems"`
-	TotalPages      int  `json:"totalPages"`
-	ItemsPerPage    int  `json:"itemsPerPage"`
-	PreviousPage    int  `json:"previousPage"`
-	HasPreviousPage bool `json:"hasPreviousPage"`
-	CurrentPage     int  `json:"currentPage"`
-	NextPage        int  `json:"nextPage"`
-	HasNextPage     bool `json:"hasNextPage"`
+	TotalItems      int  `json:"total_items"`
+	TotalPages      int  `json:"total_pages"`
+	ItemsPerPage    int  `json:"items_per_page"`
+	PreviousPage    int  `json:"previous_page"`
+	HasPreviousPage bool `json:"has_previous_page"`
+	CurrentPage     int  `json:"current_page"`
+	NextPage        int  `json:"next_page"`
+	HasNextPage     bool `json:"has_next_page"`
 }
 
 // CreatePaginateResponse creates a PaginateResponse from
