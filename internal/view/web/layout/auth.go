@@ -52,6 +52,10 @@ func Auth(params AuthParams) gomponents.Node {
 			},
 			html.Div(
 				html.Class("w-full max-w-[600px] space-y-4"),
+				html.Div(
+					html.Class("flex justify-center"),
+					component.Logotype(),
+				),
 				html.Main(
 					html.Class("rounded-box shadow-md bg-base-100 p-4"),
 					gomponents.Group(params.Body),
