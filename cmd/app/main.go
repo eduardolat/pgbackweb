@@ -20,10 +20,18 @@ func main() {
 		logger.FatalError("error initializing cron scheduler", logger.KV{"error": err})
 	}
 	cr.Start()
-	defer cr.Shutdown()
+	defer func() {
+		if err := cr.Shutdown(); err != nil {
+			logger.Error("error shutting down cron scheduler", logger.KV{"error": err})
+		}
+	}()
 
 	db := database.Connect(env)
-	defer db.Close()
+	defer func() {
+		if err := db.Close(); err != nil {
+			logger.Error("error closing database connection", logger.KV{"error": err})
+		}
+	}()
 	dbgen := dbgen.New(db)
 
 	ints := integration.New()
