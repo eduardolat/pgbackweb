@@ -46,7 +46,7 @@ func Auth(params AuthParams) gomponents.Node {
 		},
 		Body: []gomponents.Node{
 			components.Classes{
-				"w-screen h-screen p-4":               true,
+				"w-screen h-screen px-4 py-[40px]":    true,
 				"grid grid-cols-1 place-items-center": true,
 				"bg-base-300 overflow-y-auto":         true,
 			},
