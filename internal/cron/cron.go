@@ -61,18 +61,6 @@ func (c *Cron) RemoveJob(id uuid.UUID) error {
 	return nil
 }
 
-// RemoveAllJobs removes all jobs from the scheduler.
-func (c *Cron) RemoveAllJobs() error {
-	jobs := c.scheduler.Jobs()
-	for _, job := range jobs {
-		if err := c.RemoveJob(job.ID()); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 // Start starts the scheduler.
 func (c *Cron) Start() {
 	c.scheduler.Start()

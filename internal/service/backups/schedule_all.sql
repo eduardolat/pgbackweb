@@ -5,5 +5,4 @@ SELECT
   cron_expression,
   time_zone
 FROM backups
-WHERE is_active = TRUE
 ORDER BY created_at DESC;

@@ -14,14 +14,19 @@ func (s *Service) ScheduleAll() error {
 		return err
 	}
 
-	if err := s.cr.RemoveAllJobs(); err != nil {
-		return err
-	}
-
 	for _, backup := range activeBackups {
-		err := s.jobUpsert(backup.ID, backup.TimeZone, backup.CronExpression)
-		if err != nil {
-			return err
+		if !backup.IsActive {
+			err := s.jobRemove(backup.ID)
+			if err != nil {
+				return err
+			}
+		}
+
+		if backup.IsActive {
+			err := s.jobUpsert(backup.ID, backup.TimeZone, backup.CronExpression)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
