@@ -4,6 +4,7 @@ go 1.22.5
 
 require (
 	github.com/aws/aws-sdk-go v1.54.20
+	github.com/eduardolat/gomponents-lucide v1.2.0
 	github.com/go-co-op/gocron/v2 v2.11.0
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
