@@ -1,4 +1,4 @@
-package data
+package staticdata
 
 import (
 	"testing"

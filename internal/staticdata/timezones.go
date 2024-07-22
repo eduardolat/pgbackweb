@@ -1,4 +1,4 @@
-package data
+package staticdata
 
 type Timezone struct {
 	Label  string `json:"label"`
