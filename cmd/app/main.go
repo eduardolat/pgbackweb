@@ -17,6 +17,7 @@ func main() {
 	if err != nil {
 		logger.FatalError("error initializing cron scheduler", logger.KV{"error": err})
 	}
+	defer cr.Shutdown()
 
 	db := database.Connect(env)
 	defer db.Close()
@@ -25,7 +26,5 @@ func main() {
 	ints := integration.New()
 	servs := service.New(env, dbgen, cr, ints)
 
-	if err := servs.BackupsService.ScheduleAll(); err != nil {
-		logger.FatalError("error scheduling all backups", logger.KV{"error": err})
-	}
+	initSchedule(cr, servs)
 }
