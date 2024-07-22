@@ -8,6 +8,8 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/integration"
 	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/service"
+	"github.com/eduardolat/pgbackweb/internal/view"
+	"github.com/labstack/echo/v4"
 )
 
 func main() {
@@ -26,6 +28,15 @@ func main() {
 
 	ints := integration.New()
 	servs := service.New(env, dbgen, cr, ints)
-
 	initSchedule(cr, servs)
+
+	app := echo.New()
+	app.HideBanner = true
+	app.HidePort = true
+	view.MountRouter(app, servs)
+
+	logger.Info("server started at http://localhost:8085")
+	if err := app.Start(":8085"); err != nil {
+		logger.FatalError("error starting server", logger.KV{"error": err})
+	}
 }
