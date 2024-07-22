@@ -38,8 +38,5 @@ func initSchedule(cr *cron.Cron, servs *service.Service) {
 		)
 	}
 
-	err = servs.BackupsService.ScheduleAll()
-	if err != nil {
-		logger.FatalError("error scheduling all backups", logger.KV{"error": err})
-	}
+	servs.BackupsService.ScheduleAll()
 }
