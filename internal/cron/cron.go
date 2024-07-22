@@ -41,7 +41,7 @@ func (c *Cron) UpsertJob(
 	exp := fmt.Sprintf("CRON_TZ=%s %s", timeZone, cronExpression)
 	_, err := c.scheduler.NewJob(
 		gocron.CronJob(exp, false),
-		gocron.NewTask(function, parameters),
+		gocron.NewTask(function, parameters...),
 		gocron.WithIdentifier(id),
 		gocron.WithSingletonMode(gocron.LimitModeReschedule),
 	)
