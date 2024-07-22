@@ -5,6 +5,31 @@ import (
 	"github.com/maragudk/gomponents/html"
 )
 
+// getTextColorClass returns the text color class for a text that
+// is written on top of a base-100, base-200 or base-300 background.
+func getTextColorClass(color color) string {
+	switch color {
+	case ColorPrimary:
+		return "text-primary"
+	case ColorSecondary:
+		return "text-secondary"
+	case ColorAccent:
+		return "text-accent"
+	case ColorNeutral:
+		return "text-base-content"
+	case ColorInfo:
+		return "text-info"
+	case ColorSuccess:
+		return "text-success"
+	case ColorWarning:
+		return "text-warning"
+	case ColorError:
+		return "text-error"
+	default:
+		return "text-base-content"
+	}
+}
+
 func H1(children ...gomponents.Node) gomponents.Node {
 	return html.H1(
 		html.Class("text-2xl font-bold desk:text-4xl"),
