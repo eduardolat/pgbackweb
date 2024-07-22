@@ -44,7 +44,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	if err != nil {
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
 			ID:         ex.ID,
-			Status:     "failed",
+			Status:     sql.NullString{Valid: true, String: "failed"},
 			Message:    sql.NullString{Valid: true, String: err.Error()},
 			FinishedAt: sql.NullTime{Valid: true, Time: time.Now()},
 		})
@@ -54,7 +54,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	if err != nil {
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
 			ID:         ex.ID,
-			Status:     "failed",
+			Status:     sql.NullString{Valid: true, String: "failed"},
 			Message:    sql.NullString{Valid: true, String: err.Error()},
 			FinishedAt: sql.NullTime{Valid: true, Time: time.Now()},
 		})
@@ -73,7 +73,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	if err != nil {
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
 			ID:         ex.ID,
-			Status:     "failed",
+			Status:     sql.NullString{Valid: true, String: "failed"},
 			Message:    sql.NullString{Valid: true, String: err.Error()},
 			FinishedAt: sql.NullTime{Valid: true, Time: time.Now()},
 		})
@@ -94,7 +94,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	if err != nil {
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
 			ID:         ex.ID,
-			Status:     "failed",
+			Status:     sql.NullString{Valid: true, String: "failed"},
 			Message:    sql.NullString{Valid: true, String: err.Error()},
 			Path:       sql.NullString{Valid: true, String: path},
 			FinishedAt: sql.NullTime{Valid: true, Time: time.Now()},
@@ -103,7 +103,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 
 	return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
 		ID:         ex.ID,
-		Status:     "success",
+		Status:     sql.NullString{Valid: true, String: "success"},
 		Message:    sql.NullString{Valid: true, String: "Backup created successfully"},
 		Path:       sql.NullString{Valid: true, String: path},
 		FinishedAt: sql.NullTime{Valid: true, Time: time.Now()},
