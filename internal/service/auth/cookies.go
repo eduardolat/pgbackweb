@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
@@ -37,6 +38,9 @@ func (s *Service) GetUserFromSessionCookie(c echo.Context) (
 	ctx := c.Request().Context()
 
 	cookie, err := c.Cookie(sessionCookieName)
+	if err != nil && errors.Is(err, http.ErrNoCookie) {
+		return false, dbgen.AuthServiceGetUserByTokenRow{}, nil
+	}
 	if err != nil {
 		return false, dbgen.AuthServiceGetUserByTokenRow{}, err
 	}
