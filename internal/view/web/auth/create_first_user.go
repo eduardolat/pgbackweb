@@ -5,6 +5,7 @@ import (
 
 	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
+	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
@@ -16,6 +17,21 @@ import (
 )
 
 func (h *handlers) createFirstUserPageHandler(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	usersQty, err := h.servs.UsersService.GetUsersQty(ctx)
+	if err != nil {
+		logger.Error("failed to get users qty", logger.KV{
+			"ip":    c.RealIP(),
+			"ua":    c.Request().UserAgent(),
+			"error": err,
+		})
+		return c.String(http.StatusInternalServerError, "Internal server error")
+	}
+	if usersQty > 0 {
+		return c.Redirect(http.StatusFound, "/auth/login")
+	}
+
 	return echoutil.RenderGomponent(c, http.StatusOK, createFirstUserPage())
 }
 

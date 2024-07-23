@@ -16,6 +16,21 @@ import (
 )
 
 func (h *handlers) loginPageHandler(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	usersQty, err := h.servs.UsersService.GetUsersQty(ctx)
+	if err != nil {
+		logger.Error("failed to get users qty", logger.KV{
+			"ip":    c.RealIP(),
+			"ua":    c.Request().UserAgent(),
+			"error": err,
+		})
+		return c.String(http.StatusInternalServerError, "Internal server error")
+	}
+	if usersQty == 0 {
+		return c.Redirect(http.StatusFound, "/auth/create-first-user")
+	}
+
 	return echoutil.RenderGomponent(c, http.StatusOK, loginPage())
 }
 
