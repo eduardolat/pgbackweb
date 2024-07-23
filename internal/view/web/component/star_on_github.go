@@ -1,33 +1,22 @@
 package component
 
 import (
+	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/maragudk/gomponents"
+	"github.com/maragudk/gomponents/components"
 	"github.com/maragudk/gomponents/html"
 )
 
 func StarOnGithub(size size) gomponents.Node {
-	small := html.IFrame(
-		html.Src("https://ghbtns.com/github-btn.html?user=eduardolat&repo=pgbackweb&type=star&count=true"),
-		gomponents.Attr("frameborder", "0"),
-		gomponents.Attr("scrolling", "0"),
-		html.Width("150"),
-		html.Height("20"),
+	return html.A(
+		components.Classes{
+			"btn btn-neutral": true,
+			"btn-sm":          size == SizeSm,
+			"btn-lg":          size == SizeLg,
+		},
+		html.Href("https://github.com/eduardolat/pgbackweb"),
+		html.Target("_blank"),
+		lucide.Github(),
+		SpanText("Star on GitHub"),
 	)
-
-	big := html.IFrame(
-		html.Src("https://ghbtns.com/github-btn.html?user=eduardolat&repo=pgbackweb&type=star&count=true&size=large"),
-		gomponents.Attr("frameborder", "0"),
-		gomponents.Attr("scrolling", "0"),
-		html.Width("170"),
-		html.Height("30"),
-	)
-
-	switch size {
-	case SizeSm:
-		return small
-	case SizeMd:
-		return big
-	default:
-		return big
-	}
 }

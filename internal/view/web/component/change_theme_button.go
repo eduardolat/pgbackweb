@@ -53,6 +53,7 @@ func ChangeThemeButton(params ChangeThemeButtonParams) gomponents.Node {
 			components.Classes{
 				"btn btn-neutral space-x-1": true,
 				"btn-sm":                    params.Size == SizeSm,
+				"btn-lg":                    params.Size == SizeLg,
 			},
 
 			html.Div(

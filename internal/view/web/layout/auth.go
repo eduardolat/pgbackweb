@@ -56,7 +56,7 @@ func Auth(params AuthParams) gomponents.Node {
 					component.ChangeThemeButton(component.ChangeThemeButtonParams{
 						Position:    component.DropdownPositionTop,
 						AlignsToEnd: false,
-						Size:        component.SizeSm,
+						Size:        component.SizeMd,
 					}),
 					component.StarOnGithub(component.SizeMd),
 				),
