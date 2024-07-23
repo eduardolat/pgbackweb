@@ -13,6 +13,10 @@ func MountRouter(app *echo.Echo, servs *service.Service) {
 	mids := middleware.New(servs)
 
 	app.StaticFS("", static.StaticFs)
-	api.MountRouter(app.Group("/api"), servs)
-	web.MountRouter(app.Group(""), mids, servs)
+
+	apiGroup := app.Group("/api")
+	api.MountRouter(apiGroup, servs)
+
+	webGroup := app.Group("", mids.InjectReqctx)
+	web.MountRouter(webGroup, mids, servs)
 }
