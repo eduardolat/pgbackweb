@@ -8,14 +8,15 @@ import (
 )
 
 type InputControlParams struct {
-	Name        string
-	Label       string
-	Placeholder string
-	Required    bool
-	Type        inputType
-	HelpText    string
-	Color       color
-	Children    []gomponents.Node
+	Name         string
+	Label        string
+	Placeholder  string
+	Required     bool
+	Type         inputType
+	HelpText     string
+	Color        color
+	AutoComplete string
+	Children     []gomponents.Node
 }
 
 func InputControl(params InputControlParams) gomponents.Node {
@@ -50,6 +51,10 @@ func InputControl(params InputControlParams) gomponents.Node {
 			gomponents.If(
 				params.Required,
 				html.Required(),
+			),
+			gomponents.If(
+				params.AutoComplete != "",
+				html.AutoComplete(params.AutoComplete),
 			),
 			gomponents.Group(params.Children),
 		),
