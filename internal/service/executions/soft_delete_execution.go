@@ -27,7 +27,7 @@ func (s *Service) SoftDeleteExecution(
 
 	if execution.ExecutionPath.Valid {
 		err := s.ints.S3Client.Delete(
-			execution.DestinationAccessKey, execution.DestinationSecretKey,
+			execution.DecryptedDestinationAccessKey, execution.DecryptedDestinationSecretKey,
 			execution.DestinationRegion, execution.DestinationEndpoint,
 			execution.DestinationBucketName, execution.ExecutionPath.String,
 		)

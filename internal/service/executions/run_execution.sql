@@ -11,7 +11,7 @@ SELECT
 
   pgp_sym_decrypt(
     databases.connection_string::bytea, @encryption_key
-  ) AS database_connection_string,
+  ) AS decrypted_database_connection_string,
   databases.pg_version as database_pg_version,
 
   destinations.bucket_name as destination_bucket_name,
@@ -19,10 +19,10 @@ SELECT
   destinations.endpoint as destination_endpoint,
   pgp_sym_decrypt(
     destinations.access_key::bytea, @encryption_key
-  ) AS destination_access_key,
+  ) AS decrypted_destination_access_key,
   pgp_sym_decrypt(
     destinations.secret_key::bytea, @encryption_key
-  ) AS destination_secret_key
+  ) AS decrypted_destination_secret_key
 FROM backups
 JOIN databases ON backups.database_id = databases.id
 JOIN destinations ON backups.destination_id = destinations.id

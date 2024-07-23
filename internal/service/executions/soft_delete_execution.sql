@@ -10,10 +10,10 @@ SELECT
   destinations.endpoint as destination_endpoint,
   pgp_sym_decrypt(
     destinations.access_key::bytea, @encryption_key
-  ) AS destination_access_key,
+  ) AS decrypted_destination_access_key,
   pgp_sym_decrypt(
     destinations.secret_key::bytea, @encryption_key
-  ) AS destination_secret_key
+  ) AS decrypted_destination_secret_key
 FROM executions
 JOIN backups ON backups.id = executions.backup_id
 JOIN destinations ON destinations.id = backups.destination_id

@@ -50,7 +50,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		})
 	}
 
-	err = s.ints.PGDumpClient.Ping(pgVersion, back.DatabaseConnectionString)
+	err = s.ints.PGDumpClient.Ping(pgVersion, back.DecryptedDatabaseConnectionString)
 	if err != nil {
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
 			ID:         ex.ID,
@@ -61,7 +61,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	}
 
 	dumpBytes, err := s.ints.PGDumpClient.DumpZip(
-		pgVersion, back.DatabaseConnectionString, pgdump.DumpParams{
+		pgVersion, back.DecryptedDatabaseConnectionString, pgdump.DumpParams{
 			DataOnly:   back.BackupOptDataOnly,
 			SchemaOnly: back.BackupOptSchemaOnly,
 			Clean:      back.BackupOptClean,
@@ -88,8 +88,9 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	path := strutil.CreatePath(false, back.BackupDestDir, date, file)
 
 	_, err = s.ints.S3Client.Upload(
-		back.DestinationAccessKey, back.DestinationSecretKey, back.DestinationRegion,
-		back.DestinationEndpoint, back.DestinationBucketName, path, dumpBytes,
+		back.DecryptedDestinationAccessKey, back.DecryptedDestinationSecretKey,
+		back.DestinationRegion, back.DestinationEndpoint, back.DestinationBucketName,
+		path, dumpBytes,
 	)
 	if err != nil {
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
