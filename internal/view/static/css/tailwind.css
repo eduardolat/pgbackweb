@@ -36,3 +36,8 @@ html {
 svg[data-glucide="icon"]:not([class*="size-"]) {
   @apply size-4;
 }
+
+/* Scrollbar */
+* {
+  scrollbar-width: thin;
+}
