@@ -15,5 +15,12 @@
       "ctx := c.Request().Context()"
     ],
     "description": "Get's the request from echo context"
-  }
+  },
+  "Get All Context": {
+    "prefix": "gac",
+    "body": [
+      "allCtx := reqctx.GetAllCtx(c)"
+    ],
+    "description": "Inserts code to get all contexts from a request"
+  },
 }
