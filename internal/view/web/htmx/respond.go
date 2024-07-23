@@ -32,6 +32,15 @@ func RespondAlertWithRefresh(c echo.Context, message string) error {
 	return c.NoContent(http.StatusOK)
 }
 
+// RespondAlertWithRedirect shows an alert and redirects the page using JS.
+func RespondAlertWithRedirect(c echo.Context, message, url string) error {
+	msg := fmt.Sprintf("%s-::-::-%s", message, url)
+
+	ServerSetReswap(c, "none")
+	setCustomTrigger(c, "ctm_alert_with_redirect", msg)
+	return c.NoContent(http.StatusOK)
+}
+
 // RespondToastSuccess reswaps the HTMX to none and shows an success message
 // inside a toast.
 func RespondToastSuccess(c echo.Context, message string) error {

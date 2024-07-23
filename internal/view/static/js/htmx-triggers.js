@@ -9,6 +9,18 @@
       alert(message);
       location.reload();
     },
+    ctm_alert_with_redirect: function (evt) {
+      const payload = decodeURIComponent(evt.detail.value);
+      const parts = payload.split('-::-::-');
+      if (parts.length !== 2) {
+        return;
+      }
+      const message = parts[0];
+      const url = parts[1];
+
+      alert(message);
+      location.href = url;
+    },
     ctm_toast_success: function (evt) {
       const message = decodeURIComponent(evt.detail.value);
       toaster.success(message);
