@@ -12,6 +12,8 @@ type handlers struct {
 func MountRouter(parent *echo.Group, servs *service.Service) {
 	h := handlers{servs: servs}
 
-	parent.GET("/login", h.loginPageHandler)
 	parent.GET("/create-first-user", h.createFirstUserPageHandler)
+	parent.POST("/create-first-user", h.createFirstUserHandler)
+
+	parent.GET("/login", h.loginPageHandler)
 }
