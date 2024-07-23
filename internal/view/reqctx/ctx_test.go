@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAuthCtxFuncs(t *testing.T) {
+func TestCtxFuncs(t *testing.T) {
 	testUser := dbgen.User{
 		ID:    uuid.New(),
 		Email: "user@example.com",
@@ -24,13 +24,13 @@ func TestAuthCtxFuncs(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	t.Run("Create authentication values in context", func(t *testing.T) {
-		authData := AuthCtx{
+		authData := Ctx{
 			IsAuthed: true,
 			User:     testUser,
 		}
 
-		SetAuthCtx(c, authData)
-		auth := GetAuthCtx(c)
+		SetCtx(c, authData)
+		auth := GetCtx(c)
 
 		assert.True(t, auth.IsAuthed)
 		assert.Equal(t, testUser, auth.User)
@@ -38,12 +38,12 @@ func TestAuthCtxFuncs(t *testing.T) {
 	})
 
 	t.Run("Create authentication values in context with only IsAuthed", func(t *testing.T) {
-		authData := AuthCtx{
+		authData := Ctx{
 			IsAuthed: true,
 		}
 
-		SetAuthCtx(c, authData)
-		auth := GetAuthCtx(c)
+		SetCtx(c, authData)
+		auth := GetCtx(c)
 
 		assert.True(t, auth.IsAuthed)
 		assert.Empty(t, auth.User)
