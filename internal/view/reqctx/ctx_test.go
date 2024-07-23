@@ -18,6 +18,8 @@ func TestCtxFuncs(t *testing.T) {
 		Name:  "John",
 	}
 
+	testSessionID := uuid.New()
+
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
@@ -25,8 +27,9 @@ func TestCtxFuncs(t *testing.T) {
 
 	t.Run("Create authentication values in context", func(t *testing.T) {
 		authData := Ctx{
-			IsAuthed: true,
-			User:     testUser,
+			IsAuthed:  true,
+			SessionID: testSessionID,
+			User:      testUser,
 		}
 
 		SetCtx(c, authData)
@@ -34,6 +37,7 @@ func TestCtxFuncs(t *testing.T) {
 
 		assert.True(t, auth.IsAuthed)
 		assert.Equal(t, testUser, auth.User)
+		assert.Equal(t, testSessionID, auth.SessionID)
 		assert.Equal(t, testUser.Email, auth.User.Email)
 	})
 
@@ -46,6 +50,7 @@ func TestCtxFuncs(t *testing.T) {
 		auth := GetCtx(c)
 
 		assert.True(t, auth.IsAuthed)
+		assert.Equal(t, uuid.Nil, auth.SessionID)
 		assert.Empty(t, auth.User)
 	})
 }

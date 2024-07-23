@@ -26,7 +26,8 @@ func (m *Middleware) InjectReqctx(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		reqctx.SetCtx(c, reqctx.Ctx{
-			IsAuthed: true,
+			IsAuthed:  true,
+			SessionID: user.SessionID,
 			User: dbgen.User{
 				ID:        user.ID,
 				Name:      user.Name,
