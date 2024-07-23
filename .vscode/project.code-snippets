@@ -10,21 +10,21 @@
     "description": "Inserts code to check for error and return it"
   },
   "Get request context": {
-    "prefix": "grdc",
+    "prefix": "grcr", // Get Request Context Request
     "body": [
       "ctx := c.Request().Context()"
     ],
     "description": "Get's the request from echo context"
   },
   "Get request echo context": {
-    "prefix": "grec",
+    "prefix": "grce", // Get Request Context Echo
     "body": [
       "reqCtx := reqctx.GetCtx(c)"
     ],
     "description": "Inserts code to get echo context from a request"
   },
   "Get both request and echo context": {
-    "prefix": "grc",
+    "prefix": "grcb", // Get Request Context Both
     "body": [
       "ctx := c.Request().Context()",
       "reqCtx := reqctx.GetCtx(c)"
