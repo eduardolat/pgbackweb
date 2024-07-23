@@ -17,7 +17,7 @@ type RateLimitConfig struct {
 }
 
 // RateLimit creates a rate limiting middleware.
-func RateLimit(config RateLimitConfig) echo.MiddlewareFunc {
+func (Middleware) RateLimit(config RateLimitConfig) echo.MiddlewareFunc {
 	var mu sync.Mutex
 	var hits = make(map[string]int)
 
