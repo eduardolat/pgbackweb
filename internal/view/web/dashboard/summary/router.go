@@ -1,14 +1,23 @@
-package dashboard
+package summary
 
 import (
 	"github.com/eduardolat/pgbackweb/internal/service"
 	"github.com/eduardolat/pgbackweb/internal/view/middleware"
-	"github.com/eduardolat/pgbackweb/internal/view/web/dashboard/summary"
 	"github.com/labstack/echo/v4"
 )
+
+type handlers struct {
+	servs *service.Service
+}
+
+func newHandlers(servs *service.Service) *handlers {
+	return &handlers{servs: servs}
+}
 
 func MountRouter(
 	parent *echo.Group, mids *middleware.Middleware, servs *service.Service,
 ) {
-	summary.MountRouter(parent.Group(""), mids, servs)
+	h := newHandlers(servs)
+
+	parent.GET("", h.indexPageHandler)
 }
