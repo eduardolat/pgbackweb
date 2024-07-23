@@ -130,7 +130,7 @@ func Modal(params ModalParams) ModalResult {
 						hasHTMXIndicator,
 						html.Div(
 							html.Class("inline-flex h-full items-center pl-2"),
-							HxLoadingSm(false, params.HTMXIndicator),
+							HxLoadingSm(params.HTMXIndicator),
 						),
 					),
 				),
