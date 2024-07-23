@@ -18,10 +18,10 @@ SELECT
   destinations.region as destination_region,
   destinations.endpoint as destination_endpoint,
   pgp_sym_decrypt(
-    destinations.access_key, @encryption_key
+    destinations.access_key::bytea, @encryption_key
   ) AS destination_access_key,
   pgp_sym_decrypt(
-    destinations.secret_key, @encryption_key
+    destinations.secret_key::bytea, @encryption_key
   ) AS destination_secret_key
 FROM backups
 JOIN databases ON backups.database_id = databases.id
