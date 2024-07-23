@@ -24,19 +24,21 @@ func loginPage() gomponents.Node {
 			html.Class("mt-4 space-y-2"),
 
 			component.InputControl(component.InputControlParams{
-				Name:        "email",
-				Label:       "Email",
-				Placeholder: "john@example.com",
-				Required:    true,
-				Type:        component.InputTypeEmail,
+				Name:         "email",
+				Label:        "Email",
+				Placeholder:  "john@example.com",
+				Required:     true,
+				Type:         component.InputTypeEmail,
+				AutoComplete: "email",
 			}),
 
 			component.InputControl(component.InputControlParams{
-				Name:        "password",
-				Label:       "Password",
-				Placeholder: "******",
-				Required:    true,
-				Type:        component.InputTypePassword,
+				Name:         "password",
+				Label:        "Password",
+				Placeholder:  "******",
+				Required:     true,
+				Type:         component.InputTypePassword,
+				AutoComplete: "current-password",
 			}),
 
 			html.Div(

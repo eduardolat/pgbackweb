@@ -24,27 +24,30 @@ func createFirstUserPage() gomponents.Node {
 			html.Class("mt-4 space-y-2"),
 
 			component.InputControl(component.InputControlParams{
-				Name:        "name",
-				Label:       "Full name",
-				Placeholder: "John Doe",
-				Required:    true,
-				Type:        component.InputTypeText,
+				Name:         "name",
+				Label:        "Full name",
+				Placeholder:  "John Doe",
+				Required:     true,
+				Type:         component.InputTypeText,
+				AutoComplete: "name",
 			}),
 
 			component.InputControl(component.InputControlParams{
-				Name:        "email",
-				Label:       "Email",
-				Placeholder: "john@example.com",
-				Required:    true,
-				Type:        component.InputTypeEmail,
+				Name:         "email",
+				Label:        "Email",
+				Placeholder:  "john@example.com",
+				Required:     true,
+				Type:         component.InputTypeEmail,
+				AutoComplete: "email",
 			}),
 
 			component.InputControl(component.InputControlParams{
-				Name:        "password",
-				Label:       "Password",
-				Placeholder: "******",
-				Required:    true,
-				Type:        component.InputTypePassword,
+				Name:         "password",
+				Label:        "Password",
+				Placeholder:  "******",
+				Required:     true,
+				Type:         component.InputTypePassword,
+				AutoComplete: "new-password",
 			}),
 
 			component.InputControl(component.InputControlParams{
