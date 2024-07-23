@@ -16,4 +16,5 @@ func MountRouter(parent *echo.Group, servs *service.Service) {
 	parent.POST("/create-first-user", h.createFirstUserHandler)
 
 	parent.GET("/login", h.loginPageHandler)
+	parent.POST("/login", h.loginHandler)
 }

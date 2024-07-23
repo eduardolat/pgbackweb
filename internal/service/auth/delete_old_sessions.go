@@ -7,8 +7,6 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/logger"
 )
 
-const maxSessionAge = time.Hour * 12
-
 func (s *Service) DeleteOldSessions() {
 	ctx := context.Background()
 	dateThreshold := time.Now().Add(-maxSessionAge)
