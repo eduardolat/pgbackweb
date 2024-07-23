@@ -15,6 +15,7 @@ func Logotype() gomponents.Node {
 		html.Img(
 			html.Class("w-[60px] h-auto"),
 			html.Src("/images/logo.png"),
+			html.Alt("PG Back Web"),
 		),
 		html.Span(
 			html.Class("text-2xl font-bold"),
