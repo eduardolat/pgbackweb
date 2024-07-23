@@ -52,9 +52,13 @@ func Auth(params AuthParams) gomponents.Node {
 					gomponents.Group(params.Body),
 				),
 				html.Div(
-					html.Class("flex justify-between items-start"),
+					html.Class("flex justify-start space-x-2 items-center"),
+					component.ChangeThemeButton(component.ChangeThemeButtonParams{
+						Position:    component.DropdownPositionTop,
+						AlignsToEnd: false,
+						Size:        component.SizeSm,
+					}),
 					component.StarOnGithub(component.SizeMd),
-					component.ChangeThemeButton(component.DropdownPositionTop, false),
 				),
 			),
 		},

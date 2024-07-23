@@ -8,9 +8,13 @@ import (
 	"github.com/maragudk/gomponents/html"
 )
 
-func ChangeThemeButton(
-	position dropdownPosition, alignsToEnd bool,
-) gomponents.Node {
+type ChangeThemeButtonParams struct {
+	Position    dropdownPosition
+	AlignsToEnd bool
+	Size        size
+}
+
+func ChangeThemeButton(params ChangeThemeButtonParams) gomponents.Node {
 	return html.Div(
 		alpine.XData(`{
 			theme: "",
@@ -37,16 +41,19 @@ func ChangeThemeButton(
 
 		components.Classes{
 			"dropdown":        true,
-			"dropdown-end":    alignsToEnd,
-			"dropdown-right":  position == DropdownPositionRight,
-			"dropdown-left":   position == DropdownPositionLeft,
-			"dropdown-top":    position == DropdownPositionTop,
-			"dropdown-bottom": position == DropdownPositionBottom,
+			"dropdown-end":    params.AlignsToEnd,
+			"dropdown-right":  params.Position == DropdownPositionRight,
+			"dropdown-left":   params.Position == DropdownPositionLeft,
+			"dropdown-top":    params.Position == DropdownPositionTop,
+			"dropdown-bottom": params.Position == DropdownPositionBottom,
 		},
 		html.Div(
 			html.TabIndex("0"),
 			html.Role("button"),
-			html.Class("btn btn-neutral space-x-1"),
+			components.Classes{
+				"btn btn-neutral space-x-1": true,
+				"btn-sm":                    params.Size == SizeSm,
+			},
 
 			html.Div(
 				html.Class("inline-block size-4"),
