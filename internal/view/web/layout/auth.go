@@ -51,7 +51,11 @@ func Auth(params AuthParams) gomponents.Node {
 					html.Class("rounded-box shadow-md bg-base-100 p-4"),
 					gomponents.Group(params.Body),
 				),
-				component.ChangeThemeButton(component.DropdownPositionTop, false),
+				html.Div(
+					html.Class("flex justify-between items-start"),
+					component.StarOnGithub(component.SizeMd),
+					component.ChangeThemeButton(component.DropdownPositionTop, false),
+				),
 			),
 		},
 	})
