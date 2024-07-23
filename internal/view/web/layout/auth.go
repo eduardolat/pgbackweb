@@ -22,27 +22,16 @@ func Auth(params AuthParams) gomponents.Node {
 		Language: "en",
 		Title:    title,
 		Head: []gomponents.Node{
-			html.Link(
-				html.Rel("shortcut icon"),
-				html.Href("/favicon.ico"),
-			),
+			html.Link(html.Rel("shortcut icon"), html.Href("/favicon.ico")),
+			html.Link(html.Rel("stylesheet"), html.Href("/css/style.css")),
 
-			html.Link(
-				html.Rel("stylesheet"),
-				html.Href("/css/style.css"),
-			),
+			html.Script(html.Src("/libs/alpinejs/alpinejs-3.14.1.min.js"), html.Defer()),
+			html.Script(html.Src("/libs/htmx/htmx-2.0.1.min.js"), html.Defer()),
+			html.Script(html.Src("/libs/theme-change/theme-change-2.0.2.min.js")),
 
-			html.Script(
-				html.Src("/js/alpinejs-3.14.1.min.js"),
-				html.Defer(),
-			),
-			html.Script(
-				html.Src("/js/htmx-2.0.1.min.js"),
-				html.Defer(),
-			),
-			html.Script(
-				html.Src("/js/theme-change-2.0.2.min.js"),
-			),
+			html.Link(html.Rel("stylesheet"), html.Href("/libs/notyf/notyf-3.10.0.min.css")),
+			html.Script(html.Src("/libs/notyf/notyf-3.10.0.min.js")),
+			html.Script(html.Src("/js/init-notyf.js")),
 		},
 		Body: []gomponents.Node{
 			components.Classes{
