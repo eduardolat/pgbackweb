@@ -1,7 +1,10 @@
 package layout
 
 import (
+	"fmt"
+
 	lucide "github.com/eduardolat/gomponents-lucide"
+	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/maragudk/gomponents"
 	"github.com/maragudk/gomponents/components"
 	"github.com/maragudk/gomponents/html"
@@ -10,7 +13,8 @@ import (
 func dashboardAside() gomponents.Node {
 	return html.Aside(
 		components.Classes{
-			"w-[80px] h-[100dvh] bg-base-300 shadow-sm p-4": true,
+			"h-[100dvh] bg-base-300 shadow-sm p-4": true,
+			"overflow-y-auto overflow-x-hidden":    true,
 		},
 
 		html.A(
@@ -23,47 +27,68 @@ func dashboardAside() gomponents.Node {
 				html.Class("w-[50px] h-auto"),
 			),
 			html.Span(
-				html.Class("text-xs text-center font-bold mt-1"),
-				gomponents.Text("PG Back Web"),
+				html.Class("text-xs text-nowrap text-center font-bold mt-1"),
+				html.Span(
+					html.Class("block"),
+					gomponents.Text("PG Back"),
+				),
+				html.Span(
+					html.Class("block"),
+					gomponents.Text("Web"),
+				),
 			),
 		),
 
 		html.Div(
 			html.Class("mt-6 space-y-4"),
+
+			dashboardAsideItem(
+				lucide.LayoutDashboard,
+				"Summary",
+				"/dashboard",
+				true,
+			),
+
 			dashboardAsideItem(
 				lucide.Database,
 				"Databases",
 				"/dashboard/databases",
+				false,
 			),
 
 			dashboardAsideItem(
 				lucide.HardDrive,
 				"Destinations",
 				"/dashboard/destinations",
+				false,
 			),
 
 			dashboardAsideItem(
 				lucide.DatabaseBackup,
 				"Backups",
 				"/dashboard/backups",
+				false,
 			),
 
 			dashboardAsideItem(
 				lucide.List,
 				"Executions",
 				"/dashboard/executions",
+				false,
 			),
 
 			dashboardAsideItem(
 				lucide.User,
 				"Profile",
 				"/dashboard/profile",
+				false,
 			),
 
 			dashboardAsideItem(
 				lucide.Info,
 				"About",
 				"/dashboard/about",
+				false,
 			),
 		),
 	)
@@ -71,12 +96,29 @@ func dashboardAside() gomponents.Node {
 
 func dashboardAsideItem(
 	icon func(children ...gomponents.Node) gomponents.Node,
-	text, link string,
+	text, link string, strict bool,
 ) gomponents.Node {
 	return html.A(
+		alpine.XData(`{
+			link: "`+link+`",
+			strict: `+fmt.Sprintf("%t", strict)+`,
+			is_active: false,
+			init() {
+				if (this.strict) {
+					this.is_active = window.location.pathname === this.link
+					return
+				}
+				
+				this.is_active = window.location.pathname.startsWith(this.link)
+			}
+		}`),
+
 		html.Class("block flex flex-col items-center justify-center"),
 		html.Href(link),
 		html.Button(
+			alpine.XBind("class", `{
+				'btn-active': is_active,
+			}`),
 			html.Class("btn btn-ghost btn-neutral btn-square"),
 			icon(html.Class("size-6")),
 		),
