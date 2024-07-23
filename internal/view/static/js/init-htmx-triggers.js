@@ -1,4 +1,4 @@
-(function () {
+export function initHTMXTriggers() {
   const triggers = {
     ctm_alert: function (evt) {
       const message = decodeURIComponent(evt.detail.value);
@@ -42,4 +42,4 @@
   for (const key in triggers) {
     document.addEventListener(key, triggers[key])
   }
-})()
+}
