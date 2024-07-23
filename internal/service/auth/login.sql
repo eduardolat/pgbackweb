@@ -6,4 +6,4 @@ INSERT INTO sessions (
   user_id, token, ip, user_agent
 ) VALUES (
   @user_id, pgp_sym_encrypt(@token, @encryption_key), @ip, @user_agent
-) RETURNING *;
+) RETURNING *, pgp_sym_decrypt(token::bytea, @encryption_key) AS decrypted_token;

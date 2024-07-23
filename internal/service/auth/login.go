@@ -34,5 +34,12 @@ func (s *Service) Login(
 		return dbgen.Session{}, err
 	}
 
-	return session, nil
+	return dbgen.Session{
+		ID:        session.ID,
+		UserID:    session.UserID,
+		Token:     session.DecryptedToken,
+		Ip:        session.Ip,
+		UserAgent: session.UserAgent,
+		CreatedAt: session.CreatedAt,
+	}, nil
 }
