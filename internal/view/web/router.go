@@ -10,5 +10,6 @@ import (
 func MountRouter(
 	parent *echo.Group, mids *middleware.Middleware, servs *service.Service,
 ) {
-	auth.MountRouter(parent.Group("/auth"), mids, servs)
+	authGroup := parent.Group("/auth", mids.RequireNoAuth)
+	auth.MountRouter(authGroup, mids, servs)
 }
