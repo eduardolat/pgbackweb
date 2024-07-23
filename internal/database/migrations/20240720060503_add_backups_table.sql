@@ -2,8 +2,8 @@
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS backups (
   id UUID NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
-  database_id UUID NOT NULL REFERENCES databases(id),
-  destination_id UUID NOT NULL REFERENCES destinations(id),
+  database_id UUID NOT NULL REFERENCES databases(id) ON DELETE CASCADE,
+  destination_id UUID NOT NULL REFERENCES destinations(id) ON DELETE CASCADE,
 
   name TEXT NOT NULL,
   cron_expression TEXT NOT NULL UNIQUE,

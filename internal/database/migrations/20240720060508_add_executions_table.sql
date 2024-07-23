@@ -2,7 +2,7 @@
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS executions (
   id UUID NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
-  backup_id UUID NOT NULL REFERENCES backups(id),
+  backup_id UUID NOT NULL REFERENCES backups(id) ON DELETE CASCADE,
 
   status TEXT NOT NULL CHECK (
     status IN ('running', 'success', 'failed', 'deleted')
