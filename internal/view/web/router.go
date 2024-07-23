@@ -15,7 +15,6 @@ import (
 func MountRouter(
 	parent *echo.Group, mids *middleware.Middleware, servs *service.Service,
 ) {
-
 	// GET / -> Handle the root path redirects
 	parent.GET("", func(c echo.Context) error {
 		ctx := c.Request().Context()
@@ -42,7 +41,7 @@ func MountRouter(
 		return c.Redirect(http.StatusFound, "/auth/login")
 	})
 
-	authGroup := parent.Group("/auth", mids.RequireNoAuth)
+	authGroup := parent.Group("/auth")
 	auth.MountRouter(authGroup, mids, servs)
 
 	dashboardGroup := parent.Group("/dashboard", mids.RequireAuth)

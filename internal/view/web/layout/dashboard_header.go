@@ -3,6 +3,7 @@ package layout
 import (
 	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/maragudk/gomponents"
 	"github.com/maragudk/gomponents/components"
 	"github.com/maragudk/gomponents/html"
@@ -25,6 +26,8 @@ func dashboardHeader() gomponents.Node {
 		),
 		html.Div(
 			html.Button(
+				htmx.HxPost("/auth/logout"),
+				htmx.HxDisabledELT("this"),
 				html.Class("btn btn-ghost btn-neutral"),
 				component.SpanText("Log out"),
 				lucide.LogOut(),

@@ -17,12 +17,17 @@ func MountRouter(
 ) {
 	h := handlers{servs: servs}
 
-	parent.GET("/create-first-user", h.createFirstUserPageHandler)
-	parent.POST("/create-first-user", h.createFirstUserHandler)
+	requireAuth := parent.Group("", mids.RequireAuth)
+	requireNoAuth := parent.Group("", mids.RequireNoAuth)
 
-	parent.GET("/login", h.loginPageHandler)
-	parent.POST("/login", h.loginHandler, mids.RateLimit(middleware.RateLimitConfig{
+	requireNoAuth.GET("/create-first-user", h.createFirstUserPageHandler)
+	requireNoAuth.POST("/create-first-user", h.createFirstUserHandler)
+
+	requireNoAuth.GET("/login", h.loginPageHandler)
+	requireNoAuth.POST("/login", h.loginHandler, mids.RateLimit(middleware.RateLimitConfig{
 		Limit:  5,
 		Period: 10 * time.Second,
 	}))
+
+	requireAuth.POST("/logout", h.logoutHandler)
 }
