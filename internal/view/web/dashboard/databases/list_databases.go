@@ -17,7 +17,7 @@ import (
 	"github.com/maragudk/gomponents/html"
 )
 
-func (h *handlers) indexListDatabasesHandler(c echo.Context) error {
+func (h *handlers) listDatabasesHandler(c echo.Context) error {
 	ctx := c.Request().Context()
 
 	var formData struct {
@@ -41,11 +41,11 @@ func (h *handlers) indexListDatabasesHandler(c echo.Context) error {
 	}
 
 	return echoutil.RenderGomponent(
-		c, http.StatusOK, indexListDatabases(pagination, databases),
+		c, http.StatusOK, listDatabases(pagination, databases),
 	)
 }
 
-func indexListDatabases(
+func listDatabases(
 	pagination paginateutil.PaginateResponse,
 	databases []dbgen.DatabasesServicePaginateDatabasesRow,
 ) gomponents.Node {
@@ -54,7 +54,11 @@ func indexListDatabases(
 		trs = append(trs, html.Tr(
 			html.Td(
 				html.Class("w-[40px]"),
-				deleteDatabaseButton(database.ID),
+				html.Div(
+					html.Class("flex justify-start space-x-1"),
+					editDatabaseButton(database),
+					deleteDatabaseButton(database.ID),
+				),
 			),
 			html.Td(component.SpanText(database.Name)),
 			html.Td(component.SpanText("PostgreSQL "+database.PgVersion)),

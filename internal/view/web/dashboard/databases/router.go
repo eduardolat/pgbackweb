@@ -20,8 +20,9 @@ func MountRouter(
 	h := newHandlers(servs)
 
 	parent.GET("", h.indexPageHandler)
-	parent.GET("/list", h.indexListDatabasesHandler)
+	parent.GET("/list", h.listDatabasesHandler)
 	parent.POST("", h.createDatabaseHandler)
 	parent.POST("/test", h.testDatabaseHandler)
 	parent.DELETE("/:databaseID", h.deleteDatabaseHandler)
+	parent.POST("/:databaseID/edit", h.editDatabaseHandler)
 }
