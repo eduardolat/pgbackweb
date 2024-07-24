@@ -46,7 +46,7 @@ func (h *handlers) editDestinationHandler(c echo.Context) error {
 		return htmx.RespondToastError(c, err.Error())
 	}
 
-	return htmx.RespondToastSuccess(c, "Destination updated")
+	return htmx.RespondAlertWithRefresh(c, "Destination updated")
 }
 
 func editDestinationButton(

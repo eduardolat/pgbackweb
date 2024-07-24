@@ -66,7 +66,7 @@ func (h *handlers) editBackupHandler(c echo.Context) error {
 		return htmx.RespondToastError(c, err.Error())
 	}
 
-	return htmx.RespondToastSuccess(c, "Backup updated")
+	return htmx.RespondAlertWithRefresh(c, "Backup updated")
 }
 
 func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.Node {

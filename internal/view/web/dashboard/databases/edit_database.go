@@ -43,7 +43,7 @@ func (h *handlers) editDatabaseHandler(c echo.Context) error {
 		return htmx.RespondToastError(c, err.Error())
 	}
 
-	return htmx.RespondToastSuccess(c, "Database updated")
+	return htmx.RespondAlertWithRefresh(c, "Database updated")
 }
 
 func editDatabaseButton(
