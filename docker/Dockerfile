@@ -77,3 +77,22 @@ RUN rm -rf /app/temp
 ##############
 # START HERE #
 ##############
+
+# Copy and install nodejs dependencies
+COPY package.json .
+RUN npm install
+
+# Copy and install go dependencies
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+# Copy the rest of the files
+COPY . .
+
+# Build the app
+RUN task build
+
+# Run the app
+EXPOSE 8085
+CMD ["task", "serve"]
