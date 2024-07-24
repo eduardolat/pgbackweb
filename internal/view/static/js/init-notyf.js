@@ -3,7 +3,7 @@ export function initNotyf () {
 
   const toastCfg = {
     duration: 5000,
-    ripple: true,
+    ripple: false,
     position: { x: 'right', y: 'bottom' },
     dismissible: true
   }
