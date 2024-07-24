@@ -111,7 +111,7 @@ func createDatabaseButton() gomponents.Node {
 					Placeholder: "postgresql://user:password@localhost:5432/mydb",
 					Required:    true,
 					Type:        component.InputTypeText,
-					HelpText:    "It should be a valid PostgreSQL connection string including the database name",
+					HelpText:    "It should be a valid PostgreSQL connection string including the database name. It will be stored securely using PGP encryption.",
 				}),
 			),
 
