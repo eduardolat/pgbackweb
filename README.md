@@ -28,7 +28,37 @@ PG Back Web isn't just another backup tool. It's your trusted ally in ensuring t
 
 ## Installation
 
-TODO
+PG Back Web is available as a Docker image. You just need to set 2 environment variables and you're good to go!
+
+Here's an example of how you can run PG Back Web with Docker Compose, feel free to adapt it to your needs:
+
+```yaml
+services:
+  pgbackweb:
+    image: eduardolat/pgbackweb:latest
+    ports:
+      - "8085:8085" # Access the web interface at http://localhost:8085
+    environment:
+      PBW_ENCRYPTION_KEY: "my_secret_key"
+      PBW_POSTGRES_CONN_STRING: "postgresql://postgres:password@postgres:5432/pgbackweb?sslmode=disable"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: pgbackweb
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+```
 
 ## Configuration
 
