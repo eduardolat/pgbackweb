@@ -52,7 +52,10 @@ func indexListDatabases(
 	trs := []gomponents.Node{}
 	for _, database := range databases {
 		trs = append(trs, html.Tr(
-			html.Td(),
+			html.Td(
+				html.Class("w-[40px]"),
+				deleteDatabaseButton(database.ID),
+			),
 			html.Td(component.SpanText(database.Name)),
 			html.Td(component.SpanText("PostgreSQL "+database.PgVersion)),
 			html.Td(
