@@ -14,7 +14,7 @@ type PaginateBackupsParams struct {
 
 func (s *Service) PaginateBackups(
 	ctx context.Context, params PaginateBackupsParams,
-) (paginateutil.PaginateResponse, []dbgen.Backup, error) {
+) (paginateutil.PaginateResponse, []dbgen.BackupsServicePaginateBackupsRow, error) {
 	page := max(params.Page, 1)
 	limit := min(max(params.Limit, 1), 100)
 
