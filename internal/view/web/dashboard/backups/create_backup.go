@@ -99,7 +99,16 @@ func createBackupForm(
 	return html.Form(
 		htmx.HxPost("/dashboard/backups"),
 		htmx.HxDisabledELT("find button"),
-		html.Class("space-y-2"),
+		html.Class("space-y-2 text-base"),
+
+		component.InputControl(component.InputControlParams{
+			Name:        "name",
+			Label:       "Name",
+			Placeholder: "My backup",
+			Required:    true,
+			Type:        component.InputTypeText,
+			HelpText:    "A name to easily identify the backup",
+		}),
 
 		component.SelectControl(component.SelectControlParams{
 			Name:        "database_id",
@@ -131,26 +140,38 @@ func createBackupForm(
 			},
 		}),
 
-		component.InputControl(component.InputControlParams{
-			Name:        "name",
-			Label:       "Name",
-			Placeholder: "My backup",
-			Required:    true,
-			Type:        component.InputTypeText,
-			HelpText:    "A name to easily identify the backup",
-		}),
-
-		component.InputControl(component.InputControlParams{
-			Name:        "cron_expression",
-			Label:       "Cron expression",
-			Placeholder: "* * * * *",
-			Required:    true,
-			Type:        component.InputTypeText,
-			HelpText:    "The cron expression to schedule the backup",
-			Children: []gomponents.Node{
-				html.Pattern(`^\S+\s+\S+\s+\S+\s+\S+\s+\S+$`),
-			},
-		}),
+		html.Div(
+			component.InputControl(component.InputControlParams{
+				Name:        "cron_expression",
+				Label:       "Cron expression",
+				Placeholder: "* * * * *",
+				Required:    true,
+				Type:        component.InputTypeText,
+				HelpText:    "The cron expression to schedule the backup",
+				Children: []gomponents.Node{
+					html.Pattern(`^\S+\s+\S+\s+\S+\s+\S+\s+\S+$`),
+				},
+			}),
+			html.P(
+				html.Class("pl-1"),
+				gomponents.Text("Learn more about "),
+				html.A(
+					html.Class("link"),
+					html.Href("https://en.wikipedia.org/wiki/Cron"),
+					html.Target("_blank"),
+					gomponents.Text("cron expressions"),
+					lucide.ExternalLink(html.Class("inline ml-1")),
+				),
+				gomponents.Text(" and "),
+				html.A(
+					html.Class("link"),
+					html.Href("https://crontab.guru/examples.html"),
+					html.Target("_blank"),
+					gomponents.Text("see some examples"),
+					lucide.ExternalLink(html.Class("inline ml-1")),
+				),
+			),
+		),
 
 		component.SelectControl(component.SelectControlParams{
 			Name:        "time_zone",
@@ -174,6 +195,7 @@ func createBackupForm(
 			Placeholder: "/path/to/backup",
 			Required:    true,
 			Type:        component.InputTypeText,
+			HelpText:    "The directory where the backups will be stored",
 		}),
 
 		component.InputControl(component.InputControlParams{
@@ -182,7 +204,7 @@ func createBackupForm(
 			Placeholder: "30",
 			Required:    true,
 			Type:        component.InputTypeNumber,
-			HelpText:    "The number of days to keep the backup. All backups older than this will be deleted",
+			HelpText:    "The number of days to keep the backups. It is evaluated by execution and all backups before this will be deleted. Use 0 to keep them indefinitely",
 			Children: []gomponents.Node{
 				html.Min("0"),
 				html.Max("36500"),
@@ -201,61 +223,76 @@ func createBackupForm(
 		}),
 
 		html.Div(
-			html.Class("grid grid-cols-2 gap-2"),
+			html.Class("pt-4"),
+			component.H2Text("Options"),
+			component.PText("These options are passed to the pg_dump command."),
+			html.P(
+				gomponents.Text("Learn more in the "),
+				html.A(
+					html.Class("link"),
+					html.Href("https://www.postgresql.org/docs/current/app-pgdump.html"),
+					html.Target("_blank"),
+					component.SpanText("pg_dump documentation"),
+					lucide.ExternalLink(html.Class("inline ml-1")),
+				),
+			),
+			html.Div(
+				html.Class("mt-2 grid grid-cols-2 gap-2"),
 
-			component.SelectControl(component.SelectControlParams{
-				Name:     "opt_data_only",
-				Label:    "--data-only",
-				Required: true,
-				Children: []gomponents.Node{
-					yesNoOptions(),
-				},
-			}),
+				component.SelectControl(component.SelectControlParams{
+					Name:     "opt_data_only",
+					Label:    "--data-only",
+					Required: true,
+					Children: []gomponents.Node{
+						yesNoOptions(),
+					},
+				}),
 
-			component.SelectControl(component.SelectControlParams{
-				Name:     "opt_schema_only",
-				Label:    "--schema-only",
-				Required: true,
-				Children: []gomponents.Node{
-					yesNoOptions(),
-				},
-			}),
+				component.SelectControl(component.SelectControlParams{
+					Name:     "opt_schema_only",
+					Label:    "--schema-only",
+					Required: true,
+					Children: []gomponents.Node{
+						yesNoOptions(),
+					},
+				}),
 
-			component.SelectControl(component.SelectControlParams{
-				Name:     "opt_clean",
-				Label:    "--clean",
-				Required: true,
-				Children: []gomponents.Node{
-					yesNoOptions(),
-				},
-			}),
+				component.SelectControl(component.SelectControlParams{
+					Name:     "opt_clean",
+					Label:    "--clean",
+					Required: true,
+					Children: []gomponents.Node{
+						yesNoOptions(),
+					},
+				}),
 
-			component.SelectControl(component.SelectControlParams{
-				Name:     "opt_if_exists",
-				Label:    "--if-exists",
-				Required: true,
-				Children: []gomponents.Node{
-					yesNoOptions(),
-				},
-			}),
+				component.SelectControl(component.SelectControlParams{
+					Name:     "opt_if_exists",
+					Label:    "--if-exists",
+					Required: true,
+					Children: []gomponents.Node{
+						yesNoOptions(),
+					},
+				}),
 
-			component.SelectControl(component.SelectControlParams{
-				Name:     "opt_create",
-				Label:    "--create",
-				Required: true,
-				Children: []gomponents.Node{
-					yesNoOptions(),
-				},
-			}),
+				component.SelectControl(component.SelectControlParams{
+					Name:     "opt_create",
+					Label:    "--create",
+					Required: true,
+					Children: []gomponents.Node{
+						yesNoOptions(),
+					},
+				}),
 
-			component.SelectControl(component.SelectControlParams{
-				Name:     "opt_no_comments",
-				Label:    "--no-comments",
-				Required: true,
-				Children: []gomponents.Node{
-					yesNoOptions(),
-				},
-			}),
+				component.SelectControl(component.SelectControlParams{
+					Name:     "opt_no_comments",
+					Label:    "--no-comments",
+					Required: true,
+					Children: []gomponents.Node{
+						yesNoOptions(),
+					},
+				}),
+			),
 		),
 
 		html.Div(
