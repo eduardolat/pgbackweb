@@ -1,6 +1,8 @@
 package backups
 
 import (
+	"context"
+
 	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/google/uuid"
@@ -10,18 +12,16 @@ import (
 )
 
 func (h *handlers) manualRunHandler(c echo.Context) error {
-	ctx := c.Request().Context()
-
 	backupID, err := uuid.Parse(c.Param("backupID"))
 	if err != nil {
 		return htmx.RespondToastError(c, err.Error())
 	}
 
-	if err := h.servs.ExecutionsService.RunExecution(ctx, backupID); err != nil {
-		return htmx.RespondToastError(c, err.Error())
-	}
+	go func() {
+		_ = h.servs.ExecutionsService.RunExecution(context.Background(), backupID)
+	}()
 
-	return htmx.RespondToastSuccess(c, "Backup run successfully, check the backup executions for more details")
+	return htmx.RespondToastSuccess(c, "Backup started, check the backup executions for more details")
 }
 
 func manualRunbutton(backupID uuid.UUID) gomponents.Node {
