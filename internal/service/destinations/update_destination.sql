@@ -7,12 +7,12 @@ SET
   endpoint = COALESCE(sqlc.narg('endpoint'), endpoint),
   access_key = CASE
     WHEN sqlc.narg('access_key') IS NOT NULL
-    THEN pgp_sym_encrypt(sqlc.narg('access_key'), @encryption_key)
+    THEN pgp_sym_encrypt(sqlc.narg('access_key')::TEXT, sqlc.arg('encryption_key')::TEXT)
     ELSE access_key
   END,
   secret_key = CASE
     WHEN sqlc.narg('secret_key') IS NOT NULL
-    THEN pgp_sym_encrypt(sqlc.narg('secret_key'), @encryption_key)
+    THEN pgp_sym_encrypt(sqlc.narg('secret_key')::TEXT, sqlc.arg('encryption_key')::TEXT)
     ELSE secret_key
   END
 WHERE id = @id

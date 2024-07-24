@@ -12,10 +12,10 @@ const (
 	sessionCookieName = "pbw_session"
 )
 
-func (s *Service) SetSessionCookie(c echo.Context, session dbgen.Session) {
+func (s *Service) SetSessionCookie(c echo.Context, token string) {
 	cookie := http.Cookie{
 		Name:     sessionCookieName,
-		Value:    session.Token,
+		Value:    token,
 		MaxAge:   int(maxSessionAge.Seconds()),
 		HttpOnly: true,
 		Path:     "/",

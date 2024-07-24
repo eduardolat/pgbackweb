@@ -11,14 +11,14 @@ import (
 
 func (s *Service) Login(
 	ctx context.Context, email, password, ip, userAgent string,
-) (dbgen.Session, error) {
+) (dbgen.AuthServiceLoginCreateSessionRow, error) {
 	user, err := s.dbgen.AuthServiceLoginGetUserByEmail(ctx, email)
 	if err != nil {
-		return dbgen.Session{}, err
+		return dbgen.AuthServiceLoginCreateSessionRow{}, err
 	}
 
 	if err := cryptoutil.VerifyBcryptHash(password, user.Password); err != nil {
-		return dbgen.Session{}, fmt.Errorf("invalid password")
+		return dbgen.AuthServiceLoginCreateSessionRow{}, fmt.Errorf("invalid password")
 	}
 
 	session, err := s.dbgen.AuthServiceLoginCreateSession(
@@ -31,15 +31,8 @@ func (s *Service) Login(
 		},
 	)
 	if err != nil {
-		return dbgen.Session{}, err
+		return dbgen.AuthServiceLoginCreateSessionRow{}, err
 	}
 
-	return dbgen.Session{
-		ID:        session.ID,
-		UserID:    session.UserID,
-		Token:     session.DecryptedToken,
-		Ip:        session.Ip,
-		UserAgent: session.UserAgent,
-		CreatedAt: session.CreatedAt,
-	}, nil
+	return session, nil
 }

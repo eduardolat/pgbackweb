@@ -5,8 +5,8 @@ CREATE TABLE IF NOT EXISTS destinations (
 
   name TEXT NOT NULL UNIQUE,
   bucket_name TEXT NOT NULL,
-  access_key TEXT NOT NULL,
-  secret_key TEXT NOT NULL,
+  access_key BYTEA NOT NULL,
+  secret_key BYTEA NOT NULL,
   region TEXT NOT NULL,
   endpoint TEXT NOT NULL,
 

@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS sessions (
   id UUID NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
   user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 
-  token TEXT NOT NULL UNIQUE,
+  token BYTEA NOT NULL,
 
   ip TEXT NOT NULL,
   user_agent TEXT NOT NULL,

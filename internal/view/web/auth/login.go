@@ -107,6 +107,6 @@ func (h *handlers) loginHandler(c echo.Context) error {
 		return htmx.RespondToastError(c, "Login failed")
 	}
 
-	h.servs.AuthService.SetSessionCookie(c, session)
+	h.servs.AuthService.SetSessionCookie(c, session.DecryptedToken)
 	return htmx.RespondRedirect(c, "/dashboard")
 }

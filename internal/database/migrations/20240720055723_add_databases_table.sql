@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS databases (
   id UUID NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
 
   name TEXT NOT NULL UNIQUE,
-  connection_string TEXT NOT NULL,
+  connection_string BYTEA NOT NULL,
   pg_version TEXT NOT NULL CHECK (pg_version in ('13', '14', '15', '16')),
 
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
