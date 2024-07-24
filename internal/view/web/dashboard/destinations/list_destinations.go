@@ -57,6 +57,18 @@ func listDestinations(
 				html.Class("w-[40px]"),
 				html.Div(
 					html.Class("flex justify-start space-x-1"),
+					html.Div(
+						html.Class("inline-block tooltip tooltip-right"),
+						html.Data("tip", "Show executions"),
+						html.A(
+							html.Class("btn btn-sm btn-ghost btn-square"),
+							html.Href(
+								fmt.Sprintf("/dashboard/executions?destination=%s", destination.ID),
+							),
+							html.Target("_blank"),
+							lucide.List(),
+						),
+					),
 					editDestinationButton(destination),
 					html.Form(
 						html.Class("inline-block tooltip tooltip-right"),

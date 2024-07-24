@@ -30,7 +30,7 @@ func indexPage() gomponents.Node {
 					html.Class("table text-nowrap"),
 					html.THead(
 						html.Tr(
-							html.Th(),
+							html.Th(component.SpanText("Actions")),
 							html.Th(component.SpanText("Name")),
 							html.Th(component.SpanText("Version")),
 							html.Th(component.SpanText("Connection string")),

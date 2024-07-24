@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/service/backups"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
@@ -63,6 +64,18 @@ func listBackups(
 				html.Class("w-[40px]"),
 				html.Div(
 					html.Class("flex justify-start space-x-1"),
+					html.Div(
+						html.Class("inline-block tooltip tooltip-right"),
+						html.Data("tip", "Show executions"),
+						html.A(
+							html.Class("btn btn-sm btn-ghost btn-square"),
+							html.Href(
+								fmt.Sprintf("/dashboard/executions?backup=%s", backup.ID),
+							),
+							html.Target("_blank"),
+							lucide.List(),
+						),
+					),
 					editBackupButton(backup),
 					deleteBackupButton(backup.ID),
 				),

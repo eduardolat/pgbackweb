@@ -43,7 +43,7 @@ func indexPage(queryData execsQueryData) gomponents.Node {
 					html.Class("table text-nowrap"),
 					html.THead(
 						html.Tr(
-							html.Th(),
+							html.Th(component.SpanText("Actions")),
 							html.Th(component.SpanText("Status")),
 							html.Th(component.SpanText("Backup")),
 							html.Th(component.SpanText("Database")),
