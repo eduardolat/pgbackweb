@@ -36,47 +36,51 @@ func (h *handlers) indexPageHandler(c echo.Context) error {
 func indexPage(queryData execsQueryData) gomponents.Node {
 	content := []gomponents.Node{
 		component.H1Text("Executions"),
-		html.Div(
-			html.Div(
-				html.Class("mt-4 overflow-x-auto"),
-				html.Table(
-					html.Class("table text-nowrap"),
-					html.THead(
-						html.Tr(
-							html.Th(component.SpanText("Actions")),
-							html.Th(component.SpanText("Status")),
-							html.Th(component.SpanText("Backup")),
-							html.Th(component.SpanText("Database")),
-							html.Th(component.SpanText("Destination")),
-							html.Th(component.SpanText("Started at")),
-							html.Th(component.SpanText("Finished at")),
-							html.Th(component.SpanText("Duration")),
+		component.CardBox(component.CardBoxParams{
+			Class: "mt-4",
+			Children: []gomponents.Node{
+				html.Div(
+					html.Class("overflow-x-auto"),
+					html.Table(
+						html.Class("table text-nowrap"),
+						html.THead(
+							html.Tr(
+								html.Th(component.SpanText("Actions")),
+								html.Th(component.SpanText("Status")),
+								html.Th(component.SpanText("Backup")),
+								html.Th(component.SpanText("Database")),
+								html.Th(component.SpanText("Destination")),
+								html.Th(component.SpanText("Started at")),
+								html.Th(component.SpanText("Finished at")),
+								html.Th(component.SpanText("Duration")),
+							),
+						),
+						html.TBody(
+							htmx.HxGet(func() string {
+								url := "/dashboard/executions/list?page=1"
+								if queryData.Database != uuid.Nil {
+									url = strutil.AddQueryParamToUrl(url, "database", queryData.Database.String())
+								}
+								if queryData.Destination != uuid.Nil {
+									url = strutil.AddQueryParamToUrl(url, "destination", queryData.Destination.String())
+								}
+								if queryData.Backup != uuid.Nil {
+									url = strutil.AddQueryParamToUrl(url, "backup", queryData.Backup.String())
+								}
+								return url
+							}()),
+							htmx.HxTrigger("load"),
+							htmx.HxIndicator("#list-executions-loading"),
 						),
 					),
-					html.TBody(
-						htmx.HxGet(func() string {
-							url := "/dashboard/executions/list?page=1"
-							if queryData.Database != uuid.Nil {
-								url = strutil.AddQueryParamToUrl(url, "database", queryData.Database.String())
-							}
-							if queryData.Destination != uuid.Nil {
-								url = strutil.AddQueryParamToUrl(url, "destination", queryData.Destination.String())
-							}
-							if queryData.Backup != uuid.Nil {
-								url = strutil.AddQueryParamToUrl(url, "backup", queryData.Backup.String())
-							}
-							return url
-						}()),
-						htmx.HxTrigger("load"),
-						htmx.HxIndicator("#list-executions-loading"),
-					),
 				),
-			),
-			html.Div(
-				html.Class("flex justify-center mt-4"),
-				component.HxLoadingLg("list-executions-loading"),
-			),
-		),
+
+				html.Div(
+					html.Class("flex justify-center mt-4"),
+					component.HxLoadingLg("list-executions-loading"),
+				),
+			},
+		}),
 	}
 
 	return layout.Dashboard(layout.DashboardParams{

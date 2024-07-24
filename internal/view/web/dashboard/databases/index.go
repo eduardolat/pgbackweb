@@ -23,32 +23,36 @@ func indexPage() gomponents.Node {
 			component.H1Text("Databases"),
 			createDatabaseButton(),
 		),
-		html.Div(
-			html.Div(
-				html.Class("mt-4 overflow-x-auto"),
-				html.Table(
-					html.Class("table text-nowrap"),
-					html.THead(
-						html.Tr(
-							html.Th(component.SpanText("Actions")),
-							html.Th(component.SpanText("Name")),
-							html.Th(component.SpanText("Version")),
-							html.Th(component.SpanText("Connection string")),
-							html.Th(component.SpanText("Created at")),
+		component.CardBox(component.CardBoxParams{
+			Class: "mt-4",
+			Children: []gomponents.Node{
+				html.Div(
+					html.Class("overflow-x-auto"),
+					html.Table(
+						html.Class("table text-nowrap"),
+						html.THead(
+							html.Tr(
+								html.Th(component.SpanText("Actions")),
+								html.Th(component.SpanText("Name")),
+								html.Th(component.SpanText("Version")),
+								html.Th(component.SpanText("Connection string")),
+								html.Th(component.SpanText("Created at")),
+							),
+						),
+						html.TBody(
+							htmx.HxGet("/dashboard/databases/list?page=1"),
+							htmx.HxTrigger("load"),
+							htmx.HxIndicator("#list-databases-loading"),
 						),
 					),
-					html.TBody(
-						htmx.HxGet("/dashboard/databases/list?page=1"),
-						htmx.HxTrigger("load"),
-						htmx.HxIndicator("#list-databases-loading"),
-					),
 				),
-			),
-			html.Div(
-				html.Class("flex justify-center mt-4"),
-				component.HxLoadingLg("list-databases-loading"),
-			),
-		),
+
+				html.Div(
+					html.Class("flex justify-center mt-4"),
+					component.HxLoadingLg("list-databases-loading"),
+				),
+			},
+		}),
 	}
 
 	return layout.Dashboard(layout.DashboardParams{

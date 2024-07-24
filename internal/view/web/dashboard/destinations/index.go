@@ -23,35 +23,39 @@ func indexPage() gomponents.Node {
 			component.H1Text("Destinations"),
 			createDestinationButton(),
 		),
-		html.Div(
-			html.Div(
-				html.Class("mt-4 overflow-x-auto"),
-				html.Table(
-					html.Class("table text-nowrap"),
-					html.THead(
-						html.Tr(
-							html.Th(component.SpanText("Actions")),
-							html.Th(component.SpanText("Name")),
-							html.Th(component.SpanText("Bucket name")),
-							html.Th(component.SpanText("Endpoint")),
-							html.Th(component.SpanText("Region")),
-							html.Th(component.SpanText("Access key")),
-							html.Th(component.SpanText("Secret key")),
-							html.Th(component.SpanText("Created at")),
+		component.CardBox(component.CardBoxParams{
+			Class: "mt-4",
+			Children: []gomponents.Node{
+				html.Div(
+					html.Class("overflow-x-auto"),
+					html.Table(
+						html.Class("table text-nowrap"),
+						html.THead(
+							html.Tr(
+								html.Th(component.SpanText("Actions")),
+								html.Th(component.SpanText("Name")),
+								html.Th(component.SpanText("Bucket name")),
+								html.Th(component.SpanText("Endpoint")),
+								html.Th(component.SpanText("Region")),
+								html.Th(component.SpanText("Access key")),
+								html.Th(component.SpanText("Secret key")),
+								html.Th(component.SpanText("Created at")),
+							),
+						),
+						html.TBody(
+							htmx.HxGet("/dashboard/destinations/list?page=1"),
+							htmx.HxTrigger("load"),
+							htmx.HxIndicator("#list-destinations-loading"),
 						),
 					),
-					html.TBody(
-						htmx.HxGet("/dashboard/destinations/list?page=1"),
-						htmx.HxTrigger("load"),
-						htmx.HxIndicator("#list-destinations-loading"),
-					),
 				),
-			),
-			html.Div(
-				html.Class("flex justify-center mt-4"),
-				component.HxLoadingLg("list-destinations-loading"),
-			),
-		),
+
+				html.Div(
+					html.Class("flex justify-center mt-4"),
+					component.HxLoadingLg("list-destinations-loading"),
+				),
+			},
+		}),
 	}
 
 	return layout.Dashboard(layout.DashboardParams{
