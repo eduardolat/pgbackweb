@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/service/databases"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
@@ -57,6 +58,30 @@ func indexListDatabases(
 			html.Td(
 				html.Class("space-x-1"),
 				component.CopyButtonSm(database.DecryptedConnectionString),
+				html.Form(
+					html.Class("inline-block tooltip tooltip-right"),
+					html.Data("tip", "Test connection"),
+					htmx.HxPost("/dashboard/databases/test"),
+					html.Input(
+						html.Type("hidden"),
+						html.Name("name"),
+						html.Value(database.Name),
+					),
+					html.Input(
+						html.Type("hidden"),
+						html.Name("version"),
+						html.Value(database.PgVersion),
+					),
+					html.Input(
+						html.Type("hidden"),
+						html.Name("connection_string"),
+						html.Value(database.DecryptedConnectionString),
+					),
+					html.Button(
+						html.Class("btn btn-neutral btn-square btn-ghost btn-sm"),
+						lucide.DatabaseZap(),
+					),
+				),
 				component.SpanText("****************"),
 			),
 		))
