@@ -51,7 +51,8 @@ func copyButton(props copyButtonProps) gomponents.Node {
 	sc := copyButtonScript(id, props.TextToCopy)
 
 	return html.Div(
-		html.Class("inline-block"),
+		html.Class("inline-block tooltip tooltip-right"),
+		html.Data("tip", "Copy to clipboard"),
 		sc.script,
 		html.Button(
 			components.Classes{
