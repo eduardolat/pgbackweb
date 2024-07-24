@@ -34,7 +34,7 @@ func (h *handlers) listDestinationsHandler(c echo.Context) error {
 	pagination, destinations, err := h.servs.DestinationsService.PaginateDestinations(
 		ctx, destinations.PaginateDestinationsParams{
 			Page:  formData.Page,
-			Limit: 8,
+			Limit: 20,
 		},
 	)
 	if err != nil {

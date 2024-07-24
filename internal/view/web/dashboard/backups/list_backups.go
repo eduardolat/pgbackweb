@@ -33,7 +33,7 @@ func (h *handlers) listBackupsHandler(c echo.Context) error {
 	pagination, backups, err := h.servs.BackupsService.PaginateBackups(
 		ctx, backups.PaginateBackupsParams{
 			Page:  formData.Page,
-			Limit: 8,
+			Limit: 20,
 		},
 	)
 	if err != nil {

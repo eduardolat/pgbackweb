@@ -34,7 +34,7 @@ func (h *handlers) listDatabasesHandler(c echo.Context) error {
 	pagination, databases, err := h.servs.DatabasesService.PaginateDatabases(
 		ctx, databases.PaginateDatabasesParams{
 			Page:  formData.Page,
-			Limit: 8,
+			Limit: 20,
 		},
 	)
 	if err != nil {

@@ -49,7 +49,7 @@ func (h *handlers) listExecutionsHandler(c echo.Context) error {
 				UUID: queryData.Backup, Valid: queryData.Backup != uuid.Nil,
 			},
 			Page:  queryData.Page,
-			Limit: 8,
+			Limit: 20,
 		},
 	)
 	if err != nil {
