@@ -84,7 +84,7 @@ func listBackups(
 			html.Td(
 				html.Class("font-mono"),
 				html.Div(
-					html.Class("flex flex-col items-start space-y-1"),
+					html.Class("flex flex-col items-start text-xs"),
 					component.SpanText(backup.CronExpression),
 					component.SpanText(backup.TimeZone),
 				),
