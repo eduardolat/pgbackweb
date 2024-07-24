@@ -40,6 +40,19 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		return err
 	}
 
+	err = s.ints.S3Client.Ping(
+		back.DecryptedDestinationAccessKey, back.DecryptedDestinationSecretKey,
+		back.DestinationRegion, back.DestinationEndpoint, back.DestinationBucketName,
+	)
+	if err != nil {
+		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
+			ID:         ex.ID,
+			Status:     sql.NullString{Valid: true, String: "failed"},
+			Message:    sql.NullString{Valid: true, String: err.Error()},
+			FinishedAt: sql.NullTime{Valid: true, Time: time.Now()},
+		})
+	}
+
 	pgVersion, err := s.ints.PGDumpClient.ParseVersion(back.DatabasePgVersion)
 	if err != nil {
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
