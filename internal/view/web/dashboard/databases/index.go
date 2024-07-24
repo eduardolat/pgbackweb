@@ -34,6 +34,7 @@ func indexPage() gomponents.Node {
 							html.Th(component.SpanText("Name")),
 							html.Th(component.SpanText("Version")),
 							html.Th(component.SpanText("Connection string")),
+							html.Th(component.SpanText("Created at")),
 						),
 					),
 					html.TBody(

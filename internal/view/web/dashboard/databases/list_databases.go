@@ -9,6 +9,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/service/databases"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/util/paginateutil"
+	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
@@ -91,6 +92,9 @@ func listDatabases(
 				),
 				component.SpanText("****************"),
 			),
+			html.Td(component.SpanText(
+				database.CreatedAt.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+			)),
 		))
 	}
 
