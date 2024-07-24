@@ -26,6 +26,11 @@ tasks:
   serve:
     cmd: ./dist/app
 
+  migrate-serve:
+    cmds:
+      - task goose -- up
+      - task serve
+
   run:
     cmds:
       - task build

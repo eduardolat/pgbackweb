@@ -95,4 +95,4 @@ RUN task build
 
 # Run the app
 EXPOSE 8085
-CMD ["task", "serve"]
+CMD ["task", "migrate-serve"]
