@@ -14,6 +14,7 @@ func dashboardHeader() gomponents.Node {
 		components.Classes{
 			"w-[full] bg-base-200 p-4 shadow-sm": true,
 			"flex items-center justify-between":  true,
+			"sticky top-0":                       true,
 		},
 		html.Div(
 			html.Class("flex justify-start items-center space-x-2"),

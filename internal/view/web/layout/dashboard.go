@@ -34,15 +34,15 @@ func Dashboard(params DashboardParams) gomponents.Node {
 		},
 		Body: []gomponents.Node{
 			components.Classes{
-				"w-screen h-screen bg-base-200": true,
-				"flex justify-start":            true,
+				"w-screen h-screen bg-base-200":      true,
+				"flex justify-start overflow-hidden": true,
 			},
 			dashboardAside(),
 			html.Div(
-				html.Class("flex-grow"),
+				html.Class("flex-grow overflow-y-auto"),
 				dashboardHeader(),
 				html.Main(
-					html.Class("p-4 overflow-auto"),
+					html.Class("p-4"),
 					gomponents.Group(params.Body),
 				),
 			),
