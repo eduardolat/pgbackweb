@@ -13,8 +13,8 @@ import (
 func dashboardAside() gomponents.Node {
 	return html.Aside(
 		components.Classes{
-			"h-[100dvh] bg-base-300 shadow-sm p-4": true,
-			"overflow-y-auto overflow-x-hidden":    true,
+			"flex-none h-[100dvh] bg-base-300 shadow-sm p-4": true,
+			"overflow-y-auto overflow-x-hidden":              true,
 		},
 
 		html.A(
