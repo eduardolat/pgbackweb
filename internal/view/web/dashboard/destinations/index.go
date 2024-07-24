@@ -20,7 +20,7 @@ func indexPage() gomponents.Node {
 	content := []gomponents.Node{
 		html.Div(
 			html.Class("flex justify-between items-start"),
-			component.H1Text("Destinations"),
+			component.H1Text("S3 Destinations"),
 			createDestinationButton(),
 		),
 		component.CardBox(component.CardBoxParams{
@@ -59,7 +59,7 @@ func indexPage() gomponents.Node {
 	}
 
 	return layout.Dashboard(layout.DashboardParams{
-		Title: "Destinations",
+		Title: "S3 Destinations",
 		Body:  content,
 	})
 }
