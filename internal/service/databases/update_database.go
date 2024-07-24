@@ -10,6 +10,13 @@ import (
 func (s *Service) UpdateDatabase(
 	ctx context.Context, params dbgen.DatabasesServiceUpdateDatabaseParams,
 ) (dbgen.Database, error) {
+	err := s.TestDatabase(
+		ctx, params.PgVersion.String, params.ConnectionString.String,
+	)
+	if err != nil {
+		return dbgen.Database{}, err
+	}
+
 	params.EncryptionKey = *s.env.PBW_ENCRYPTION_KEY
 	return s.dbgen.DatabasesServiceUpdateDatabase(ctx, params)
 }

@@ -27,7 +27,7 @@ func New(
 	cr *cron.Cron, ints *integration.Integration,
 ) *Service {
 	authService := auth.New(env, dbgen)
-	databasesService := databases.New(env, dbgen)
+	databasesService := databases.New(env, dbgen, ints)
 	destinationsService := destinations.New(env, dbgen)
 	executionsService := executions.New(env, dbgen, ints)
 	usersService := users.New(dbgen)
