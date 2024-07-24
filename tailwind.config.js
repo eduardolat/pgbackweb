@@ -4,8 +4,19 @@ module.exports = {
   plugins: [require('daisyui')],
   daisyui: {
     logs: false,
-    themes: ['light', 'dim'],
-    darkTheme: 'dim'
+    themes: [
+      {
+        light: {
+          ...require('daisyui/src/theming/themes').light,
+          primary: '#2be7c8'
+        },
+        dark: {
+          ...require('daisyui/src/theming/themes').dracula,
+          primary: '#2be7c8'
+        }
+      }
+    ],
+    darkTheme: 'dark'
   },
   theme: {
     screens: {
