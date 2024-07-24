@@ -1,11 +1,11 @@
-export function initNotyf() {
+export function initNotyf () {
   let toastQueue = []
 
   const toastCfg = {
     duration: 5000,
     ripple: true,
     position: { x: 'right', y: 'bottom' },
-    dismissible: true,
+    dismissible: true
   }
 
   const infiniteToastCfg = {
@@ -15,21 +15,21 @@ export function initNotyf() {
 
   window.toaster = {
     success: (message) => {
-      toastQueue.push({ type: "success", message, config: toastCfg })
+      toastQueue.push({ type: 'success', message, config: toastCfg })
     },
     error: (message) => {
-      toastQueue.push({ type: "error", message, config: toastCfg })
+      toastQueue.push({ type: 'error', message, config: toastCfg })
     },
     successInfinite: (message) => {
-      toastQueue.push({ type: "success", message, config: infiniteToastCfg })
+      toastQueue.push({ type: 'success', message, config: infiniteToastCfg })
     },
     errorInfinite: (message) => {
-      toastQueue.push({ type: "error", message, config: infiniteToastCfg })
+      toastQueue.push({ type: 'error', message, config: infiniteToastCfg })
     }
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    var notyf = new Notyf()
+    const notyf = new Notyf()
 
     toastQueue.forEach(item => {
       notyf.open({ type: item.type, message: item.message, ...item.config })
@@ -38,16 +38,16 @@ export function initNotyf() {
     toastQueue = []
 
     window.toaster.success = (message) => {
-      notyf.open({ type: "success", message, ...toastCfg })
+      notyf.open({ type: 'success', message, ...toastCfg })
     }
     window.toaster.error = (message) => {
-      notyf.open({ type: "error", message, ...toastCfg })
+      notyf.open({ type: 'error', message, ...toastCfg })
     }
     window.toaster.successInfinite = (message) => {
-      notyf.open({ type: "success", message, ...infiniteToastCfg })
+      notyf.open({ type: 'success', message, ...infiniteToastCfg })
     }
     window.toaster.errorInfinite = (message) => {
-      notyf.open({ type: "error", message, ...infiniteToastCfg })
+      notyf.open({ type: 'error', message, ...infiniteToastCfg })
     }
   })
 }

@@ -51,7 +51,9 @@ tasks:
     cmd: go mod tidy
 
   fmt:
-    cmd: go fmt ./...
+    cmds:
+      - go fmt ./...
+      - npm run standard
 
   test:
     cmds:

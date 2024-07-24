@@ -1,14 +1,14 @@
 export const githubStars = {
-  name: "githubStars",
+  name: 'githubStars',
   fn: () => ({
-    stars: "",
-    async init() {
+    stars: '',
+    async init () {
       const stars = await this.getGitHubStars()
       if (stars !== null) {
         this.stars = stars
       }
     },
-    async getGitHubStars() {
+    async getGitHubStars () {
       const cacheKey = 'pbw_gh_stars'
       const cachedData = this.getCachedData(cacheKey)
       if (cachedData !== null) {
@@ -28,7 +28,7 @@ export const githubStars = {
         return null
       }
     },
-    getCachedData(key) {
+    getCachedData (key) {
       const cachedJSON = localStorage.getItem(key)
       if (!cachedJSON) {
         return null
@@ -39,10 +39,10 @@ export const githubStars = {
       }
       return null
     },
-    cacheData(key, value) {
+    cacheData (key, value) {
       const data = JSON.stringify({
-        value: value,
-        timestamp: Date.now(),
+        value,
+        timestamp: Date.now()
       })
       localStorage.setItem(key, data)
     }

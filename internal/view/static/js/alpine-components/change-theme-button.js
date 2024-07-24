@@ -1,19 +1,19 @@
 export const changeThemeButton = {
-  name: "changeThemeButton",
+  name: 'changeThemeButton',
   fn: () => ({
-    theme: "",
+    theme: '',
 
-    getCurrentTheme() {
-      const el = document.querySelector("html")
-      const theme = el.getAttribute("data-theme")
+    getCurrentTheme () {
+      const el = document.querySelector('html')
+      const theme = el.getAttribute('data-theme')
       if (theme) {
         this.theme = theme
         return
       }
-      this.theme = "system"
+      this.theme = 'system'
     },
 
-    init() {
+    init () {
       setTimeout(() => {
         this.getCurrentTheme()
       }, 200)

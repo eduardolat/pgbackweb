@@ -3,10 +3,22 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "tailwindcss": "tailwindcss"
+    "tailwindcss": "tailwindcss",
+    "standard": "standard --fix"
   },
   "devDependencies": {
     "daisyui": "4.12.10",
+    "standard": "17.1.0",
     "tailwindcss": "3.4.6"
+  },
+  "standard": {
+    "globals": [
+      "localStorage",
+      "alert",
+      "location",
+      "toaster",
+      "Alpine",
+      "Notyf"
+    ]
   }
 }

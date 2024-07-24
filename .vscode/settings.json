@@ -17,8 +17,11 @@
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
+  // JavaScript & Standard
+  "standard.enable": true,
+  "standard.autoFixOnSave": true,
   "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "standard.vscode-standard"
   },
   "[css]": {
     "editor.defaultFormatter": "vscode.css-language-features"

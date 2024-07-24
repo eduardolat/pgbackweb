@@ -4,13 +4,13 @@ module.exports = {
   plugins: [require('daisyui')],
   daisyui: {
     logs: false,
-    themes: ["light", "dim"],
-    darkTheme: "dim",
+    themes: ['light', 'dim'],
+    darkTheme: 'dim'
   },
   theme: {
     screens: {
-      'desk': '768px', // only one breakpoint to keep it simple
+      desk: '768px' // only one breakpoint to keep it simple
     },
-    extend: {},
+    extend: {}
   }
 }

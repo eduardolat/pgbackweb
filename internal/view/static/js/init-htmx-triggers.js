@@ -1,4 +1,4 @@
-export function initHTMXTriggers() {
+export function initHTMXTriggers () {
   const triggers = {
     ctm_alert: function (evt) {
       const message = decodeURIComponent(evt.detail.value)
@@ -36,7 +36,7 @@ export function initHTMXTriggers() {
     ctm_toast_error_infinite: function (evt) {
       const message = decodeURIComponent(evt.detail.value)
       toaster.errorInfinite(message)
-    },
+    }
   }
 
   for (const key in triggers) {

@@ -1,10 +1,10 @@
 export const dashboardAsideItem = {
-  name: "dashboardAsideItem",
+  name: 'dashboardAsideItem',
   fn: (link = '', strict = false) => ({
-    link: link,
-    strict: strict,
+    link,
+    strict,
     is_active: false,
-    init() {
+    init () {
       if (this.strict) {
         this.is_active = window.location.pathname === this.link
         return
