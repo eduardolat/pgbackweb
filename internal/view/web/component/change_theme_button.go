@@ -16,25 +16,7 @@ type ChangeThemeButtonParams struct {
 
 func ChangeThemeButton(params ChangeThemeButtonParams) gomponents.Node {
 	return html.Div(
-		alpine.XData(`{
-			theme: "",
-			
-			getCurrentTheme() {
-				const el = document.querySelector("html");
-				const theme = el.getAttribute("data-theme");
-				if (theme) {
-					this.theme = theme;
-					return
-				}
-				this.theme = "system";
-			},
-
-			init() {
-				setTimeout(() => {
-					this.getCurrentTheme();
-				}, 200)
-			}
-		}`),
+		alpine.XData("changeThemeButton"),
 		alpine.XCloak(),
 		alpine.XOn("click", "getCurrentTheme()"),
 		alpine.XOn("click.outside", "getCurrentTheme()"),

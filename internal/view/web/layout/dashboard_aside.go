@@ -99,26 +99,12 @@ func dashboardAsideItem(
 	text, link string, strict bool,
 ) gomponents.Node {
 	return html.A(
-		alpine.XData(`{
-			link: "`+link+`",
-			strict: `+fmt.Sprintf("%t", strict)+`,
-			is_active: false,
-			init() {
-				if (this.strict) {
-					this.is_active = window.location.pathname === this.link
-					return
-				}
-				
-				this.is_active = window.location.pathname.startsWith(this.link)
-			}
-		}`),
+		alpine.XData(fmt.Sprintf("dashboardAsideItem('%s', %t)", link, strict)),
 
 		html.Class("block flex flex-col items-center justify-center"),
 		html.Href(link),
 		html.Button(
-			alpine.XBind("class", `{
-				'btn-active': is_active,
-			}`),
+			alpine.XBind("class", `{'btn-active': is_active}`),
 			html.Class("btn btn-ghost btn-neutral btn-square"),
 			icon(html.Class("size-6")),
 		),
