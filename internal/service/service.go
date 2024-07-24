@@ -28,7 +28,7 @@ func New(
 ) *Service {
 	authService := auth.New(env, dbgen)
 	databasesService := databases.New(env, dbgen, ints)
-	destinationsService := destinations.New(env, dbgen)
+	destinationsService := destinations.New(env, dbgen, ints)
 	executionsService := executions.New(env, dbgen, ints)
 	usersService := users.New(dbgen)
 	backupsService := backups.New(dbgen, cr, executionsService)
