@@ -3,6 +3,7 @@ package about
 import (
 	"net/http"
 
+	"github.com/eduardolat/pgbackweb/internal/config"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
@@ -18,6 +19,8 @@ func (h *handlers) indexPageHandler(c echo.Context) error {
 func indexPage() gomponents.Node {
 	content := []gomponents.Node{
 		component.H1Text("About PG Back Web"),
+		component.H2Text(config.Version),
+
 		html.Div(
 			html.Class("grid grid-cols-2 gap-4 mt-4"),
 
