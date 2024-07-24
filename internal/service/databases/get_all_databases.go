@@ -8,7 +8,7 @@ import (
 
 func (s *Service) GetAllDatabases(
 	ctx context.Context,
-) (dbgen.DatabasesServiceGetAllDatabasesRow, error) {
+) ([]dbgen.DatabasesServiceGetAllDatabasesRow, error) {
 	return s.dbgen.DatabasesServiceGetAllDatabases(
 		ctx, *s.env.PBW_ENCRYPTION_KEY,
 	)

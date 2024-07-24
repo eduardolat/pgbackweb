@@ -8,7 +8,7 @@ import (
 
 func (s *Service) GetAllDestinations(
 	ctx context.Context,
-) (dbgen.DestinationsServiceGetAllDestinationsRow, error) {
+) ([]dbgen.DestinationsServiceGetAllDestinationsRow, error) {
 	return s.dbgen.DestinationsServiceGetAllDestinations(
 		ctx, *s.env.PBW_ENCRYPTION_KEY,
 	)

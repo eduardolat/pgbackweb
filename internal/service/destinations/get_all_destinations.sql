@@ -1,4 +1,4 @@
--- name: DestinationsServiceGetAllDestinations :one
+-- name: DestinationsServiceGetAllDestinations :many
 SELECT
   *,
   pgp_sym_decrypt(access_key, @encryption_key) AS decrypted_access_key,
