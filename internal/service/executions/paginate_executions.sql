@@ -24,7 +24,11 @@ AND
 );
 
 -- name: ExecutionsServicePaginateExecutions :many
-SELECT executions.*
+SELECT
+  executions.*,
+  backups.name AS backup_name,
+  databases.name AS database_name,
+  destinations.name AS destination_name
 FROM executions
 JOIN backups ON backups.id = executions.backup_id
 JOIN databases ON databases.id = backups.database_id

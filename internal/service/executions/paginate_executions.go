@@ -18,7 +18,7 @@ type PaginateExecutionsParams struct {
 
 func (s *Service) PaginateExecutions(
 	ctx context.Context, params PaginateExecutionsParams,
-) (paginateutil.PaginateResponse, []dbgen.Execution, error) {
+) (paginateutil.PaginateResponse, []dbgen.ExecutionsServicePaginateExecutionsRow, error) {
 	page := max(params.Page, 1)
 	limit := min(max(params.Limit, 1), 100)
 
