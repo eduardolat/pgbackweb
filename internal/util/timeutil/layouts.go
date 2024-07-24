@@ -39,4 +39,7 @@ const (
 
 	// LayoutYYYYMMDDHHMMSS is the layout for dates in the format YYYYMMDD-HHMMSS
 	LayoutYYYYMMDDHHMMSS = "20060102-150405"
+
+	// LayoutYYYYMMDDHHMMSSPretty is the layout for dates in the format YYYY-MM-DD HH:MM:SS
+	LayoutYYYYMMDDHHMMSSPretty = "2006-01-02 15:04:05"
 )
