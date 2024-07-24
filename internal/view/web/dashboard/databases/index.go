@@ -8,6 +8,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
 	"github.com/labstack/echo/v4"
 	"github.com/maragudk/gomponents"
+	"github.com/maragudk/gomponents/html"
 )
 
 func (h *handlers) indexPageHandler(c echo.Context) error {
@@ -16,7 +17,11 @@ func (h *handlers) indexPageHandler(c echo.Context) error {
 
 func indexPage() gomponents.Node {
 	content := []gomponents.Node{
-		component.H1Text("Databases"),
+		html.Div(
+			html.Class("flex justify-between items-start"),
+			component.H1Text("Databases"),
+			createDatabaseButton(),
+		),
 	}
 
 	return layout.Dashboard(layout.DashboardParams{
