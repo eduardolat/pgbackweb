@@ -114,6 +114,7 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 					Type:        component.InputTypeText,
 					HelpText:    "The cron expression to schedule the backup",
 					Children: []gomponents.Node{
+						html.Pattern(`^\S+\s+\S+\s+\S+\s+\S+\s+\S+$`),
 						html.Value(backup.CronExpression),
 					},
 				}),

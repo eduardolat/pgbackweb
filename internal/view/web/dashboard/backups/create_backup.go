@@ -147,6 +147,9 @@ func createBackupForm(
 			Required:    true,
 			Type:        component.InputTypeText,
 			HelpText:    "The cron expression to schedule the backup",
+			Children: []gomponents.Node{
+				html.Pattern(`^\S+\s+\S+\s+\S+\s+\S+\s+\S+$`),
+			},
 		}),
 
 		component.SelectControl(component.SelectControlParams{
