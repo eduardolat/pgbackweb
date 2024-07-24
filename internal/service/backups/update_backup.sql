@@ -1,7 +1,7 @@
 -- name: BackupsServiceUpdateBackup :one
 UPDATE backups
 SET
-  name = COALESCE(name, @name),
+  name = COALESCE(sqlc.narg('name'), @name),
   cron_expression = COALESCE(sqlc.narg('cron_expression'), cron_expression),
   time_zone = COALESCE(sqlc.narg('time_zone'), time_zone),
   is_active = COALESCE(sqlc.narg('is_active'), is_active),
