@@ -76,6 +76,7 @@ func listBackups(
 							lucide.List(),
 						),
 					),
+					manualRunbutton(backup.ID),
 					editBackupButton(backup),
 					deleteBackupButton(backup.ID),
 				),
