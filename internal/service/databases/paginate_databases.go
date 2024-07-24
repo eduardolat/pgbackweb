@@ -16,7 +16,7 @@ func (s *Service) PaginateDatabases(
 	ctx context.Context, params PaginateDatabasesParams,
 ) (paginateutil.PaginateResponse, []dbgen.DatabasesServicePaginateDatabasesRow, error) {
 	page := max(params.Page, 1)
-	limit := max(params.Limit, 100)
+	limit := min(max(params.Limit, 1), 100)
 
 	count, err := s.dbgen.DatabasesServicePaginateDatabasesCount(ctx)
 	if err != nil {

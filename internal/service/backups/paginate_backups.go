@@ -16,7 +16,7 @@ func (s *Service) PaginateBackups(
 	ctx context.Context, params PaginateBackupsParams,
 ) (paginateutil.PaginateResponse, []dbgen.Backup, error) {
 	page := max(params.Page, 1)
-	limit := max(params.Limit, 100)
+	limit := min(max(params.Limit, 1), 100)
 
 	count, err := s.dbgen.BackupsServicePaginateBackupsCount(ctx)
 	if err != nil {
