@@ -27,7 +27,7 @@ func indexPage() gomponents.Node {
 			html.Div(
 				html.Class("mt-4 overflow-x-auto"),
 				html.Table(
-					html.Class("table"),
+					html.Class("table text-nowrap"),
 					html.THead(
 						html.Tr(
 							html.Th(),
