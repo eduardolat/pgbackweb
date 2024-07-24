@@ -8,6 +8,7 @@ import (
 
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/integration/pgdump"
+	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/google/uuid"
@@ -22,6 +23,13 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		return err
 	}
 
+	logError := func(err error) {
+		logger.Error("error running backup", logger.KV{
+			"backup_id": backupID.String(),
+			"error":     err.Error(),
+		})
+	}
+
 	back, err := s.dbgen.ExecutionsServiceGetBackupData(
 		ctx, dbgen.ExecutionsServiceGetBackupDataParams{
 			BackupID:      backupID,
@@ -29,6 +37,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		},
 	)
 	if err != nil {
+		logError(err)
 		return err
 	}
 
@@ -37,6 +46,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		Status:   "running",
 	})
 	if err != nil {
+		logError(err)
 		return err
 	}
 
@@ -45,6 +55,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		back.DestinationRegion, back.DestinationEndpoint, back.DestinationBucketName,
 	)
 	if err != nil {
+		logError(err)
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
 			ID:         ex.ID,
 			Status:     sql.NullString{Valid: true, String: "failed"},
@@ -55,6 +66,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 
 	pgVersion, err := s.ints.PGDumpClient.ParseVersion(back.DatabasePgVersion)
 	if err != nil {
+		logError(err)
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
 			ID:         ex.ID,
 			Status:     sql.NullString{Valid: true, String: "failed"},
@@ -65,6 +77,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 
 	err = s.ints.PGDumpClient.Ping(pgVersion, back.DecryptedDatabaseConnectionString)
 	if err != nil {
+		logError(err)
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
 			ID:         ex.ID,
 			Status:     sql.NullString{Valid: true, String: "failed"},
@@ -84,6 +97,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		},
 	)
 	if err != nil {
+		logError(err)
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
 			ID:         ex.ID,
 			Status:     sql.NullString{Valid: true, String: "failed"},
@@ -106,6 +120,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		path, dumpBytes,
 	)
 	if err != nil {
+		logError(err)
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
 			ID:         ex.ID,
 			Status:     sql.NullString{Valid: true, String: "failed"},
@@ -115,6 +130,10 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		})
 	}
 
+	logger.Info("backup created successfully", logger.KV{
+		"backup_id":    backupID.String(),
+		"execution_id": ex.ID.String(),
+	})
 	return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
 		ID:         ex.ID,
 		Status:     sql.NullString{Valid: true, String: "success"},
