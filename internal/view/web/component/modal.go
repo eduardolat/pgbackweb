@@ -94,11 +94,11 @@ func Modal(params ModalParams) ModalResult {
 		// Dialog
 		html.Div(
 			components.Classes{
-				"absolute z-[1002] top-[50%] left-[50%]":  true,
-				"translate-y-[-50%] translate-x-[-50%]":   true,
-				"max-w-[calc(100dvw-30px)] max-h-[85dvh]": true,
-				"bg-base-100 rounded overflow-y-auto p-0": true,
-				"overflow-x-hidden whitespace-normal":     true,
+				"absolute z-[1002] top-[50%] left-[50%]":      true,
+				"translate-y-[-50%] translate-x-[-50%]":       true,
+				"max-w-[calc(100dvw-30px)] max-h-[85dvh]":     true,
+				"bg-base-100 rounded-box overflow-y-auto p-0": true,
+				"overflow-x-hidden whitespace-normal":         true,
 
 				"w-[400px]": size == SizeSm,
 				"w-[600px]": size == SizeMd,
