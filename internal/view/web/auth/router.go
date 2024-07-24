@@ -30,4 +30,5 @@ func MountRouter(
 	}))
 
 	requireAuth.POST("/logout", h.logoutHandler)
+	requireAuth.POST("/logout-all", h.logoutAllSessionsHandler)
 }

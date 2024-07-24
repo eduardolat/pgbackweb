@@ -17,3 +17,16 @@ func (h *handlers) logoutHandler(c echo.Context) error {
 	h.servs.AuthService.ClearSessionCookie(c)
 	return htmx.RespondRedirect(c, "/auth/login")
 }
+
+func (h *handlers) logoutAllSessionsHandler(c echo.Context) error {
+	ctx := c.Request().Context()
+	reqCtx := reqctx.GetCtx(c)
+
+	err := h.servs.AuthService.DeleteAllUserSessions(ctx, reqCtx.User.ID)
+	if err != nil {
+		return htmx.RespondToastError(c, err.Error())
+	}
+
+	h.servs.AuthService.ClearSessionCookie(c)
+	return htmx.RespondRedirect(c, "/auth/login")
+}
