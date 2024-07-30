@@ -1,0 +1,29 @@
+name: Run linter, tests & build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run_all:
+    name: Run all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build docker image
+        run: docker build -t pbw-test -f ./docker/Dockerfile.cicd .
+
+      - name: Run linter
+        run: docker run --rm pbw-test task lint-only
+
+      - name: Run tests
+        run: docker run --rm pbw-test task test-only
+
+      - name: Run build
+        run: docker run --rm pbw-test task build
