@@ -1,11 +1,26 @@
-# PG Back Web
-
-<img 
-  width="70"
-  src="internal/view/static/images/logo.png"
-/>
-
-🐘 Effortless PostgreSQL backups with a user-friendly web interface! 🌐💾
+<p align="center">
+  <h1 align="center">PG Back Web</h1>
+  <p align="center">
+    <img align="center" width="70" src="internal/view/static/images/logo.png"/>
+  </p>
+  <p align="center">
+    🐘 Effortless PostgreSQL backups with a user-friendly web interface! 🌐💾
+  </p>
+</p>
+<p align="center">
+  <a href="https://github.com/eduardolat/pgbackweb/actions/workflows/run-all-tests.yaml?query=branch%3Amain">
+    <img src="https://github.com/eduardolat/pgbackweb/actions/workflows/run-all-tests.yaml/badge.svg" alt="Tests Status"/>
+  </a>
+  <a href="https://goreportcard.com/report/eduardolat/pgbackweb">
+    <img src="https://goreportcard.com/badge/eduardolat/pgbackweb" alt="Go Report Card"/>
+  </a>
+  <a href="https://github.com/eduardolat/pgbackweb/releases/latest">
+    <img src="https://img.shields.io/github/release/eduardolat/pgbackweb.svg" alt="Release Version"/>
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/github/license/eduardolat/pgbackweb.svg" alt="License"/>
+  </a>
+</p>
 
 ## Why PG Back Web?
 
