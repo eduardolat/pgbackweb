@@ -70,6 +70,12 @@ RUN wget https://github.com/sqlc-dev/sqlc/releases/download/v1.26.0/sqlc_1.26.0_
     mv ./sqlc /usr/local/bin/sqlc && \
     chmod 777 /usr/local/bin/sqlc
 
+# Install golangci-lint
+RUN wget https://github.com/golangci/golangci-lint/releases/download/v1.59.1/golangci-lint-1.59.1-linux-amd64.tar.gz && \
+    tar -xzf golangci-lint-1.59.1-linux-amd64.tar.gz && \
+    mv ./golangci-lint-1.59.1-linux-amd64/golangci-lint /usr/local/bin/golangci-lint && \
+    chmod 777 /usr/local/bin/golangci-lint
+
 # Delete the temporary directory and go to the app directory
 WORKDIR /app
 RUN rm -rf /app/temp

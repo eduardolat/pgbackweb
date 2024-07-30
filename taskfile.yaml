@@ -60,10 +60,20 @@ tasks:
       - go fmt ./...
       - npm run standard
 
+  lint-only:
+    cmds:
+      - task gen-db
+      - golangci-lint run ./...
+
+  test-only:
+    cmds:
+      - task gen-db
+      - go test ./...
+
   test:
     cmds:
-      - task fmt
-      - go test ./...
+      - task lint-only
+      - task test-only
 
   clean:
     cmds:
