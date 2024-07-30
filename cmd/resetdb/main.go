@@ -14,7 +14,9 @@ func main() {
 	var answer string
 
 	for answer != "yes" && answer != "no" {
-		fmt.Scanln(&answer)
+		if _, err := fmt.Scanln(&answer); err != nil {
+			panic(err)
+		}
 		if answer == "no" {
 			log.Println("Exiting...")
 			return
