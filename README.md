@@ -17,6 +17,9 @@
   <a href="https://github.com/eduardolat/pgbackweb/releases/latest">
     <img src="https://img.shields.io/github/release/eduardolat/pgbackweb.svg" alt="Release Version"/>
   </a>
+  <a href="https://hub.docker.com/r/eduardolat/pgbackweb">
+    <img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/eduardolat/pgbackweb"/>
+  <a/>
   <a href="LICENSE">
     <img src="https://img.shields.io/github/license/eduardolat/pgbackweb.svg" alt="License"/>
   </a>
