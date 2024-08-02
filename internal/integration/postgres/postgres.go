@@ -1,4 +1,4 @@
-package pgdump
+package postgres
 
 import (
 	"fmt"
@@ -7,6 +7,14 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/util/fileutil"
 	"github.com/orsinium-labs/enum"
 )
+
+/*
+	Important:
+	Versions supported by PG Back Web must be supported in PostgreSQL Version Policy
+	https://www.postgresql.org/support/versioning/
+
+	Backing up a database from an old unsupported version should not be allowed.
+*/
 
 type version struct {
 	version string

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
-	"github.com/eduardolat/pgbackweb/internal/integration/pgdump"
+	"github.com/eduardolat/pgbackweb/internal/integration/postgres"
 	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
@@ -64,7 +64,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		})
 	}
 
-	pgVersion, err := s.ints.PGDumpClient.ParseVersion(back.DatabasePgVersion)
+	pgVersion, err := s.ints.PGClient.ParseVersion(back.DatabasePgVersion)
 	if err != nil {
 		logError(err)
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
@@ -75,7 +75,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		})
 	}
 
-	err = s.ints.PGDumpClient.Ping(pgVersion, back.DecryptedDatabaseConnectionString)
+	err = s.ints.PGClient.Ping(pgVersion, back.DecryptedDatabaseConnectionString)
 	if err != nil {
 		logError(err)
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
@@ -86,8 +86,8 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		})
 	}
 
-	dumpBytes, err := s.ints.PGDumpClient.DumpZip(
-		pgVersion, back.DecryptedDatabaseConnectionString, pgdump.DumpParams{
+	dumpBytes, err := s.ints.PGClient.DumpZip(
+		pgVersion, back.DecryptedDatabaseConnectionString, postgres.DumpParams{
 			DataOnly:   back.BackupOptDataOnly,
 			SchemaOnly: back.BackupOptSchemaOnly,
 			Clean:      back.BackupOptClean,
