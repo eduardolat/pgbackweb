@@ -102,11 +102,18 @@ The password should be bcrypt hashed.
 
 ## Next steps
 
-- [ ] Password reset command
+In this link you can see a list of features that have been confirmed for future updates:
+
+<a href="https://github.com/eduardolat/pgbackweb/issues?q=is%3Aissue+is%3Aopen+label%3A%22confirmed+next+step%22">
+  Next steps ⏭️
+</a>
+
+
+<!-- - [ ] Password reset command
 - [ ] One-click backup restoration
 - [ ] API for on-demand backups
 - [ ] Advanced alert system and webhooks
-- [ ] Automatic health checks
+- [ ] Automatic health checks -->
 
 ## Join the Community
 
