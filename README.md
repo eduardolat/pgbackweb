@@ -108,13 +108,6 @@ In this link you can see a list of features that have been confirmed for future 
   Next steps ⏭️
 </a>
 
-
-<!-- - [ ] Password reset command
-- [ ] One-click backup restoration
-- [ ] API for on-demand backups
-- [ ] Advanced alert system and webhooks
-- [ ] Automatic health checks -->
-
 ## Join the Community
 
 Got ideas to improve PG Back Web? Contribute to the project! Every suggestion and pull request is welcome.
