@@ -1,12 +1,22 @@
-package pgdump
+package postgres
 
 import (
+	"archive/zip"
+	"bytes"
 	"fmt"
+	"io"
 	"os/exec"
 
-	"github.com/eduardolat/pgbackweb/internal/util/fileutil"
 	"github.com/orsinium-labs/enum"
 )
+
+/*
+	Important:
+	Versions supported by PG Back Web must be supported in PostgreSQL Version Policy
+	https://www.postgresql.org/support/versioning/
+
+	Backing up a database from an old unsupported version should not be allowed.
+*/
 
 type version struct {
 	version string
@@ -109,10 +119,10 @@ type DumpParams struct {
 }
 
 // Dump runs the pg_dump command with the given parameters. It returns the SQL
-// dump as a byte slice.
+// dump as an io.Reader.
 func (Client) Dump(
 	version PGVersion, connString string, params ...DumpParams,
-) ([]byte, error) {
+) io.Reader {
 	pickedParams := DumpParams{}
 	if len(params) > 0 {
 		pickedParams = params[0]
@@ -138,35 +148,50 @@ func (Client) Dump(
 		args = append(args, "--no-comments")
 	}
 
+	errorBuffer := &bytes.Buffer{}
+	reader, writer := io.Pipe()
 	cmd := exec.Command(version.Value.pgDump, args...)
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		return nil, fmt.Errorf(
-			"error running pg_dump v%s: %s",
-			version.Value.version, output,
-		)
-	}
+	cmd.Stdout = writer
+	cmd.Stderr = errorBuffer
 
-	return output, nil
+	go func() {
+		defer writer.Close()
+		if err := cmd.Run(); err != nil {
+			writer.CloseWithError(fmt.Errorf(
+				"error running pg_dump v%s: %s",
+				version.Value.version, errorBuffer.String(),
+			))
+		}
+	}()
+
+	return reader
 }
 
 // DumpZip runs the pg_dump command with the given parameters and returns the
-// ZIP-compressed SQL dump as a byte slice.
+// ZIP-compressed SQL dump as an io.Reader.
 func (c *Client) DumpZip(
 	version PGVersion, connString string, params ...DumpParams,
-) ([]byte, error) {
-	dump, err := c.Dump(version, connString, params...)
-	if err != nil {
-		return nil, err
-	}
+) io.Reader {
+	dumpReader := c.Dump(version, connString, params...)
+	reader, writer := io.Pipe()
 
-	output, err := fileutil.CreateZip([]fileutil.ZipFile{{
-		Name:  "dump.sql",
-		Bytes: dump,
-	}})
-	if err != nil {
-		return nil, fmt.Errorf("error creating zip file: %w", err)
-	}
+	go func() {
+		defer writer.Close()
 
-	return output, nil
+		zipWriter := zip.NewWriter(writer)
+		defer zipWriter.Close()
+
+		fileWriter, err := zipWriter.Create("dump.sql")
+		if err != nil {
+			writer.CloseWithError(fmt.Errorf("error creating zip file: %w", err))
+			return
+		}
+
+		if _, err := io.Copy(fileWriter, dumpReader); err != nil {
+			writer.CloseWithError(fmt.Errorf("error writing to zip file: %w", err))
+			return
+		}
+	}()
+
+	return reader
 }

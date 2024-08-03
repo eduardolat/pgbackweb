@@ -1,14 +1,15 @@
 package s3
 
 import (
-	"bytes"
 	"fmt"
+	"io"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 )
 
@@ -56,33 +57,33 @@ func (Client) Ping(
 	return nil
 }
 
-// Upload uploads a file to S3
+// Upload uploads a file to S3 from a reader
 func (Client) Upload(
 	accessKey, secretKey, region, endpoint, bucketName, key string,
-	fileContent []byte,
-) (string, error) {
+	fileReader io.Reader,
+) error {
 	s3Client, err := createS3Client(
 		accessKey, secretKey, region, endpoint,
 	)
 	if err != nil {
-		return "", err
+		return err
 	}
 
-	reader := bytes.NewReader(fileContent)
 	key = strutil.RemoveLeadingSlash(key)
 	contentType := strutil.GetContentTypeFromFileName(key)
 
-	_, err = s3Client.PutObject(&s3.PutObjectInput{
+	uploader := s3manager.NewUploaderWithClient(s3Client)
+	_, err = uploader.Upload(&s3manager.UploadInput{
 		Bucket:      aws.String(bucketName),
 		Key:         aws.String(key),
-		Body:        aws.ReadSeekCloser(reader),
+		Body:        fileReader,
 		ContentType: aws.String(contentType),
 	})
 	if err != nil {
-		return "", fmt.Errorf("failed to upload file to S3: %w", err)
+		return fmt.Errorf("failed to upload file to S3: %w", err)
 	}
 
-	return key, nil
+	return nil
 }
 
 // Delete deletes a file from S3
