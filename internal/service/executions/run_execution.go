@@ -86,7 +86,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		})
 	}
 
-	dumpBytes, err := s.ints.PGClient.DumpZip(
+	dumpReader := s.ints.PGClient.DumpZip(
 		pgVersion, back.DecryptedDatabaseConnectionString, postgres.DumpParams{
 			DataOnly:   back.BackupOptDataOnly,
 			SchemaOnly: back.BackupOptSchemaOnly,
@@ -96,15 +96,6 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 			NoComments: back.BackupOptNoComments,
 		},
 	)
-	if err != nil {
-		logError(err)
-		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
-			ID:         ex.ID,
-			Status:     sql.NullString{Valid: true, String: "failed"},
-			Message:    sql.NullString{Valid: true, String: err.Error()},
-			FinishedAt: sql.NullTime{Valid: true, Time: time.Now()},
-		})
-	}
 
 	date := time.Now().Format(timeutil.LayoutSlashYYYYMMDD)
 	file := fmt.Sprintf(
@@ -114,10 +105,10 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	)
 	path := strutil.CreatePath(false, back.BackupDestDir, date, file)
 
-	_, err = s.ints.S3Client.Upload(
+	err = s.ints.S3Client.Upload(
 		back.DecryptedDestinationAccessKey, back.DecryptedDestinationSecretKey,
 		back.DestinationRegion, back.DestinationEndpoint, back.DestinationBucketName,
-		path, dumpBytes,
+		path, dumpReader,
 	)
 	if err != nil {
 		logError(err)
