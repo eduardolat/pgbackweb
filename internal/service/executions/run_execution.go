@@ -50,7 +50,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		return err
 	}
 
-	err = s.ints.S3Client.Ping(
+	err = s.ints.StorageClient.S3Ping(
 		back.DecryptedDestinationAccessKey, back.DecryptedDestinationSecretKey,
 		back.DestinationRegion, back.DestinationEndpoint, back.DestinationBucketName,
 	)
@@ -105,7 +105,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	)
 	path := strutil.CreatePath(false, back.BackupDestDir, date, file)
 
-	err = s.ints.S3Client.Upload(
+	err = s.ints.StorageClient.S3Upload(
 		back.DecryptedDestinationAccessKey, back.DecryptedDestinationSecretKey,
 		back.DestinationRegion, back.DestinationEndpoint, back.DestinationBucketName,
 		path, dumpReader,

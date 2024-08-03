@@ -26,7 +26,7 @@ func (s *Service) GetExecutionDownloadLink(
 		return "", fmt.Errorf("execution has no file associated")
 	}
 
-	return s.ints.S3Client.GetDownloadLink(
+	return s.ints.StorageClient.S3GetDownloadLink(
 		data.DecryptedAccessKey, data.DecryptedSecretKey, data.Region,
 		data.Endpoint, data.BucketName, data.Path.String, time.Hour*12,
 	)

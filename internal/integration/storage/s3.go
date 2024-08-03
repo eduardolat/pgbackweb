@@ -1,4 +1,4 @@
-package s3
+package storage
 
 import (
 	"fmt"
@@ -12,12 +12,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 )
-
-type Client struct{}
-
-func New() *Client {
-	return &Client{}
-}
 
 // createS3Client creates a new S3 client
 func createS3Client(
@@ -36,8 +30,8 @@ func createS3Client(
 	return s3.New(sess), nil
 }
 
-// Ping tests the connection to S3
-func (Client) Ping(
+// S3Ping tests the connection to S3
+func (Client) S3Ping(
 	accessKey, secretKey, region, endpoint, bucketName string,
 ) error {
 	s3Client, err := createS3Client(
@@ -57,8 +51,8 @@ func (Client) Ping(
 	return nil
 }
 
-// Upload uploads a file to S3 from a reader
-func (Client) Upload(
+// S3Upload uploads a file to S3 from a reader
+func (Client) S3Upload(
 	accessKey, secretKey, region, endpoint, bucketName, key string,
 	fileReader io.Reader,
 ) error {
@@ -86,8 +80,8 @@ func (Client) Upload(
 	return nil
 }
 
-// Delete deletes a file from S3
-func (Client) Delete(
+// S3Delete deletes a file from S3
+func (Client) S3Delete(
 	accessKey, secretKey, region, endpoint, bucketName, key string,
 ) error {
 	s3Client, err := createS3Client(
@@ -110,8 +104,8 @@ func (Client) Delete(
 	return nil
 }
 
-// GetDownloadLink generates a presigned URL for downloading a file from S3
-func (Client) GetDownloadLink(
+// S3GetDownloadLink generates a presigned URL for downloading a file from S3
+func (Client) S3GetDownloadLink(
 	accessKey, secretKey, region, endpoint, bucketName, key string,
 	expiration time.Duration,
 ) (string, error) {
@@ -134,4 +128,28 @@ func (Client) GetDownloadLink(
 	}
 
 	return url, nil
+}
+
+// S3ReadFile reads a file from S3
+func (Client) S3ReadFile(
+	accessKey, secretKey, region, endpoint, bucketName, key string,
+) (io.ReadCloser, error) {
+	s3Client, err := createS3Client(
+		accessKey, secretKey, region, endpoint,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	key = strutil.RemoveLeadingSlash(key)
+
+	resp, err := s3Client.GetObject(&s3.GetObjectInput{
+		Bucket: aws.String(bucketName),
+		Key:    aws.String(key),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to read file from S3: %w", err)
+	}
+
+	return resp.Body, nil
 }
