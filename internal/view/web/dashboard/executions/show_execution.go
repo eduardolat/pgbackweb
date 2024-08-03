@@ -61,7 +61,10 @@ func showExecutionButton(
 						execution.Message.Valid,
 						html.Tr(
 							html.Th(component.SpanText("Message")),
-							html.Td(component.SpanText(execution.Message.String)),
+							html.Td(
+								html.Class("break-all"),
+								component.SpanText(execution.Message.String),
+							),
 						),
 					),
 					html.Tr(
