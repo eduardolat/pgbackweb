@@ -76,9 +76,11 @@ RUN wget https://github.com/golangci/golangci-lint/releases/download/v1.59.1/gol
     mv ./golangci-lint-1.59.1-linux-amd64/golangci-lint /usr/local/bin/golangci-lint && \
     chmod 777 /usr/local/bin/golangci-lint
 
-# Delete the temporary directory and go to the app directory
+# Go to the app dir, delete the temporary dir and create backups dir
 WORKDIR /app
-RUN rm -rf /app/temp
+RUN rm -rf /app/temp && \
+    mkdir /backups && \
+    chmod 777 /backups
 
 ##############
 # START HERE #
