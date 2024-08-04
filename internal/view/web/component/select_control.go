@@ -48,9 +48,7 @@ func SelectControl(params SelectControlParams) gomponents.Node {
 				HelpButtonModal(HelpButtonModalParams{
 					ModalTitle: params.Label,
 					ButtonSize: SizeSm,
-					Children: []gomponents.Node{
-						SpanText(params.HelpText),
-					},
+					Children:   params.HelpButtonChildren,
 				}),
 			),
 		),
