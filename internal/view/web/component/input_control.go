@@ -52,7 +52,6 @@ func InputControl(params InputControlParams) gomponents.Node {
 				len(params.HelpButtonChildren) > 0,
 				HelpButtonModal(HelpButtonModalParams{
 					ModalTitle: params.Label,
-					ButtonSize: SizeSm,
 					Children:   params.HelpButtonChildren,
 				}),
 			),
