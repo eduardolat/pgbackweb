@@ -18,6 +18,7 @@ type InputControlParams struct {
 	HelpText           string
 	Color              color
 	AutoComplete       string
+	Pattern            string
 	Children           []gomponents.Node
 	HelpButtonChildren []gomponents.Node
 }
@@ -72,6 +73,10 @@ func InputControl(params InputControlParams) gomponents.Node {
 			gomponents.If(
 				params.AutoComplete != "",
 				html.AutoComplete(params.AutoComplete),
+			),
+			gomponents.If(
+				params.Pattern != "",
+				html.Pattern(params.Pattern),
 			),
 			gomponents.Group(params.Children),
 		),
