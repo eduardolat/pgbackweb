@@ -5,6 +5,8 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 )
 
 const (
@@ -14,7 +16,7 @@ const (
 // LocalUpload Creates a new file using the provided path and reader relative
 // to the local backups directory.
 func (Client) LocalUpload(relativeFilePath string, fileReader io.Reader) error {
-	fullPath := filepath.Join(localBackupsDir, relativeFilePath)
+	fullPath := strutil.CreatePath(true, localBackupsDir, relativeFilePath)
 	dir := filepath.Dir(fullPath)
 
 	err := os.MkdirAll(filepath.Dir(fullPath), os.ModePerm)
@@ -39,7 +41,7 @@ func (Client) LocalUpload(relativeFilePath string, fileReader io.Reader) error {
 // LocalDelete Deletes a file using the provided path relative to the local
 // backups directory.
 func (Client) LocalDelete(relativeFilePath string) error {
-	fullPath := filepath.Join(localBackupsDir, relativeFilePath)
+	fullPath := strutil.CreatePath(true, localBackupsDir, relativeFilePath)
 
 	err := os.Remove(fullPath)
 	if err != nil {
@@ -52,7 +54,7 @@ func (Client) LocalDelete(relativeFilePath string) error {
 // LocalReadFile Reads a file using the provided path relative to the local
 // backups directory.
 func (Client) LocalReadFile(relativeFilePath string) (io.ReadCloser, error) {
-	fullPath := filepath.Join(localBackupsDir, relativeFilePath)
+	fullPath := strutil.CreatePath(true, localBackupsDir, relativeFilePath)
 
 	file, err := os.Open(fullPath)
 	if err != nil {
