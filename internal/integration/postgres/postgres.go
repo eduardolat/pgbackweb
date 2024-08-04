@@ -5,10 +5,10 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"os/exec"
 
+	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 	"github.com/orsinium-labs/enum"
 )
 
@@ -198,75 +198,58 @@ func (c *Client) DumpZip(
 	return reader
 }
 
-// RestoreZip downloads the ZIP from the given url, unzips it, and runs the
-// psql command to restore the database.
+// RestoreZip downloads or copies the ZIP from the given url or path, unzips it,
+// and runs the psql command to restore the database.
+//
+// The ZIP file must contain a dump.sql file with the SQL dump to restore.
+//
+//   - version: PostgreSQL version to use for the restore
+//   - connString: connection string to the database
+//   - isLocal: whether the ZIP file is local or a URL
+//   - zipURLOrPath: URL or path to the ZIP file
 func (Client) RestoreZip(
-	version PGVersion, connString string, zipURL string,
+	version PGVersion, connString string, isLocal bool, zipURLOrPath string,
 ) error {
-	// Create a temporary directory
-	dir, err := os.MkdirTemp("", "pbw-restore-*")
+	workDir, err := os.MkdirTemp("", "pbw-restore-*")
 	if err != nil {
 		return fmt.Errorf("error creating temp dir: %w", err)
 	}
-	defer os.RemoveAll(dir)
+	defer os.RemoveAll(workDir)
+	zipPath := strutil.CreatePath(true, workDir, "dump.zip")
+	dumpPath := strutil.CreatePath(true, workDir, "dump.sql")
 
-	// Download the ZIP file from the given URL
-	zipPath := fmt.Sprintf("%s/dump.zip", dir)
-	resp, err := http.Get(zipURL)
-	if err != nil {
-		return fmt.Errorf("error downloading ZIP file: %w", err)
-	}
-	defer resp.Body.Close()
-
-	out, err := os.Create(zipPath)
-	if err != nil {
-		return fmt.Errorf("error creating ZIP file: %w", err)
-	}
-	defer out.Close()
-
-	if _, err = io.Copy(out, resp.Body); err != nil {
-		return fmt.Errorf("error writing to ZIP file: %w", err)
-	}
-
-	// Unzip the file into the temp dir
-	zipReadCloser, err := zip.OpenReader(zipPath)
-	if err != nil {
-		return fmt.Errorf("error opening ZIP file: %w", err)
-	}
-	defer zipReadCloser.Close()
-
-	var dumpPath string
-	for _, file := range zipReadCloser.File {
-		if file.Name == "dump.sql" {
-			dumpPath = fmt.Sprintf("%s/%s", dir, file.Name)
-
-			fileReadCloser, err := file.Open()
-			if err != nil {
-				return fmt.Errorf("error opening dump.sql in ZIP file: %w", err)
-			}
-			defer fileReadCloser.Close()
-
-			outFile, err := os.Create(dumpPath)
-			if err != nil {
-				return fmt.Errorf("error creating dump.sql: %w", err)
-			}
-			defer outFile.Close()
-
-			if _, err = io.Copy(outFile, fileReadCloser); err != nil {
-				return fmt.Errorf("error writing dump.sql: %w", err)
-			}
-
-			break
+	if isLocal {
+		cmd := exec.Command("cp", zipURLOrPath, zipPath)
+		output, err := cmd.CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("error copying ZIP file to temp dir: %s", output)
 		}
 	}
 
-	if dumpPath == "" {
-		return fmt.Errorf("dump.sql not found in ZIP file")
+	if !isLocal {
+		cmd := exec.Command("wget", "--no-verbose", "-O", zipPath, zipURLOrPath)
+		output, err := cmd.CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("error downloading ZIP file: %s", output)
+		}
 	}
 
-	// Run the psql command to restore the database
-	cmd := exec.Command(version.Value.psql, connString, "-f", dumpPath)
+	if _, err := os.Stat(zipPath); os.IsNotExist(err) {
+		return fmt.Errorf("zip file not found: %s", zipPath)
+	}
+
+	cmd := exec.Command("unzip", "-o", zipPath, "dump.sql", "-d", workDir)
 	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("error unzipping ZIP file: %s", output)
+	}
+
+	if _, err := os.Stat(dumpPath); os.IsNotExist(err) {
+		return fmt.Errorf("dump.sql file not found in ZIP file: %s", zipPath)
+	}
+
+	cmd = exec.Command(version.Value.psql, connString, "-f", dumpPath)
+	output, err = cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf(
 			"error running psql v%s command: %s",
