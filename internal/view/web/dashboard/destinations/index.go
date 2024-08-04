@@ -23,6 +23,12 @@ func indexPage() gomponents.Node {
 			component.H1Text("S3 Destinations"),
 			createDestinationButton(),
 		),
+
+		component.PText(`
+			Here you can manage your S3 destinations. You can skip creating a S3
+			destination if you want to use the local storage for your backups.
+		`),
+
 		component.CardBox(component.CardBoxParams{
 			Class: "mt-4",
 			Children: []gomponents.Node{
