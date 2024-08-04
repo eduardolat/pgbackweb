@@ -13,8 +13,8 @@ const (
 
 // LocalUpload Creates a new file using the provided path and reader relative
 // to the local backups directory.
-func (Client) LocalUpload(relativePath string, fileReader io.Reader) error {
-	fullPath := filepath.Join(localBackupsDir, relativePath)
+func (Client) LocalUpload(relativeFilePath string, fileReader io.Reader) error {
+	fullPath := filepath.Join(localBackupsDir, relativeFilePath)
 	dir := filepath.Dir(fullPath)
 
 	err := os.MkdirAll(filepath.Dir(fullPath), os.ModePerm)
@@ -38,8 +38,8 @@ func (Client) LocalUpload(relativePath string, fileReader io.Reader) error {
 
 // LocalDelete Deletes a file using the provided path relative to the local
 // backups directory.
-func (Client) LocalDelete(relativePath string) error {
-	fullPath := filepath.Join(localBackupsDir, relativePath)
+func (Client) LocalDelete(relativeFilePath string) error {
+	fullPath := filepath.Join(localBackupsDir, relativeFilePath)
 
 	err := os.Remove(fullPath)
 	if err != nil {
@@ -51,8 +51,8 @@ func (Client) LocalDelete(relativePath string) error {
 
 // LocalReadFile Reads a file using the provided path relative to the local
 // backups directory.
-func (Client) LocalReadFile(relativePath string) (io.ReadCloser, error) {
-	fullPath := filepath.Join(localBackupsDir, relativePath)
+func (Client) LocalReadFile(relativeFilePath string) (io.ReadCloser, error) {
+	fullPath := filepath.Join(localBackupsDir, relativeFilePath)
 
 	file, err := os.Open(fullPath)
 	if err != nil {
