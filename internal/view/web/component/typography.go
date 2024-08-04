@@ -119,3 +119,9 @@ func PText(text string) gomponents.Node {
 func SpanText(text string) gomponents.Node {
 	return html.Span(gomponents.Text(text))
 }
+
+// BText is a convenience function to create a B element with a
+// simple text node as its child.
+func BText(text string) gomponents.Node {
+	return html.B(gomponents.Text(text))
+}
