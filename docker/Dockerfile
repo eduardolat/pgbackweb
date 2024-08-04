@@ -41,42 +41,54 @@ RUN echo 'alias pg_dump_13="/usr/lib/postgresql/13/bin/pg_dump"' >> /etc/bash.ba
 # Move to temporary directory to install additional tools
 WORKDIR /app/temp
 
-# Install task
-RUN wget https://github.com/go-task/task/releases/download/v3.37.2/task_linux_amd64.tar.gz && \
-    tar -xzf task_linux_amd64.tar.gz && \
-    mv ./task /usr/local/bin/task && \
-    chmod 777 /usr/local/bin/task
+ARG TARGETPLATFORM
 
-# Install GitHub CLI
-RUN wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz && \
-    tar -xzf gh_2.52.0_linux_amd64.tar.gz && \
-    mv gh_2.52.0_linux_amd64/bin/gh /usr/local/bin/gh && \
-    chmod 777 /usr/local/bin/gh
+RUN if [ "${TARGETPLATFORM}" = "linux/arm64" ]; then \
+        wget https://github.com/go-task/task/releases/download/v3.37.2/task_linux_arm64.tar.gz -O task.tar.gz && \
+        tar -xzf task.tar.gz && \
+        mv ./task /usr/local/bin/task && \
+        wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_arm64.tar.gz -O gh.tar.gz && \
+        tar -xzf gh.tar.gz && \
+        mv gh_2.52.0_linux_arm64/bin/gh /usr/local/bin/gh && \
+        wget https://github.com/cosmtrek/air/releases/download/v1.52.3/air_1.52.3_linux_arm64.tar.gz -O air.tar.gz && \
+        tar -xzf air.tar.gz && \
+        mv ./air /usr/local/bin/air && \
+        wget https://github.com/pressly/goose/releases/download/v3.21.1/goose_linux_arm64 -O goose && \
+        mv ./goose /usr/local/bin/goose && \
+        wget https://github.com/sqlc-dev/sqlc/releases/download/v1.26.0/sqlc_1.26.0_linux_arm64.tar.gz -O sqlc.tar.gz && \
+        tar -xzf sqlc.tar.gz && \
+        mv ./sqlc /usr/local/bin/sqlc && \
+        wget https://github.com/golangci/golangci-lint/releases/download/v1.59.1/golangci-lint-1.59.1-linux-arm64.tar.gz -O golangci-lint.tar.gz && \
+        tar -xzf golangci-lint.tar.gz && \
+        mv ./golangci-lint-1.59.1-linux-arm64/golangci-lint /usr/local/bin/golangci-lint; \
+    else \
+        wget https://github.com/go-task/task/releases/download/v3.37.2/task_linux_amd64.tar.gz -O task.tar.gz && \
+        tar -xzf task.tar.gz && \
+        mv ./task /usr/local/bin/task && \
+        wget https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz -O gh.tar.gz && \
+        tar -xzf gh.tar.gz && \
+        mv gh_2.52.0_linux_amd64/bin/gh /usr/local/bin/gh && \
+        wget https://github.com/cosmtrek/air/releases/download/v1.52.3/air_1.52.3_linux_amd64.tar.gz -O air.tar.gz && \
+        tar -xzf air.tar.gz && \
+        mv ./air /usr/local/bin/air && \
+        wget https://github.com/pressly/goose/releases/download/v3.21.1/goose_linux_x86_64 -O goose && \
+        mv ./goose /usr/local/bin/goose && \
+        wget https://github.com/sqlc-dev/sqlc/releases/download/v1.26.0/sqlc_1.26.0_linux_amd64.tar.gz -O sqlc.tar.gz && \
+        tar -xzf sqlc.tar.gz && \
+        mv ./sqlc /usr/local/bin/sqlc && \
+        wget https://github.com/golangci/golangci-lint/releases/download/v1.59.1/golangci-lint-1.59.1-linux-amd64.tar.gz -O golangci-lint.tar.gz && \
+        tar -xzf golangci-lint.tar.gz && \
+        mv ./golangci-lint-1.59.1-linux-amd64/golangci-lint /usr/local/bin/golangci-lint; \
+    fi
 
-# Install air
-RUN wget https://github.com/cosmtrek/air/releases/download/v1.52.3/air_1.52.3_linux_amd64.tar.gz && \
-    tar -xzf air_1.52.3_linux_amd64.tar.gz && \
-    mv ./air /usr/local/bin/air && \
-    chmod 777 /usr/local/bin/air
-
-# Install goose
-RUN wget https://github.com/pressly/goose/releases/download/v3.21.1/goose_linux_x86_64 && \
-    mv ./goose_linux_x86_64 /usr/local/bin/goose && \
-    chmod 777 /usr/local/bin/goose
-
-# Install sqlc
-RUN wget https://github.com/sqlc-dev/sqlc/releases/download/v1.26.0/sqlc_1.26.0_linux_amd64.tar.gz && \
-    tar -xzf sqlc_1.26.0_linux_amd64.tar.gz && \
-    mv ./sqlc /usr/local/bin/sqlc && \
-    chmod 777 /usr/local/bin/sqlc
-
-# Install golangci-lint
-RUN wget https://github.com/golangci/golangci-lint/releases/download/v1.59.1/golangci-lint-1.59.1-linux-amd64.tar.gz && \
-    tar -xzf golangci-lint-1.59.1-linux-amd64.tar.gz && \
-    mv ./golangci-lint-1.59.1-linux-amd64/golangci-lint /usr/local/bin/golangci-lint && \
+RUN chmod 777 /usr/local/bin/task && \
+    chmod 777 /usr/local/bin/gh && \
+    chmod 777 /usr/local/bin/air && \
+    chmod 777 /usr/local/bin/goose && \
+    chmod 777 /usr/local/bin/sqlc && \
     chmod 777 /usr/local/bin/golangci-lint
-
-# Go to the app dir, delete the temporary dir and create backups dir
+  
+# Delete the temporary directory and go to the app directory
 WORKDIR /app
 RUN rm -rf /app/temp && \
     mkdir /backups && \
