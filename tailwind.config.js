@@ -8,7 +8,9 @@ module.exports = {
       {
         light: {
           ...require('daisyui/src/theming/themes').light,
-          primary: '#2be7c8'
+          primary: '#2be7c8',
+          'success-content': '#ffffff',
+          'error-content': '#ffffff'
         },
         dark: {
           ...require('daisyui/src/theming/themes').dracula,
