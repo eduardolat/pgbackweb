@@ -2,31 +2,40 @@ package component
 
 import (
 	lucide "github.com/eduardolat/gomponents-lucide"
+	"github.com/google/uuid"
 	"github.com/maragudk/gomponents"
 	"github.com/maragudk/gomponents/components"
 	"github.com/maragudk/gomponents/html"
 )
 
 type SelectControlParams struct {
-	Name         string
-	Label        string
-	Placeholder  string
-	Required     bool
-	HelpText     string
-	Color        color
-	AutoComplete string
-	Children     []gomponents.Node
+	ID                 string
+	Name               string
+	Label              string
+	Placeholder        string
+	Required           bool
+	HelpText           string
+	Color              color
+	AutoComplete       string
+	Children           []gomponents.Node
+	HelpButtonChildren []gomponents.Node
 }
 
 func SelectControl(params SelectControlParams) gomponents.Node {
-	return html.Label(
+	id := params.ID
+	if id == "" {
+		id = "select-control-" + uuid.NewString()
+	}
+
+	return html.Div(
 		components.Classes{
 			"form-control w-full":           true,
 			getTextColorClass(params.Color): true,
 		},
 		html.Div(
-			html.Class("label"),
-			html.Div(
+			html.Class("label flex justify-start"),
+			html.Label(
+				html.For(id),
 				html.Class("flex justify-start items-center space-x-1"),
 				SpanText(params.Label),
 				gomponents.If(
@@ -34,12 +43,23 @@ func SelectControl(params SelectControlParams) gomponents.Node {
 					lucide.Asterisk(html.Class("text-error")),
 				),
 			),
+			gomponents.If(
+				len(params.HelpButtonChildren) > 0,
+				HelpButtonModal(HelpButtonModalParams{
+					ModalTitle: params.Label,
+					ButtonSize: SizeSm,
+					Children: []gomponents.Node{
+						SpanText(params.HelpText),
+					},
+				}),
+			),
 		),
 		html.Select(
 			components.Classes{
 				"select select-bordered w-full":   true,
 				getSelectColorClass(params.Color): true,
 			},
+			html.ID(id),
 			html.Name(params.Name),
 			gomponents.If(
 				params.Required,
@@ -62,8 +82,9 @@ func SelectControl(params SelectControlParams) gomponents.Node {
 		),
 		gomponents.If(
 			params.HelpText != "",
-			html.Div(
+			html.Label(
 				html.Class("label"),
+				html.For(id),
 				SpanText(params.HelpText),
 			),
 		),

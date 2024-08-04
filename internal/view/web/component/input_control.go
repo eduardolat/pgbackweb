@@ -2,36 +2,45 @@ package component
 
 import (
 	lucide "github.com/eduardolat/gomponents-lucide"
+	"github.com/google/uuid"
 	"github.com/maragudk/gomponents"
 	"github.com/maragudk/gomponents/components"
 	"github.com/maragudk/gomponents/html"
 )
 
 type InputControlParams struct {
-	Name         string
-	Label        string
-	Placeholder  string
-	Required     bool
-	Type         inputType
-	HelpText     string
-	Color        color
-	AutoComplete string
-	Children     []gomponents.Node
+	ID                 string
+	Name               string
+	Label              string
+	Placeholder        string
+	Required           bool
+	Type               inputType
+	HelpText           string
+	Color              color
+	AutoComplete       string
+	Children           []gomponents.Node
+	HelpButtonChildren []gomponents.Node
 }
 
 func InputControl(params InputControlParams) gomponents.Node {
+	id := params.ID
+	if id == "" {
+		id = "input-control-" + uuid.NewString()
+	}
+
 	if params.Type.Value == "" {
 		params.Type = InputTypeText
 	}
 
-	return html.Label(
+	return html.Div(
 		components.Classes{
 			"form-control w-full":           true,
 			getTextColorClass(params.Color): true,
 		},
 		html.Div(
-			html.Class("label"),
-			html.Div(
+			html.Class("label flex justify-start"),
+			html.Label(
+				html.For(id),
 				html.Class("flex justify-start items-center space-x-1"),
 				SpanText(params.Label),
 				gomponents.If(
@@ -39,12 +48,23 @@ func InputControl(params InputControlParams) gomponents.Node {
 					lucide.Asterisk(html.Class("text-error")),
 				),
 			),
+			gomponents.If(
+				len(params.HelpButtonChildren) > 0,
+				HelpButtonModal(HelpButtonModalParams{
+					ModalTitle: params.Label,
+					ButtonSize: SizeSm,
+					Children: []gomponents.Node{
+						SpanText(params.HelpText),
+					},
+				}),
+			),
 		),
 		html.Input(
 			components.Classes{
 				"input input-bordered w-full":    true,
 				getInputColorClass(params.Color): true,
 			},
+			html.ID(id),
 			html.Type(params.Type.Value),
 			html.Name(params.Name),
 			html.Placeholder(params.Placeholder),
@@ -60,8 +80,9 @@ func InputControl(params InputControlParams) gomponents.Node {
 		),
 		gomponents.If(
 			params.HelpText != "",
-			html.Div(
+			html.Label(
 				html.Class("label"),
+				html.For(id),
 				SpanText(params.HelpText),
 			),
 		),
