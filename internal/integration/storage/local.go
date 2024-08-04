@@ -51,15 +51,8 @@ func (Client) LocalDelete(relativeFilePath string) error {
 	return nil
 }
 
-// LocalReadFile Reads a file using the provided path relative to the local
-// backups directory.
-func (Client) LocalReadFile(relativeFilePath string) (io.ReadCloser, error) {
-	fullPath := strutil.CreatePath(true, localBackupsDir, relativeFilePath)
-
-	file, err := os.Open(fullPath)
-	if err != nil {
-		return nil, fmt.Errorf("failed to open file %s: %w", fullPath, err)
-	}
-
-	return file, nil
+// LocalGetFullPath Returns the full path of a file using the provided relative
+// file path to the local backups directory.
+func (Client) LocalGetFullPath(relativeFilePath string) string {
+	return strutil.CreatePath(true, localBackupsDir, relativeFilePath)
 }

@@ -129,27 +129,3 @@ func (Client) S3GetDownloadLink(
 
 	return url, nil
 }
-
-// S3ReadFile reads a file from S3
-func (Client) S3ReadFile(
-	accessKey, secretKey, region, endpoint, bucketName, key string,
-) (io.ReadCloser, error) {
-	s3Client, err := createS3Client(
-		accessKey, secretKey, region, endpoint,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	key = strutil.RemoveLeadingSlash(key)
-
-	resp, err := s3Client.GetObject(&s3.GetObjectInput{
-		Bucket: aws.String(bucketName),
-		Key:    aws.String(key),
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to read file from S3: %w", err)
-	}
-
-	return resp.Body, nil
-}
