@@ -8,6 +8,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/staticdata"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
+	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/google/uuid"
@@ -21,7 +22,8 @@ func (h *handlers) createBackupHandler(c echo.Context) error {
 
 	var formData struct {
 		DatabaseID     uuid.UUID `form:"database_id" validate:"required,uuid"`
-		DestinationID  uuid.UUID `form:"destination_id" validate:"required,uuid"`
+		DestinationID  uuid.UUID `form:"destination_id" validate:"omitempty,uuid"`
+		IsLocal        string    `form:"is_local" validate:"required,oneof=true false"`
 		Name           string    `form:"name" validate:"required"`
 		CronExpression string    `form:"cron_expression" validate:"required"`
 		TimeZone       string    `form:"time_zone" validate:"required"`
@@ -44,8 +46,11 @@ func (h *handlers) createBackupHandler(c echo.Context) error {
 
 	_, err := h.servs.BackupsService.CreateBackup(
 		ctx, dbgen.BackupsServiceCreateBackupParams{
-			DatabaseID:     formData.DatabaseID,
-			DestinationID:  formData.DestinationID,
+			DatabaseID: formData.DatabaseID,
+			DestinationID: uuid.NullUUID{
+				Valid: formData.IsLocal == "false", UUID: formData.DestinationID,
+			},
+			IsLocal:        formData.IsLocal == "true",
 			Name:           formData.Name,
 			CronExpression: formData.CronExpression,
 			TimeZone:       formData.TimeZone,
@@ -101,13 +106,16 @@ func createBackupForm(
 		htmx.HxDisabledELT("find button"),
 		html.Class("space-y-2 text-base"),
 
+		alpine.XData(`{
+			is_local: "false",
+		}`),
+
 		component.InputControl(component.InputControlParams{
 			Name:        "name",
 			Label:       "Name",
 			Placeholder: "My backup",
 			Required:    true,
 			Type:        component.InputTypeText,
-			HelpText:    "A name to easily identify the backup",
 		}),
 
 		component.SelectControl(component.SelectControlParams{
@@ -126,52 +134,45 @@ func createBackupForm(
 		}),
 
 		component.SelectControl(component.SelectControlParams{
-			Name:        "destination_id",
-			Label:       "Destination",
-			Required:    true,
-			Placeholder: "Select a destination",
+			Name:     "is_local",
+			Label:    "Local backup",
+			Required: true,
 			Children: []gomponents.Node{
-				component.GMap(
-					destinations,
-					func(dest dbgen.DestinationsServiceGetAllDestinationsRow) gomponents.Node {
-						return html.Option(html.Value(dest.ID.String()), gomponents.Text(dest.Name))
-					},
-				),
+				alpine.XModel("is_local"),
+				html.Option(html.Value("true"), gomponents.Text("Yes")),
+				html.Option(html.Value("false"), gomponents.Text("No"), html.Selected()),
 			},
+			HelpButtonChildren: localBackupsHelp(),
 		}),
 
-		html.Div(
-			component.InputControl(component.InputControlParams{
-				Name:        "cron_expression",
-				Label:       "Cron expression",
-				Placeholder: "* * * * *",
+		alpine.Template(
+			alpine.XIf("is_local == 'false'"),
+			component.SelectControl(component.SelectControlParams{
+				Name:        "destination_id",
+				Label:       "Destination",
 				Required:    true,
-				Type:        component.InputTypeText,
-				HelpText:    "The cron expression to schedule the backup",
+				Placeholder: "Select a destination",
 				Children: []gomponents.Node{
-					html.Pattern(`^\S+\s+\S+\s+\S+\s+\S+\s+\S+$`),
+					component.GMap(
+						destinations,
+						func(dest dbgen.DestinationsServiceGetAllDestinationsRow) gomponents.Node {
+							return html.Option(html.Value(dest.ID.String()), gomponents.Text(dest.Name))
+						},
+					),
 				},
 			}),
-			html.P(
-				html.Class("pl-1"),
-				gomponents.Text("Learn more about "),
-				html.A(
-					html.Class("link"),
-					html.Href("https://en.wikipedia.org/wiki/Cron"),
-					html.Target("_blank"),
-					gomponents.Text("cron expressions"),
-					lucide.ExternalLink(html.Class("inline ml-1")),
-				),
-				gomponents.Text(" and "),
-				html.A(
-					html.Class("link"),
-					html.Href("https://crontab.guru/examples.html"),
-					html.Target("_blank"),
-					gomponents.Text("see some examples"),
-					lucide.ExternalLink(html.Class("inline ml-1")),
-				),
-			),
 		),
+
+		component.InputControl(component.InputControlParams{
+			Name:               "cron_expression",
+			Label:              "Cron expression",
+			Placeholder:        "* * * * *",
+			Required:           true,
+			Type:               component.InputTypeText,
+			HelpText:           "The cron expression to schedule the backup",
+			Pattern:            `^\S+\s+\S+\s+\S+\s+\S+\s+\S+$`,
+			HelpButtonChildren: cronExpressionHelp(),
+		}),
 
 		component.SelectControl(component.SelectControlParams{
 			Name:        "time_zone",
@@ -190,25 +191,27 @@ func createBackupForm(
 		}),
 
 		component.InputControl(component.InputControlParams{
-			Name:        "dest_dir",
-			Label:       "Destination directory",
-			Placeholder: "/path/to/backup",
-			Required:    true,
-			Type:        component.InputTypeText,
-			HelpText:    "The directory where the backups will be stored",
+			Name:               "dest_dir",
+			Label:              "Destination directory",
+			Placeholder:        "/path/to/backup",
+			Required:           true,
+			Type:               component.InputTypeText,
+			HelpText:           "Relative to the base directory of the destination",
+			Pattern:            `^\/\S*[^\/]$`,
+			HelpButtonChildren: destinationDirectoryHelp(),
 		}),
 
 		component.InputControl(component.InputControlParams{
-			Name:        "retention_days",
-			Label:       "Retention days",
-			Placeholder: "30",
-			Required:    true,
-			Type:        component.InputTypeNumber,
-			HelpText:    "The number of days to keep the backups. It is evaluated by execution and all backups before this will be deleted. Use 0 to keep them indefinitely",
+			Name:               "retention_days",
+			Label:              "Retention days",
+			Placeholder:        "30",
+			Required:           true,
+			Type:               component.InputTypeNumber,
+			Pattern:            "[0-9]+",
+			HelpButtonChildren: retentionDaysHelp(),
 			Children: []gomponents.Node{
 				html.Min("0"),
 				html.Max("36500"),
-				html.Pattern("[0-9]+"),
 			},
 		}),
 
@@ -224,18 +227,15 @@ func createBackupForm(
 
 		html.Div(
 			html.Class("pt-4"),
-			component.H2Text("Options"),
-			component.PText("These options are passed to the pg_dump command."),
-			html.P(
-				gomponents.Text("Learn more in the "),
-				html.A(
-					html.Class("link"),
-					html.Href("https://www.postgresql.org/docs/current/app-pgdump.html"),
-					html.Target("_blank"),
-					component.SpanText("pg_dump documentation"),
-					lucide.ExternalLink(html.Class("inline ml-1")),
-				),
+			html.Div(
+				html.Class("flex justify-start items-center space-x-1"),
+				component.H2Text("Options"),
+				component.HelpButtonModal(component.HelpButtonModalParams{
+					ModalTitle: "Backup options",
+					Children:   pgDumpOptionsHelp(),
+				}),
 			),
+
 			html.Div(
 				html.Class("mt-2 grid grid-cols-2 gap-2"),
 
