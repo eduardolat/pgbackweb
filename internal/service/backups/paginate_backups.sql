@@ -7,7 +7,7 @@ SELECT
   databases.name AS database_name,
   destinations.name AS destination_name
 FROM backups
-JOIN databases ON backups.database_id = databases.id
-JOIN destinations ON backups.destination_id = destinations.id
+INNER JOIN databases ON backups.database_id = databases.id
+LEFT JOIN destinations ON backups.destination_id = destinations.id
 ORDER BY backups.created_at DESC
 LIMIT sqlc.arg('limit') OFFSET sqlc.arg('offset');
