@@ -94,15 +94,9 @@ func listBackups(
 				),
 			),
 			html.Td(component.SpanText(backup.DatabaseName)),
-			html.Td(component.SpanText(func() string {
-				if backup.DestinationName.Valid {
-					return backup.DestinationName.String
-				}
-				if backup.IsLocal {
-					return "Local"
-				}
-				return "Unknown"
-			}())),
+			html.Td(component.PrettyDestinationName(
+				backup.IsLocal, backup.DestinationName,
+			)),
 			html.Td(
 				html.Class("font-mono"),
 				html.Div(
