@@ -19,7 +19,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install system dependencies
 RUN apt-get update && \
-    apt-get install -y wget git gnupg2 lsb-release && \
+    apt-get install -y \
+        wget=1.21.4-1ubuntu4.1 unzip=6.0-28ubuntu4 git=1:2.43.0-1ubuntu7.1 \
+        gnupg2=2.4.4-2ubuntu17 lsb-release=12.0-2 && \
     rm -rf /var/lib/apt/lists/*
 
 # Add PostgreSQL repository and key
