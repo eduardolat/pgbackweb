@@ -79,7 +79,9 @@ func listExecutions(
 			html.Td(component.StatusBadge(execution.Status)),
 			html.Td(component.SpanText(execution.BackupName)),
 			html.Td(component.SpanText(execution.DatabaseName)),
-			html.Td(component.SpanText(execution.DestinationName)),
+			html.Td(component.PrettyDestinationName(
+				execution.BackupIsLocal, execution.DestinationName,
+			)),
 			html.Td(component.SpanText(
 				execution.StartedAt.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 			)),

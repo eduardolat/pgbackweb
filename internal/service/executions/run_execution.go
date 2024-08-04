@@ -50,18 +50,21 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		return err
 	}
 
-	err = s.ints.S3Client.Ping(
-		back.DecryptedDestinationAccessKey, back.DecryptedDestinationSecretKey,
-		back.DestinationRegion, back.DestinationEndpoint, back.DestinationBucketName,
-	)
-	if err != nil {
-		logError(err)
-		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
-			ID:         ex.ID,
-			Status:     sql.NullString{Valid: true, String: "failed"},
-			Message:    sql.NullString{Valid: true, String: err.Error()},
-			FinishedAt: sql.NullTime{Valid: true, Time: time.Now()},
-		})
+	if !back.BackupIsLocal {
+		err = s.ints.StorageClient.S3Ping(
+			back.DecryptedDestinationAccessKey, back.DecryptedDestinationSecretKey,
+			back.DestinationRegion.String, back.DestinationEndpoint.String,
+			back.DestinationBucketName.String,
+		)
+		if err != nil {
+			logError(err)
+			return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
+				ID:         ex.ID,
+				Status:     sql.NullString{Valid: true, String: "failed"},
+				Message:    sql.NullString{Valid: true, String: err.Error()},
+				FinishedAt: sql.NullTime{Valid: true, Time: time.Now()},
+			})
+		}
 	}
 
 	pgVersion, err := s.ints.PGClient.ParseVersion(back.DatabasePgVersion)
@@ -105,20 +108,36 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	)
 	path := strutil.CreatePath(false, back.BackupDestDir, date, file)
 
-	err = s.ints.S3Client.Upload(
-		back.DecryptedDestinationAccessKey, back.DecryptedDestinationSecretKey,
-		back.DestinationRegion, back.DestinationEndpoint, back.DestinationBucketName,
-		path, dumpReader,
-	)
-	if err != nil {
-		logError(err)
-		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
-			ID:         ex.ID,
-			Status:     sql.NullString{Valid: true, String: "failed"},
-			Message:    sql.NullString{Valid: true, String: err.Error()},
-			Path:       sql.NullString{Valid: true, String: path},
-			FinishedAt: sql.NullTime{Valid: true, Time: time.Now()},
-		})
+	if back.BackupIsLocal {
+		err = s.ints.StorageClient.LocalUpload(path, dumpReader)
+		if err != nil {
+			logError(err)
+			return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
+				ID:         ex.ID,
+				Status:     sql.NullString{Valid: true, String: "failed"},
+				Message:    sql.NullString{Valid: true, String: err.Error()},
+				Path:       sql.NullString{Valid: true, String: path},
+				FinishedAt: sql.NullTime{Valid: true, Time: time.Now()},
+			})
+		}
+	}
+
+	if !back.BackupIsLocal {
+		err = s.ints.StorageClient.S3Upload(
+			back.DecryptedDestinationAccessKey, back.DecryptedDestinationSecretKey,
+			back.DestinationRegion.String, back.DestinationEndpoint.String,
+			back.DestinationBucketName.String, path, dumpReader,
+		)
+		if err != nil {
+			logError(err)
+			return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
+				ID:         ex.ID,
+				Status:     sql.NullString{Valid: true, String: "failed"},
+				Message:    sql.NullString{Valid: true, String: err.Error()},
+				Path:       sql.NullString{Valid: true, String: path},
+				FinishedAt: sql.NullTime{Valid: true, Time: time.Now()},
+			})
+		}
 	}
 
 	logger.Info("backup created successfully", logger.KV{

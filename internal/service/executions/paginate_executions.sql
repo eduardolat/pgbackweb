@@ -1,9 +1,9 @@
 -- name: ExecutionsServicePaginateExecutionsCount :one
 SELECT COUNT(executions.*)
 FROM executions
-JOIN backups ON backups.id = executions.backup_id
-JOIN databases ON databases.id = backups.database_id
-JOIN destinations ON destinations.id = backups.destination_id
+INNER JOIN backups ON backups.id = executions.backup_id
+INNER JOIN databases ON databases.id = backups.database_id
+LEFT JOIN destinations ON destinations.id = backups.destination_id
 WHERE
 (
   sqlc.narg('backup_id')::UUID IS NULL
@@ -28,11 +28,12 @@ SELECT
   executions.*,
   backups.name AS backup_name,
   databases.name AS database_name,
-  destinations.name AS destination_name
+  destinations.name AS destination_name,
+  backups.is_local AS backup_is_local
 FROM executions
-JOIN backups ON backups.id = executions.backup_id
-JOIN databases ON databases.id = backups.database_id
-JOIN destinations ON destinations.id = backups.destination_id
+INNER JOIN backups ON backups.id = executions.backup_id
+INNER JOIN databases ON databases.id = backups.database_id
+LEFT JOIN destinations ON destinations.id = backups.destination_id
 WHERE
 (
   sqlc.narg('backup_id')::UUID IS NULL

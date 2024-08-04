@@ -1,11 +1,13 @@
 package executions
 
 import (
+	"net/http"
+	"path/filepath"
+
 	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/maragudk/gomponents"
@@ -17,17 +19,21 @@ func (h *handlers) downloadExecutionHandler(c echo.Context) error {
 
 	executionID, err := uuid.Parse(c.Param("executionID"))
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	link, err := h.servs.ExecutionsService.GetExecutionDownloadLink(
+	isLocal, link, err := h.servs.ExecutionsService.GetExecutionDownloadLinkOrPath(
 		ctx, executionID,
 	)
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
-	return htmx.RespondRedirect(c, link)
+	if isLocal {
+		return c.Attachment(link, filepath.Base(link))
+	}
+
+	return c.Redirect(http.StatusFound, link)
 }
 
 func showExecutionButton(
@@ -55,7 +61,9 @@ func showExecutionButton(
 					),
 					html.Tr(
 						html.Th(component.SpanText("Destination")),
-						html.Td(component.SpanText(execution.DestinationName)),
+						html.Td(component.PrettyDestinationName(
+							execution.BackupIsLocal, execution.DestinationName,
+						)),
 					),
 					gomponents.If(
 						execution.Message.Valid,
@@ -106,9 +114,9 @@ func showExecutionButton(
 					html.Div(
 						html.Class("flex justify-end items-center space-x-2"),
 						deleteExecutionButton(execution.ID),
-						html.Button(
-							htmx.HxGet("/dashboard/executions/"+execution.ID.String()+"/download"),
-							htmx.HxDisabledELT("this"),
+						html.A(
+							html.Href("/dashboard/executions/"+execution.ID.String()+"/download"),
+							html.Target("_blank"),
 							html.Class("btn btn-primary"),
 							component.SpanText("Download"),
 							lucide.Download(),

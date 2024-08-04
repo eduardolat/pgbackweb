@@ -100,45 +100,24 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 					Placeholder: "My backup",
 					Required:    true,
 					Type:        component.InputTypeText,
-					HelpText:    "A name to easily identify the backup",
 					Children: []gomponents.Node{
 						html.Value(backup.Name),
 					},
 				}),
 
-				html.Div(
-					component.InputControl(component.InputControlParams{
-						Name:        "cron_expression",
-						Label:       "Cron expression",
-						Placeholder: "* * * * *",
-						Required:    true,
-						Type:        component.InputTypeText,
-						HelpText:    "The cron expression to schedule the backup",
-						Children: []gomponents.Node{
-							html.Pattern(`^\S+\s+\S+\s+\S+\s+\S+\s+\S+$`),
-							html.Value(backup.CronExpression),
-						},
-					}),
-					html.P(
-						html.Class("pl-1"),
-						gomponents.Text("Learn more about "),
-						html.A(
-							html.Class("link"),
-							html.Href("https://en.wikipedia.org/wiki/Cron"),
-							html.Target("_blank"),
-							gomponents.Text("cron expressions"),
-							lucide.ExternalLink(html.Class("inline ml-1")),
-						),
-						gomponents.Text(" and "),
-						html.A(
-							html.Class("link"),
-							html.Href("https://crontab.guru/examples.html"),
-							html.Target("_blank"),
-							gomponents.Text("see some examples"),
-							lucide.ExternalLink(html.Class("inline ml-1")),
-						),
-					),
-				),
+				component.InputControl(component.InputControlParams{
+					Name:        "cron_expression",
+					Label:       "Cron expression",
+					Placeholder: "* * * * *",
+					Required:    true,
+					Type:        component.InputTypeText,
+					HelpText:    "The cron expression to schedule the backup",
+					Pattern:     `^\S+\s+\S+\s+\S+\s+\S+\s+\S+$`,
+					Children: []gomponents.Node{
+						html.Value(backup.CronExpression),
+					},
+					HelpButtonChildren: cronExpressionHelp(),
+				}),
 
 				component.SelectControl(component.SelectControlParams{
 					Name:        "time_zone",
@@ -164,28 +143,30 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 				}),
 
 				component.InputControl(component.InputControlParams{
-					Name:        "dest_dir",
-					Label:       "Destination directory",
-					Placeholder: "/path/to/backup",
-					Required:    true,
-					Type:        component.InputTypeText,
-					HelpText:    "The directory where the backups will be stored",
+					Name:               "dest_dir",
+					Label:              "Destination directory",
+					Placeholder:        "/path/to/backup",
+					Required:           true,
+					Type:               component.InputTypeText,
+					HelpText:           "Relative to the base directory of the destination",
+					HelpButtonChildren: destinationDirectoryHelp(),
+					Pattern:            `^\/\S*[^\/]$`,
 					Children: []gomponents.Node{
 						html.Value(backup.DestDir),
 					},
 				}),
 
 				component.InputControl(component.InputControlParams{
-					Name:        "retention_days",
-					Label:       "Retention days",
-					Placeholder: "30",
-					Required:    true,
-					Type:        component.InputTypeNumber,
-					HelpText:    "The number of days to keep the backups. It is evaluated by execution and all backups before this will be deleted. Use 0 to keep them indefinitely",
+					Name:               "retention_days",
+					Label:              "Retention days",
+					Placeholder:        "30",
+					Required:           true,
+					Type:               component.InputTypeNumber,
+					Pattern:            "[0-9]+",
+					HelpButtonChildren: retentionDaysHelp(),
 					Children: []gomponents.Node{
 						html.Min("0"),
 						html.Max("36500"),
-						html.Pattern("[0-9]+"),
 						html.Value(fmt.Sprintf("%d", backup.RetentionDays)),
 					},
 				}),
@@ -201,17 +182,13 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 
 				html.Div(
 					html.Class("pt-4"),
-					component.H2Text("Options"),
-					component.PText("These options are passed to the pg_dump command."),
-					html.P(
-						gomponents.Text("Learn more in the "),
-						html.A(
-							html.Class("link"),
-							html.Href("https://www.postgresql.org/docs/current/app-pgdump.html"),
-							html.Target("_blank"),
-							component.SpanText("pg_dump documentation"),
-							lucide.ExternalLink(html.Class("inline ml-1")),
-						),
+					html.Div(
+						html.Class("flex justify-start items-center space-x-1"),
+						component.H2Text("Options"),
+						component.HelpButtonModal(component.HelpButtonModalParams{
+							ModalTitle: "Backup options",
+							Children:   pgDumpOptionsHelp(),
+						}),
 					),
 
 					html.Div(
