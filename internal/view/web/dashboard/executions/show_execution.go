@@ -55,7 +55,15 @@ func showExecutionButton(
 					),
 					html.Tr(
 						html.Th(component.SpanText("Destination")),
-						html.Td(component.SpanText(execution.DestinationName)),
+						html.Td(component.SpanText(func() string {
+							if execution.DestinationName.Valid {
+								return execution.DestinationName.String
+							}
+							if execution.BackupIsLocal {
+								return "Local"
+							}
+							return "Unknown"
+						}())),
 					),
 					gomponents.If(
 						execution.Message.Valid,
