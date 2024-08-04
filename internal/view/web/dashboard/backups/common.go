@@ -39,7 +39,7 @@ func cronExpressionHelp() []gomponents.Node {
 		`),
 
 		html.Div(
-			html.Class("mt-4 flex justify-end items-center"),
+			html.Class("mt-4 flex justify-end items-center space-x-1"),
 			html.A(
 				html.Href("https://en.wikipedia.org/wiki/Cron"),
 				html.Target("_blank"),
