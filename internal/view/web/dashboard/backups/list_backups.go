@@ -94,7 +94,9 @@ func listBackups(
 				),
 			),
 			html.Td(component.SpanText(backup.DatabaseName)),
-			html.Td(component.SpanText(backup.DestinationName)),
+			html.Td(component.PrettyDestinationName(
+				backup.IsLocal, backup.DestinationName,
+			)),
 			html.Td(
 				html.Class("font-mono"),
 				html.Div(

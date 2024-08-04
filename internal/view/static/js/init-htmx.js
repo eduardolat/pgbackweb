@@ -1,4 +1,4 @@
-export function initHTMXTriggers () {
+export function initHTMX () {
   const triggers = {
     ctm_alert: function (evt) {
       const message = decodeURIComponent(evt.detail.value)
@@ -42,4 +42,19 @@ export function initHTMXTriggers () {
   for (const key in triggers) {
     document.addEventListener(key, triggers[key])
   }
+
+  /*
+    This fixes this issue:
+    https://stackoverflow.com/questions/73658449/htmx-request-not-firing-when-hx-attributes-are-added-dynamically-from-javascrip
+  */
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === 1 && !node['htmx-internal-data']) {
+          htmx.process(node)
+        }
+      })
+    })
+  })
+  observer.observe(document, { childList: true, subtree: true })
 }

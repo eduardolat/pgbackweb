@@ -18,7 +18,9 @@
       "location",
       "toaster",
       "Alpine",
-      "Notyf"
+      "Notyf",
+      "htmx",
+      "MutationObserver"
     ]
   }
 }

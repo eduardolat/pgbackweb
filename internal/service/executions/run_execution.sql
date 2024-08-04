@@ -1,6 +1,7 @@
 -- name: ExecutionsServiceGetBackupData :one
 SELECT
   backups.is_active as backup_is_active,
+  backups.is_local as backup_is_local,
   backups.dest_dir as backup_dest_dir,
   backups.opt_data_only as backup_opt_data_only,
   backups.opt_schema_only as backup_opt_schema_only,
@@ -15,9 +16,19 @@ SELECT
   destinations.bucket_name as destination_bucket_name,
   destinations.region as destination_region,
   destinations.endpoint as destination_endpoint,
-  pgp_sym_decrypt(destinations.access_key, @encryption_key) AS decrypted_destination_access_key,
-  pgp_sym_decrypt(destinations.secret_key, @encryption_key) AS decrypted_destination_secret_key
+  (
+    CASE WHEN destinations.access_key IS NOT NULL
+    THEN pgp_sym_decrypt(destinations.access_key, @encryption_key)
+    ELSE ''
+    END
+  ) AS decrypted_destination_access_key,
+  (
+    CASE WHEN destinations.secret_key IS NOT NULL
+    THEN pgp_sym_decrypt(destinations.secret_key, @encryption_key)
+    ELSE ''
+    END
+  ) AS decrypted_destination_secret_key
 FROM backups
-JOIN databases ON backups.database_id = databases.id
-JOIN destinations ON backups.destination_id = destinations.id
+INNER JOIN databases ON backups.database_id = databases.id
+LEFT JOIN destinations ON backups.destination_id = destinations.id
 WHERE backups.id = @backup_id;
