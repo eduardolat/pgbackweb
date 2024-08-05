@@ -10,6 +10,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/service/databases"
 	"github.com/eduardolat/pgbackweb/internal/service/destinations"
 	"github.com/eduardolat/pgbackweb/internal/service/executions"
+	"github.com/eduardolat/pgbackweb/internal/service/restorations"
 	"github.com/eduardolat/pgbackweb/internal/service/users"
 )
 
@@ -20,6 +21,7 @@ type Service struct {
 	DestinationsService *destinations.Service
 	ExecutionsService   *executions.Service
 	UsersService        *users.Service
+	RestorationsService *restorations.Service
 }
 
 func New(
@@ -32,6 +34,9 @@ func New(
 	executionsService := executions.New(env, dbgen, ints)
 	usersService := users.New(dbgen)
 	backupsService := backups.New(dbgen, cr, executionsService)
+	restorationsService := restorations.New(
+		dbgen, ints, executionsService, databasesService, destinationsService,
+	)
 
 	return &Service{
 		AuthService:         authService,
@@ -40,5 +45,6 @@ func New(
 		DestinationsService: destinationsService,
 		ExecutionsService:   executionsService,
 		UsersService:        usersService,
+		RestorationsService: restorationsService,
 	}
 }
