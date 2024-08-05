@@ -57,6 +57,8 @@ services:
     image: eduardolat/pgbackweb:latest
     ports:
       - "8085:8085" # Access the web interface at http://localhost:8085
+    volumes:
+      - ./backups:/backups # If you only use S3 destinations, you don't need this volume
     environment:
       PBW_ENCRYPTION_KEY: "my_secret_key"
       PBW_POSTGRES_CONN_STRING: "postgresql://postgres:password@postgres:5432/pgbackweb?sslmode=disable"
