@@ -23,4 +23,6 @@ func MountRouter(
 	parent.GET("/list", h.listExecutionsHandler)
 	parent.GET("/:executionID/download", h.downloadExecutionHandler)
 	parent.DELETE("/:executionID", h.deleteExecutionHandler)
+	parent.GET("/:executionID/restore-form", h.restoreExecutionFormHandler)
+	parent.POST("/:executionID/restore", h.restoreExecutionHandler)
 }
