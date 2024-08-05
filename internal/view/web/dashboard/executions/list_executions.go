@@ -74,6 +74,7 @@ func listExecutions(
 				html.Div(
 					html.Class("flex justify-start space-x-1"),
 					showExecutionButton(execution),
+					restoreExecutionButton(execution),
 				),
 			),
 			html.Td(component.StatusBadge(execution.Status)),

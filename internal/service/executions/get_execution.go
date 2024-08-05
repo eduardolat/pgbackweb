@@ -9,6 +9,6 @@ import (
 
 func (s *Service) GetExecution(
 	ctx context.Context, id uuid.UUID,
-) (dbgen.Execution, error) {
+) (dbgen.ExecutionsServiceGetExecutionRow, error) {
 	return s.dbgen.ExecutionsServiceGetExecution(ctx, id)
 }

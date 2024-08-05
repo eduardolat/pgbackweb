@@ -5,8 +5,10 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"os"
 	"os/exec"
 
+	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 	"github.com/orsinium-labs/enum"
 )
 
@@ -194,4 +196,66 @@ func (c *Client) DumpZip(
 	}()
 
 	return reader
+}
+
+// RestoreZip downloads or copies the ZIP from the given url or path, unzips it,
+// and runs the psql command to restore the database.
+//
+// The ZIP file must contain a dump.sql file with the SQL dump to restore.
+//
+//   - version: PostgreSQL version to use for the restore
+//   - connString: connection string to the database
+//   - isLocal: whether the ZIP file is local or a URL
+//   - zipURLOrPath: URL or path to the ZIP file
+func (Client) RestoreZip(
+	version PGVersion, connString string, isLocal bool, zipURLOrPath string,
+) error {
+	workDir, err := os.MkdirTemp("", "pbw-restore-*")
+	if err != nil {
+		return fmt.Errorf("error creating temp dir: %w", err)
+	}
+	defer os.RemoveAll(workDir)
+	zipPath := strutil.CreatePath(true, workDir, "dump.zip")
+	dumpPath := strutil.CreatePath(true, workDir, "dump.sql")
+
+	if isLocal {
+		cmd := exec.Command("cp", zipURLOrPath, zipPath)
+		output, err := cmd.CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("error copying ZIP file to temp dir: %s", output)
+		}
+	}
+
+	if !isLocal {
+		cmd := exec.Command("wget", "--no-verbose", "-O", zipPath, zipURLOrPath)
+		output, err := cmd.CombinedOutput()
+		if err != nil {
+			return fmt.Errorf("error downloading ZIP file: %s", output)
+		}
+	}
+
+	if _, err := os.Stat(zipPath); os.IsNotExist(err) {
+		return fmt.Errorf("zip file not found: %s", zipPath)
+	}
+
+	cmd := exec.Command("unzip", "-o", zipPath, "dump.sql", "-d", workDir)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("error unzipping ZIP file: %s", output)
+	}
+
+	if _, err := os.Stat(dumpPath); os.IsNotExist(err) {
+		return fmt.Errorf("dump.sql file not found in ZIP file: %s", zipPath)
+	}
+
+	cmd = exec.Command(version.Value.psql, connString, "-f", dumpPath)
+	output, err = cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf(
+			"error running psql v%s command: %s",
+			version.Value.version, output,
+		)
+	}
+
+	return nil
 }

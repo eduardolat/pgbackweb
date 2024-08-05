@@ -1,4 +1,4 @@
-package executions
+package restorations
 
 import (
 	"github.com/eduardolat/pgbackweb/internal/service"
@@ -20,9 +20,5 @@ func MountRouter(
 	h := newHandlers(servs)
 
 	parent.GET("", h.indexPageHandler)
-	parent.GET("/list", h.listExecutionsHandler)
-	parent.GET("/:executionID/download", h.downloadExecutionHandler)
-	parent.DELETE("/:executionID", h.deleteExecutionHandler)
-	parent.GET("/:executionID/restore-form", h.restoreExecutionFormHandler)
-	parent.POST("/:executionID/restore", h.restoreExecutionHandler)
+	parent.GET("/list", h.listRestorationsHandler)
 }
