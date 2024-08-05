@@ -1,14 +1,21 @@
-export const githubStars = {
-  name: 'githubStars',
+export const githubRepoInfo = {
+  name: 'githubRepoInfo',
   fn: () => ({
     stars: '',
+    latestRelease: '',
+
     async init () {
-      const stars = await this.getGitHubStars()
+      const stars = await this.getStars()
       if (stars !== null) {
         this.stars = stars
       }
+
+      const latestRelease = await this.getLatestRelease()
+      if (latestRelease !== null) {
+        this.latestRelease = latestRelease
+      }
     },
-    async getGitHubStars () {
+    async getStars () {
       const cacheKey = 'pbw_gh_stars'
       const cachedData = this.getCachedData(cacheKey)
       if (cachedData !== null) {
@@ -24,6 +31,26 @@ export const githubStars = {
         const data = await response.json()
         this.cacheData(cacheKey, data.stargazers_count)
         return data.stargazers_count
+      } catch {
+        return null
+      }
+    },
+    async getLatestRelease () {
+      const cacheKey = 'pbw_gh_last_release'
+      const cachedData = this.getCachedData(cacheKey)
+      if (cachedData !== null) {
+        return cachedData
+      }
+
+      const url = 'https://api.github.com/repos/eduardolat/pgbackweb/releases/latest'
+      try {
+        const response = await fetch(url)
+        if (!response.ok) {
+          return null
+        }
+        const data = await response.json()
+        this.cacheData(cacheKey, data.name)
+        return data.name
       } catch {
         return null
       }

@@ -1,7 +1,11 @@
 package layout
 
 import (
+	"fmt"
+
 	lucide "github.com/eduardolat/gomponents-lucide"
+	"github.com/eduardolat/pgbackweb/internal/config"
+	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/maragudk/gomponents"
@@ -24,8 +28,17 @@ func dashboardHeader() gomponents.Node {
 				Size:        component.SizeMd,
 			}),
 			component.StarOnGithub(component.SizeMd),
+			dashboardHeaderCheckForUpdates(),
 		),
 		html.Div(
+			html.Class("flex justify-end items-center space-x-2"),
+			html.A(
+				html.Href("https://discord.gg/BmAwq29UZ8"),
+				html.Target("_blank"),
+				html.Class("btn btn-ghost btn-neutral"),
+				component.SpanText("Chat on Discord"),
+				lucide.ExternalLink(),
+			),
 			html.Button(
 				htmx.HxPost("/auth/logout"),
 				htmx.HxDisabledELT("this"),
@@ -33,6 +46,29 @@ func dashboardHeader() gomponents.Node {
 				component.SpanText("Log out"),
 				lucide.LogOut(),
 			),
+		),
+	)
+}
+
+func dashboardHeaderCheckForUpdates() gomponents.Node {
+	return html.A(
+		alpine.XData("githubRepoInfo"),
+		alpine.XCloak(),
+		alpine.XShow(fmt.Sprintf(
+			"latestRelease !== '' && latestRelease !== '%s'",
+			config.Version,
+		)),
+
+		components.Classes{
+			"btn btn-warning": true,
+		},
+		html.Href("https://github.com/eduardolat/pgbackweb/releases"),
+		html.Target("_blank"),
+		lucide.ExternalLink(),
+		component.SpanText("Update available"),
+		html.Span(
+			alpine.XShow("stars"),
+			alpine.XText("'( ' + latestRelease + ' )'"),
 		),
 	)
 }
