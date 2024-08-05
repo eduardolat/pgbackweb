@@ -32,15 +32,21 @@ func (h *handlers) indexPageHandler(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
+	restorationsQty, err := h.servs.RestorationsService.GetRestorationsQty(ctx)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
 
 	return echoutil.RenderGomponent(
 		c, http.StatusOK,
-		indexPage(databasesQty, destinationsQty, backupsQty, executionsQty),
+		indexPage(
+			databasesQty, destinationsQty, backupsQty, executionsQty, restorationsQty,
+		),
 	)
 }
 
 func indexPage(
-	databasesQty, destinationsQty, backupsQty, executionsQty int64,
+	databasesQty, destinationsQty, backupsQty, executionsQty, restorationsQty int64,
 ) gomponents.Node {
 	countCard := func(title string, count int64) gomponents.Node {
 		return component.CardBox(component.CardBoxParams{
@@ -58,11 +64,12 @@ func indexPage(
 	content := []gomponents.Node{
 		component.H1Text("Summary"),
 		html.Div(
-			html.Class("mt-4 grid grid-cols-4 gap-4"),
+			html.Class("mt-4 grid grid-cols-5 gap-4"),
 			countCard("Databases", databasesQty),
 			countCard("Destinations", destinationsQty),
 			countCard("Backups", backupsQty),
 			countCard("Executions", executionsQty),
+			countCard("Restorations", restorationsQty),
 		),
 		html.Div(
 			alpine.XData("genericSlider(4)"),
