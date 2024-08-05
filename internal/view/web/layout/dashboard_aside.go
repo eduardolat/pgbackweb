@@ -78,6 +78,13 @@ func dashboardAside() gomponents.Node {
 			),
 
 			dashboardAsideItem(
+				lucide.ArchiveRestore,
+				"Restorations",
+				"/dashboard/restorations",
+				false,
+			),
+
+			dashboardAsideItem(
 				lucide.User,
 				"Profile",
 				"/dashboard/profile",
