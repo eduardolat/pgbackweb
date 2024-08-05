@@ -103,6 +103,10 @@ COPY . .
 # Build the app
 RUN task build
 
+# Copy change-password binary
+RUN cp ./dist/change-password /usr/local/bin/change-password && \
+    chmod 777 /usr/local/bin/change-password
+
 # Run the app
 EXPOSE 8085
 CMD ["task", "migrate-serve"]

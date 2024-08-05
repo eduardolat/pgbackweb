@@ -22,6 +22,7 @@ tasks:
     cmds:
       - task fmt
       - go build -o ./dist/app ./cmd/app/.
+      - go build -o ./dist/change-password ./cmd/changepw/.
 
   serve:
     cmd: ./dist/app
