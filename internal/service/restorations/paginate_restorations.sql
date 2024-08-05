@@ -2,6 +2,7 @@
 SELECT COUNT(restorations.*)
 FROM restorations
 INNER JOIN executions ON executions.id = restorations.execution_id
+INNER JOIN backups ON backups.id = executions.backup_id
 LEFT JOIN databases ON databases.id = restorations.database_id
 WHERE
 (
@@ -19,9 +20,11 @@ AND
 -- name: RestorationsServicePaginateRestorations :many
 SELECT
   restorations.*,
-  databases.name AS database_name
+  databases.name AS database_name,
+  backups.name AS backup_name
 FROM restorations
 INNER JOIN executions ON executions.id = restorations.execution_id
+INNER JOIN backups ON backups.id = executions.backup_id
 LEFT JOIN databases ON databases.id = restorations.database_id
 WHERE
 (
