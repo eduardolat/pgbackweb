@@ -105,7 +105,16 @@ func listBackups(
 					component.SpanText(backup.TimeZone),
 				),
 			),
-			html.Td(component.SpanText(fmt.Sprintf("%d days", backup.RetentionDays))),
+			html.Td(
+				gomponents.If(
+					backup.RetentionDays == 0,
+					lucide.Infinity(),
+				),
+				gomponents.If(
+					backup.RetentionDays > 0,
+					component.SpanText(fmt.Sprintf("%d days", backup.RetentionDays)),
+				),
+			),
 			html.Td(yesNoSpan(backup.OptDataOnly)),
 			html.Td(yesNoSpan(backup.OptSchemaOnly)),
 			html.Td(yesNoSpan(backup.OptClean)),

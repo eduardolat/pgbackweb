@@ -29,7 +29,7 @@ func (h *handlers) createBackupHandler(c echo.Context) error {
 		TimeZone       string    `form:"time_zone" validate:"required"`
 		IsActive       string    `form:"is_active" validate:"required,oneof=true false"`
 		DestDir        string    `form:"dest_dir" validate:"required"`
-		RetentionDays  int16     `form:"retention_days" validate:"required"`
+		RetentionDays  int16     `form:"retention_days"`
 		OptDataOnly    string    `form:"opt_data_only" validate:"required,oneof=true false"`
 		OptSchemaOnly  string    `form:"opt_schema_only" validate:"required,oneof=true false"`
 		OptClean       string    `form:"opt_clean" validate:"required,oneof=true false"`

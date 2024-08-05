@@ -109,11 +109,19 @@ func destinationDirectoryHelp() []gomponents.Node {
 
 func retentionDaysHelp() []gomponents.Node {
 	return []gomponents.Node{
-		component.PText(`
-			Retention days specifies the number of days to keep backup files before
-			they are automatically deleted. This ensures that old backups are removed
-			to save storage space. The retention period is evaluated by execution.
-		`),
+		html.Div(
+			html.Class("space-y-2"),
+
+			component.PText(`
+				Retention days specifies the number of days to keep backup files before
+				they are automatically deleted. This ensures that old backups are removed
+				to save storage space. The retention period is evaluated by execution.
+			`),
+
+			component.PText(`
+				If you set the retention days to 0, the backups will never be deleted.
+			`),
+		),
 	}
 }
 
