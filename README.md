@@ -31,15 +31,16 @@ PG Back Web isn't just another backup tool. It's your trusted ally in ensuring t
 
 - 🎯 **Designed for everyone**: From individual developers to teams.
 - ⏱️ **Save time**: Automate your backups and forget about manual tasks.
+- ⚡ **Plug and play**: Don't waste time with complex configurations.
 
 ## Features
 
 - 📦 **Intuitive web interface**: Manage your backups with ease, no database expertise required.
 - 📅 **Scheduled backups**: Set it and forget it. PG Back Web takes care of the rest.
 - 📈 **Backup monitoring**: Visualize the status of your backups with execution logs.
-- 📤 **Instant download**: Access your backups when you need them, directly from the web interface.
+- 📤 **Instant download & restore**: Restore and download your backups when you need them, directly from the web interface.
 - 🖥 **Multi-version support**: Compatible with PostgreSQL 13, 14, 15, and 16.
-- 📁 **S3 storage**: Add as many S3 buckets as you want for greater flexibility.
+- 📁 **Local & S3 storage**: Store backups locally or add as many S3 buckets as you want for greater flexibility.
 - 🔒 **Security first**: PGP encryption to protect your sensitive information.
 - 🛡️ **Open-source trust**: Open-source code under MIT license, backed by the robust pg_dump tool.
 - 🌚 **Dark mode**: Because we all love dark mode.
@@ -96,9 +97,13 @@ You only need to configure the following environment variables:
 
 ## Reset password
 
-For the moment you can reset your password by updating the table `users` in the database.
+You can reset your PG Back Web password by running the following command in the server where PG Back Web is running:
 
-The password should be bcrypt hashed.
+```bash
+docker exec -it <container_name_or_id> sh -c change-password
+```
+
+You should replace `<container_name_or_id>` with the name or ID of the PG Back Web container, then just follow the instructions.
 
 ## Next steps
 
