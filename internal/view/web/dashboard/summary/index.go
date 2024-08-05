@@ -86,22 +86,22 @@ func indexPage(
 							html.Class("steps"),
 							html.Li(
 								html.Class("step"),
-								alpine.XBind("class", "currentSlide === 1 ? 'step-primary' : ''"),
+								alpine.XBind("class", "currentSlide >= 1 ? 'step-primary' : ''"),
 								gomponents.Text("Create database"),
 							),
 							html.Li(
 								html.Class("step"),
-								alpine.XBind("class", "currentSlide === 2 ? 'step-primary' : ''"),
+								alpine.XBind("class", "currentSlide >= 2 ? 'step-primary' : ''"),
 								gomponents.Text("Create destination"),
 							),
 							html.Li(
 								html.Class("step"),
-								alpine.XBind("class", "currentSlide === 3 ? 'step-primary' : ''"),
+								alpine.XBind("class", "currentSlide >= 3 ? 'step-primary' : ''"),
 								gomponents.Text("Create backup"),
 							),
 							html.Li(
 								html.Class("step"),
-								alpine.XBind("class", "currentSlide === 4 ? 'step-primary' : ''"),
+								alpine.XBind("class", "currentSlide >= 4 ? 'step-primary' : ''"),
 								gomponents.Text("Wait for executions"),
 							),
 						),
