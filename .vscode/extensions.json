@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "golang.go",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "standard.vscode-standard"
   ]
 }
