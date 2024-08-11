@@ -51,9 +51,9 @@ func (Client) S3Ping(
 	return nil
 }
 
-// S3Upload uploads a file to S3 from a reader
+// S3Upload uploads a file to S3 from a reader.
 //
-// Returns the file size
+// Returns the file size, in bytes.
 func (Client) S3Upload(
 	accessKey, secretKey, region, endpoint, bucketName, key string,
 	fileReader io.Reader,

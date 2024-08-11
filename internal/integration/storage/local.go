@@ -16,7 +16,7 @@ const (
 // LocalUpload Creates a new file using the provided path and reader relative
 // to the local backups directory.
 //
-// Returns the size of the file created.
+// Returns the size of the file created, in bytes.
 func (Client) LocalUpload(relativeFilePath string, fileReader io.Reader) (int64, error) {
 	fullPath := strutil.CreatePath(true, localBackupsDir, relativeFilePath)
 	dir := filepath.Dir(fullPath)
