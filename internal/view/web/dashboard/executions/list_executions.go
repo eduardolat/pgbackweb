@@ -102,6 +102,12 @@ func listExecutions(
 					),
 				),
 			),
+			html.Td(
+				gomponents.If(
+					execution.FileSize.Valid,
+					component.PrettyFileSize(execution.FileSize),
+				),
+			),
 		))
 	}
 

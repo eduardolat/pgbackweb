@@ -108,6 +108,13 @@ func showExecutionButton(
 							)),
 						),
 					),
+					gomponents.If(
+						execution.FileSize.Valid,
+						html.Tr(
+							html.Th(component.SpanText("Compressed Size")),
+							html.Td(component.PrettyFileSize(execution.FileSize)),
+						),
+					),
 				),
 				gomponents.If(
 					execution.Status == "success",
