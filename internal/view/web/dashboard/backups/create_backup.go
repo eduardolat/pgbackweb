@@ -2,6 +2,7 @@ package backups
 
 import (
 	"net/http"
+	"time"
 
 	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
@@ -101,6 +102,8 @@ func createBackupForm(
 		})
 	}
 
+	serverTZ := time.Now().Location().String()
+
 	return html.Form(
 		htmx.HxPost("/dashboard/backups"),
 		htmx.HxDisabledELT("find button"),
@@ -184,7 +187,12 @@ func createBackupForm(
 				component.GMap(
 					staticdata.Timezones,
 					func(tz staticdata.Timezone) gomponents.Node {
-						return html.Option(html.Value(tz.TzCode), gomponents.Text(tz.Label))
+						var selected gomponents.Node
+						if tz.TzCode == serverTZ {
+							selected = html.Selected()
+						}
+
+						return html.Option(html.Value(tz.TzCode), gomponents.Text(tz.Label), selected)
 					},
 				),
 			},
