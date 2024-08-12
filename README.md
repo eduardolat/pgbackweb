@@ -62,6 +62,7 @@ services:
     environment:
       PBW_ENCRYPTION_KEY: "my_secret_key"
       PBW_POSTGRES_CONN_STRING: "postgresql://postgres:password@postgres:5432/pgbackweb?sslmode=disable"
+      TZ: "America/Guatemala" # Set your timezone, optional
     depends_on:
       postgres:
         condition: service_healthy
@@ -90,6 +91,9 @@ You only need to configure the following environment variables:
 - `PBW_ENCRYPTION_KEY`: Your encryption key. Generate a strong one and store it in a safe place, as PG Back Web uses it to encrypt sensitive data.
 
 - `PBW_POSTGRES_CONN_STRING`: The connection string for the PostgreSQL database that will store PG Back Web data.
+
+- `TZ`: Your [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List), optional. Default is `UTC`.
+For accurate logging and default timezone in the web interface. Can also be a mount point to the host's `/etc/localtime` instead.
 
 ## Screenshots
 
