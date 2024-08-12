@@ -53,6 +53,7 @@ func indexPage(queryData execsQueryData) gomponents.Node {
 								html.Th(component.SpanText("Started at")),
 								html.Th(component.SpanText("Finished at")),
 								html.Th(component.SpanText("Duration")),
+								html.Th(component.SpanText("Compressed Size")),
 							),
 						),
 						html.TBody(

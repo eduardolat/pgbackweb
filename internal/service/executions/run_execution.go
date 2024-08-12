@@ -107,9 +107,10 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		uuid.NewString(),
 	)
 	path := strutil.CreatePath(false, back.BackupDestDir, date, file)
+	fileSize := int64(0)
 
 	if back.BackupIsLocal {
-		err = s.ints.StorageClient.LocalUpload(path, dumpReader)
+		fileSize, err = s.ints.StorageClient.LocalUpload(path, dumpReader)
 		if err != nil {
 			logError(err)
 			return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{
@@ -123,7 +124,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	}
 
 	if !back.BackupIsLocal {
-		err = s.ints.StorageClient.S3Upload(
+		fileSize, err = s.ints.StorageClient.S3Upload(
 			back.DecryptedDestinationAccessKey, back.DecryptedDestinationSecretKey,
 			back.DestinationRegion.String, back.DestinationEndpoint.String,
 			back.DestinationBucketName.String, path, dumpReader,
@@ -150,5 +151,6 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		Message:    sql.NullString{Valid: true, String: "Backup created successfully"},
 		Path:       sql.NullString{Valid: true, String: path},
 		FinishedAt: sql.NullTime{Valid: true, Time: time.Now()},
+		FileSize:   sql.NullInt64{Valid: true, Int64: fileSize},
 	})
 }

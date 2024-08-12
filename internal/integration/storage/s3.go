@@ -51,16 +51,18 @@ func (Client) S3Ping(
 	return nil
 }
 
-// S3Upload uploads a file to S3 from a reader
+// S3Upload uploads a file to S3 from a reader.
+//
+// Returns the file size, in bytes.
 func (Client) S3Upload(
 	accessKey, secretKey, region, endpoint, bucketName, key string,
 	fileReader io.Reader,
-) error {
+) (int64, error) {
 	s3Client, err := createS3Client(
 		accessKey, secretKey, region, endpoint,
 	)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	key = strutil.RemoveLeadingSlash(key)
@@ -74,10 +76,19 @@ func (Client) S3Upload(
 		ContentType: aws.String(contentType),
 	})
 	if err != nil {
-		return fmt.Errorf("failed to upload file to S3: %w", err)
+		return 0, fmt.Errorf("failed to upload file to S3: %w", err)
 	}
 
-	return nil
+	fileHead, err := s3Client.HeadObject(&s3.HeadObjectInput{
+		Bucket: aws.String(bucketName),
+		Key:    aws.String(key),
+	})
+	if err != nil {
+		return 0, fmt.Errorf("failed to get uploaded file info from S3: %w", err)
+	}
+	fileSize := *fileHead.ContentLength
+
+	return fileSize, nil
 }
 
 // S3Delete deletes a file from S3
