@@ -82,13 +82,13 @@ func listRestorations(
 			}())),
 			html.Td(component.SpanText(restoration.ExecutionID.String())),
 			html.Td(component.SpanText(
-				restoration.StartedAt.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+				restoration.StartedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 			)),
 			html.Td(
 				gomponents.If(
 					restoration.FinishedAt.Valid,
 					component.SpanText(
-						restoration.FinishedAt.Time.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+						restoration.FinishedAt.Time.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 					),
 				),
 			),

@@ -105,7 +105,7 @@ func listDatabases(
 				component.SpanText("****************"),
 			),
 			html.Td(component.SpanText(
-				database.CreatedAt.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+				database.CreatedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 			)),
 		))
 	}

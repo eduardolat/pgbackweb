@@ -54,7 +54,7 @@ func showRestorationButton(
 					html.Tr(
 						html.Th(component.SpanText("Started At")),
 						html.Td(component.SpanText(
-							restoration.StartedAt.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+							restoration.StartedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 						)),
 					),
 					gomponents.If(
@@ -62,7 +62,7 @@ func showRestorationButton(
 						html.Tr(
 							html.Th(component.SpanText("Finished At")),
 							html.Td(component.SpanText(
-								restoration.FinishedAt.Time.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+								restoration.FinishedAt.Time.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 							)),
 						),
 					),
