@@ -6,6 +6,7 @@ import (
 	"github.com/maragudk/gomponents"
 	"github.com/maragudk/gomponents/components"
 	"github.com/maragudk/gomponents/html"
+	"time"
 )
 
 func localBackupsHelp() []gomponents.Node {
@@ -52,6 +53,32 @@ func cronExpressionHelp() []gomponents.Node {
 				html.Target("_blank"),
 				html.Class("btn btn-ghost"),
 				component.SpanText("Examples & common expressions"),
+				lucide.ExternalLink(),
+			),
+		),
+	}
+}
+
+func timezoneFilenamesHelp() []gomponents.Node {
+	serverTimezone := time.Now().Location().String()
+
+	return []gomponents.Node{
+		html.P(
+			component.SpanText(`
+				Only for cron evaluation.
+                Backup filenames will always use the server timezone (currently 
+			`),
+			component.BText(serverTimezone),
+			component.SpanText(")."),
+		),
+
+		html.Div(
+			html.Class("mt-4 flex justify-end items-center"),
+			html.A(
+				html.Href("https://github.com/eduardolat/pgbackweb?tab=readme-ov-file#configuration"),
+				html.Target("_blank"),
+				html.Class("btn btn-ghost"),
+				component.SpanText("Learn more in project README"),
 				lucide.ExternalLink(),
 			),
 		),
