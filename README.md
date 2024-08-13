@@ -93,7 +93,7 @@ You only need to configure the following environment variables:
 - `PBW_POSTGRES_CONN_STRING`: The connection string for the PostgreSQL database that will store PG Back Web data.
 
 - `TZ`: Your [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List), optional. Default is `UTC`.
-For accurate logging and default timezone in the web interface. Can also be a mount point to the host's `/etc/localtime` instead.
+  Impacts logging, backup filenames and default timezone in the web interface. Can also be a mount point to the host's `/etc/localtime` instead.
 
 ## Screenshots
 
