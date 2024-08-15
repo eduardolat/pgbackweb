@@ -1,7 +1,7 @@
 <p align="center">
   <h1 align="center">PG Back Web</h1>
   <p align="center">
-    <img align="center" width="70" src="internal/view/static/images/logo.png"/>
+    <img align="center" width="70" src="https://raw.githubusercontent.com/eduardolat/pgbackweb/main/internal/view/static/images/logo.png"/>
   </p>
   <p align="center">
     🐘 Effortless PostgreSQL backups with a user-friendly web interface! 🌐💾
@@ -99,9 +99,9 @@ You only need to configure the following environment variables:
 
 ## Screenshots
 
-<img src="screenshots/summary.png" />
-<img src="screenshots/backups.png" />
-<img src="screenshots/executions.png" />
+<img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/main/screenshots/summary.png" />
+<img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/main/screenshots/backups.png" />
+<img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/main/screenshots/executions.png" />
 
 ## Reset password
 
