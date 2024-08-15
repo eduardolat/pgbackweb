@@ -8,8 +8,8 @@
   </p>
 </p>
 <p align="center">
-  <a href="https://github.com/eduardolat/pgbackweb/actions/workflows/run-all-tests.yaml?query=branch%3Amain">
-    <img src="https://github.com/eduardolat/pgbackweb/actions/workflows/run-all-tests.yaml/badge.svg" alt="Tests Status"/>
+  <a href="https://github.com/eduardolat/pgbackweb/actions/workflows/lint-test-build.yaml?query=branch%3Amain">
+    <img src="https://github.com/eduardolat/pgbackweb/actions/workflows/lint-test-build.yaml/badge.svg" alt="Tests Status"/>
   </a>
   <a href="https://goreportcard.com/report/eduardolat/pgbackweb">
     <img src="https://goreportcard.com/badge/eduardolat/pgbackweb" alt="Go Report Card"/>

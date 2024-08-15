@@ -1,4 +1,4 @@
-name: Run linter, tests & build
+name: Lint, test & build
 
 on:
   push:
