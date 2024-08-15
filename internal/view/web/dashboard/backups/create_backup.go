@@ -196,6 +196,7 @@ func createBackupForm(
 					},
 				),
 			},
+			HelpButtonChildren: timezoneFilenamesHelp(),
 		}),
 
 		component.InputControl(component.InputControlParams{
