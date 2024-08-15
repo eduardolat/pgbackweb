@@ -127,7 +127,7 @@ func listDestinations(
 				component.SpanText("**********"),
 			),
 			html.Td(component.SpanText(
-				destination.CreatedAt.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+				destination.CreatedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 			)),
 		))
 	}

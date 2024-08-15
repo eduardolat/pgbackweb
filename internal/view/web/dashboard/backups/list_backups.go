@@ -122,7 +122,7 @@ func listBackups(
 			html.Td(yesNoSpan(backup.OptCreate)),
 			html.Td(yesNoSpan(backup.OptNoComments)),
 			html.Td(component.SpanText(
-				backup.CreatedAt.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+				backup.CreatedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 			)),
 		))
 	}

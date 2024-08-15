@@ -43,7 +43,7 @@ func closeAllSessionsForm(sessions []dbgen.Session) gomponents.Node {
 						component.GMap(sessions, func(session dbgen.Session) gomponents.Node {
 							return html.Tr(
 								html.Td(component.SpanText(
-									session.CreatedAt.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+									session.CreatedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 								)),
 								html.Td(component.SpanText(session.Ip)),
 								html.Td(component.SpanText(session.UserAgent)),

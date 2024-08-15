@@ -84,13 +84,13 @@ func listExecutions(
 				execution.BackupIsLocal, execution.DestinationName,
 			)),
 			html.Td(component.SpanText(
-				execution.StartedAt.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+				execution.StartedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 			)),
 			html.Td(
 				gomponents.If(
 					execution.FinishedAt.Valid,
 					component.SpanText(
-						execution.FinishedAt.Time.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+						execution.FinishedAt.Time.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 					),
 				),
 			),

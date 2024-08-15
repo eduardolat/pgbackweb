@@ -78,7 +78,7 @@ func showExecutionButton(
 					html.Tr(
 						html.Th(component.SpanText("Started At")),
 						html.Td(component.SpanText(
-							execution.StartedAt.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+							execution.StartedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 						)),
 					),
 					gomponents.If(
@@ -86,7 +86,7 @@ func showExecutionButton(
 						html.Tr(
 							html.Th(component.SpanText("Finished At")),
 							html.Td(component.SpanText(
-								execution.FinishedAt.Time.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+								execution.FinishedAt.Time.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 							)),
 						),
 					),
@@ -104,7 +104,7 @@ func showExecutionButton(
 						html.Tr(
 							html.Th(component.SpanText("Deleted At")),
 							html.Td(component.SpanText(
-								execution.DeletedAt.Time.Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+								execution.DeletedAt.Time.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 							)),
 						),
 					),
