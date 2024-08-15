@@ -182,7 +182,6 @@ func createBackupForm(
 			Label:       "Time zone",
 			Required:    true,
 			Placeholder: "Select a time zone",
-			HelpText:    "The time zone in which the cron expression will be evaluated",
 			Children: []gomponents.Node{
 				component.GMap(
 					staticdata.Timezones,

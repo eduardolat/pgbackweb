@@ -1,12 +1,13 @@
 package backups
 
 import (
+	"time"
+
 	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/maragudk/gomponents"
 	"github.com/maragudk/gomponents/components"
 	"github.com/maragudk/gomponents/html"
-	"time"
 )
 
 func localBackupsHelp() []gomponents.Node {
@@ -63,10 +64,12 @@ func timezoneFilenamesHelp() []gomponents.Node {
 	serverTimezone := time.Now().Location().String()
 
 	return []gomponents.Node{
+		component.PText(`
+			This is the time zone in which the cron expression will be evaluated.
+		`),
 		html.P(
 			component.SpanText(`
-				Only for cron evaluation.
-                Backup filenames will always use the server timezone (currently 
+				Backup filenames will always use the server timezone (currently 
 			`),
 			component.BText(serverTimezone),
 			component.SpanText(")."),

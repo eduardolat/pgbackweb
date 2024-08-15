@@ -124,7 +124,6 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 					Label:       "Time zone",
 					Required:    true,
 					Placeholder: "Select a time zone",
-					HelpText:    "The time zone in which the cron expression will be evaluated",
 					Children: []gomponents.Node{
 						component.GMap(
 							staticdata.Timezones,
@@ -140,6 +139,7 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 							},
 						),
 					},
+					HelpButtonChildren: timezoneFilenamesHelp(),
 				}),
 
 				component.InputControl(component.InputControlParams{

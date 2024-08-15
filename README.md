@@ -47,7 +47,7 @@ PG Back Web isn't just another backup tool. It's your trusted ally in ensuring t
 
 ## Installation
 
-PG Back Web is available as a Docker image. You just need to set 2 environment variables and you're good to go!
+PG Back Web is available as a Docker image. You just need to set 3 environment variables and you're good to go!
 
 Here's an example of how you can run PG Back Web with Docker Compose, feel free to adapt it to your needs:
 
@@ -60,7 +60,7 @@ services:
     volumes:
       - ./backups:/backups # If you only use S3 destinations, you don't need this volume
     environment:
-      PBW_ENCRYPTION_KEY: "my_secret_key"
+      PBW_ENCRYPTION_KEY: "my_secret_key" # Change this to a strong key
       PBW_POSTGRES_CONN_STRING: "postgresql://postgres:password@postgres:5432/pgbackweb?sslmode=disable"
       TZ: "America/Guatemala" # Set your timezone, optional
     depends_on:
@@ -92,8 +92,7 @@ You only need to configure the following environment variables:
 
 - `PBW_POSTGRES_CONN_STRING`: The connection string for the PostgreSQL database that will store PG Back Web data.
 
-- `TZ`: Your [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List), optional. Default is `UTC`.
-  Impacts logging, backup filenames and default timezone in the web interface. Can also be a mount point to the host's `/etc/localtime` instead.
+- `TZ`: Your [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)  (optional). Default is `UTC`. This impacts logging, backup filenames and default timezone in the web interface.
 
 ## Screenshots
 
