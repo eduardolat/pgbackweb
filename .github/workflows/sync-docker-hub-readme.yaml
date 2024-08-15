@@ -1,4 +1,4 @@
-name: Sync README
+name: Sync Docker Hub README
 
 on:
   push:
