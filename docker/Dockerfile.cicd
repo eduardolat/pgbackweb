@@ -21,7 +21,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y \
         wget=1.21.4-1ubuntu4.1 unzip=6.0-28ubuntu4 git=1:2.43.0-1ubuntu7.1 \
-        gnupg2=2.4.4-2ubuntu17 lsb-release=12.0-2 && \
+        gnupg2=2.4.4-2ubuntu17 lsb-release=12.0-2 tzdata=2024a-2ubuntu1 && \
     rm -rf /var/lib/apt/lists/*
 
 # Add PostgreSQL repository and key
