@@ -9,10 +9,15 @@ on:
 
 jobs:
   run_sync:
-    name: Sync
-    uses: ms-jpq/sync-dockerhub-readme@v1
-    with:
-      username: ${{ secrets.DOCKERHUB_USER }}
-      password: ${{ secrets.DOCKERHUB_PASS }}
-      repository: eduardolat/pgbackweb
-      readme: "./README.md"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Sync Docker Hub README
+        uses: ms-jpq/sync-dockerhub-readme@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PASS }}
+          repository: eduardolat/pgbackweb
+          readme: "./README.md"
