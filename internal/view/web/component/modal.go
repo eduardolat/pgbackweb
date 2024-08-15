@@ -107,9 +107,9 @@ func Modal(params ModalParams) ModalResult {
 
 			html.Div(
 				components.Classes{
-					"w-full sticky top-0 right-0 bg-base-100": true,
-					"flex items-center justify-between":       true,
-					"border-b border-base-300 px-4 py-3":      true,
+					"w-full sticky top-0 right-0 z-[1003] bg-base-100": true,
+					"flex items-center justify-between":                true,
+					"border-b border-base-300 px-4 py-3":               true,
 				},
 
 				html.Div(
