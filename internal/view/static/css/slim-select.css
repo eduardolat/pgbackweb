@@ -5,7 +5,7 @@
 
 .ss-main {
   all: unset;
-  @apply !input !input-bordered !text-base-content !text-opacity-65 !z-10;
+  @apply !input !input-bordered !text-base-content;
 }
 
 .ss-content {
