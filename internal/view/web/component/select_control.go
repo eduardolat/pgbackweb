@@ -53,8 +53,7 @@ func SelectControl(params SelectControlParams) gomponents.Node {
 		),
 		html.Select(
 			components.Classes{
-				"select select-bordered w-full":   true,
-				getSelectColorClass(params.Color): true,
+				"w-full": true,
 			},
 			html.ID(id),
 			html.Name(params.Name),
@@ -85,28 +84,8 @@ func SelectControl(params SelectControlParams) gomponents.Node {
 				SpanText(params.HelpText),
 			),
 		),
+		html.Script(gomponents.Raw(`
+			new SlimSelect({select: '#`+id+`'})
+		`)),
 	)
-}
-
-func getSelectColorClass(color color) string {
-	switch color {
-	case ColorPrimary:
-		return "select-primary"
-	case ColorSecondary:
-		return "select-secondary"
-	case ColorAccent:
-		return "select-accent"
-	case ColorNeutral:
-		return "select-neutral"
-	case ColorInfo:
-		return "select-info"
-	case ColorSuccess:
-		return "select-success"
-	case ColorWarning:
-		return "select-warning"
-	case ColorError:
-		return "select-error"
-	default:
-		return "select-neutral"
-	}
 }

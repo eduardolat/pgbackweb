@@ -1,0 +1,46 @@
+/*
+  For Slim Select, this takes some styles from:
+  https://github.com/saadeghi/daisyui/blob/master/src/components/styled/input.css
+*/
+
+.ss-main {
+  all: unset;
+  @apply !input !input-bordered !text-base-content !text-opacity-70 !z-10;
+}
+
+.ss-content {
+  all: unset;
+  @apply !bg-base-100 !text-base-content !rounded-btn;
+  @apply !px-2 !py-2 !space-y-1;
+  @apply !border !border-base-content/20;
+}
+
+.ss-list {
+  all: unset;
+  scrollbar-width: thin;
+  @apply !space-y-1;
+}
+
+.ss-search input {
+  all: unset;
+  @apply !input !input-bordered !input-sm;
+}
+
+.ss-option {
+  all: unset;
+  @apply !bg-base-100 !text-base-content !rounded-btn;
+}
+
+.ss-option:hover {
+  all: unset;
+  @apply !bg-base-200;
+}
+
+.ss-option.ss-selected {
+  all: unset;
+  @apply !bg-base-200;
+}
+
+.ss-option.ss-disabled {
+  @apply !text-opacity-80;
+}
