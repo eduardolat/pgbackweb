@@ -87,6 +87,10 @@ services:
       retries: 5
 ```
 
+### Install on Zeabur with One Click
+
+[![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/PISFJX)
+
 ## Configuration
 
 You only need to configure the following environment variables:
