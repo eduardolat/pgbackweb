@@ -76,7 +76,7 @@ func showExecutionButton(
 						),
 					),
 					html.Tr(
-						html.Th(component.SpanText("Started At")),
+						html.Th(component.SpanText("Started at")),
 						html.Td(component.SpanText(
 							execution.StartedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 						)),
@@ -84,7 +84,7 @@ func showExecutionButton(
 					gomponents.If(
 						execution.FinishedAt.Valid,
 						html.Tr(
-							html.Th(component.SpanText("Finished At")),
+							html.Th(component.SpanText("Finished at")),
 							html.Td(component.SpanText(
 								execution.FinishedAt.Time.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 							)),
@@ -102,7 +102,7 @@ func showExecutionButton(
 					gomponents.If(
 						execution.DeletedAt.Valid,
 						html.Tr(
-							html.Th(component.SpanText("Deleted At")),
+							html.Th(component.SpanText("Deleted at")),
 							html.Td(component.SpanText(
 								execution.DeletedAt.Time.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 							)),
@@ -111,7 +111,7 @@ func showExecutionButton(
 					gomponents.If(
 						execution.FileSize.Valid,
 						html.Tr(
-							html.Th(component.SpanText("Compressed Size")),
+							html.Th(component.SpanText("File size")),
 							html.Td(component.PrettyFileSize(execution.FileSize)),
 						),
 					),

@@ -2,8 +2,8 @@ package component
 
 import (
 	"database/sql"
-	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 
+	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 	"github.com/maragudk/gomponents"
 	"github.com/maragudk/gomponents/html"
 )
