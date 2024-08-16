@@ -33,7 +33,7 @@ func Dashboard(params DashboardParams) gomponents.Node {
 			html.Script(html.Src("/libs/notyf/notyf-3.10.0.min.js")),
 
 			html.Link(html.Rel("stylesheet"), html.Href("/libs/slim-select/slimselect-2.8.2.css")),
-			html.Script(html.Src("/libs/slim-select/slimselect-2.8.2.min.js"), html.Defer()),
+			html.Script(html.Src("/libs/slim-select/slimselect-2.8.2.min.js")),
 		},
 		Body: []gomponents.Node{
 			components.Classes{
