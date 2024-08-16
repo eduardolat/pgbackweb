@@ -84,12 +84,7 @@ func listBackups(
 			html.Td(
 				html.Div(
 					html.Class("flex items-center space-x-2"),
-					html.Div(
-						html.Class("tooltip tooltip-right"),
-						gomponents.If(backup.IsActive, html.Data("tip", "Active")),
-						gomponents.If(!backup.IsActive, html.Data("tip", "Inactive")),
-						component.EnabledPing(backup.IsActive),
-					),
+					component.IsActivePing(backup.IsActive),
 					component.SpanText(backup.Name),
 				),
 			),

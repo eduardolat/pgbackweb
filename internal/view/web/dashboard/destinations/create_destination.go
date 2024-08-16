@@ -20,26 +20,6 @@ type createDestinationDTO struct {
 	Endpoint   string `form:"endpoint" validate:"required"`
 }
 
-func (h *handlers) testDestinationHandler(c echo.Context) error {
-	var formData createDestinationDTO
-	if err := c.Bind(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
-	}
-	if err := validate.Struct(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
-	}
-
-	err := h.servs.DestinationsService.TestDestination(
-		formData.AccessKey, formData.SecretKey, formData.Region, formData.Endpoint,
-		formData.BucketName,
-	)
-	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
-	}
-
-	return htmx.RespondToastSuccess(c, "Connection successful")
-}
-
 func (h *handlers) createDestinationHandler(c echo.Context) error {
 	ctx := c.Request().Context()
 

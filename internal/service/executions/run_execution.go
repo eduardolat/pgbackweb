@@ -51,7 +51,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	}
 
 	if !back.BackupIsLocal {
-		err = s.ints.StorageClient.S3Ping(
+		err = s.ints.StorageClient.S3Test(
 			back.DecryptedDestinationAccessKey, back.DecryptedDestinationSecretKey,
 			back.DestinationRegion.String, back.DestinationEndpoint.String,
 			back.DestinationBucketName.String,
@@ -78,7 +78,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		})
 	}
 
-	err = s.ints.PGClient.Ping(pgVersion, back.DecryptedDatabaseConnectionString)
+	err = s.ints.PGClient.Test(pgVersion, back.DecryptedDatabaseConnectionString)
 	if err != nil {
 		logError(err)
 		return updateExec(dbgen.ExecutionsServiceUpdateExecutionParams{

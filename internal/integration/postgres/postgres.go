@@ -74,13 +74,13 @@ func (Client) ParseVersion(version string) (PGVersion, error) {
 	}
 }
 
-// Ping tests the connection to the PostgreSQL database
-func (Client) Ping(version PGVersion, connString string) error {
+// Test tests the connection to the PostgreSQL database
+func (Client) Test(version PGVersion, connString string) error {
 	cmd := exec.Command(version.Value.psql, connString, "-c", "SELECT 1;")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf(
-			"error running psql ping v%s: %s",
+			"error running psql test v%s: %s",
 			version.Value.version, output,
 		)
 	}

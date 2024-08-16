@@ -25,4 +25,5 @@ func MountRouter(
 	parent.POST("/test", h.testDestinationHandler)
 	parent.DELETE("/:destinationID", h.deleteDestinationHandler)
 	parent.POST("/:destinationID/edit", h.editDestinationHandler)
+	parent.POST("/:destinationID/test", h.testExistingDestinationHandler)
 }

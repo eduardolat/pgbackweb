@@ -14,6 +14,8 @@ func initSchedule(cr *cron.Cron, servs *service.Service) {
 
 	servs.ExecutionsService.SoftDeleteExpiredExecutions()
 	servs.AuthService.DeleteOldSessions()
+	servs.DatabasesService.TestAllDatabases()
+	servs.DestinationsService.TestAllDestinations()
 
 	/*
 		Schedules
@@ -35,6 +37,24 @@ func initSchedule(cr *cron.Cron, servs *service.Service) {
 	if err != nil {
 		logger.FatalError(
 			"error scheduling deletion of old sessions", logger.KV{"error": err},
+		)
+	}
+
+	err = cr.UpsertJob(uuid.New(), "UTC", "*/10 * * * *", func() {
+		servs.DatabasesService.TestAllDatabases()
+	})
+	if err != nil {
+		logger.FatalError(
+			"error scheduling databases tests", logger.KV{"error": err},
+		)
+	}
+
+	err = cr.UpsertJob(uuid.New(), "UTC", "*/10 * * * *", func() {
+		servs.DestinationsService.TestAllDestinations()
+	})
+	if err != nil {
+		logger.FatalError(
+			"error scheduling destinations tests", logger.KV{"error": err},
 		)
 	}
 

@@ -70,41 +70,12 @@ func listDestinations(
 						),
 					),
 					editDestinationButton(destination),
-					html.Form(
+					html.Div(
 						html.Class("inline-block tooltip tooltip-right"),
 						html.Data("tip", "Test connection"),
-						htmx.HxPost("/dashboard/destinations/test"),
-						html.Input(
-							html.Type("hidden"),
-							html.Name("name"),
-							html.Value(destination.Name),
-						),
-						html.Input(
-							html.Type("hidden"),
-							html.Name("bucket_name"),
-							html.Value(destination.BucketName),
-						),
-						html.Input(
-							html.Type("hidden"),
-							html.Name("endpoint"),
-							html.Value(destination.Endpoint),
-						),
-						html.Input(
-							html.Type("hidden"),
-							html.Name("region"),
-							html.Value(destination.Region),
-						),
-						html.Input(
-							html.Type("hidden"),
-							html.Name("access_key"),
-							html.Value(destination.DecryptedAccessKey),
-						),
-						html.Input(
-							html.Type("hidden"),
-							html.Name("secret_key"),
-							html.Value(destination.DecryptedSecretKey),
-						),
 						html.Button(
+							htmx.HxPost("/dashboard/destinations/"+destination.ID.String()+"/test"),
+							htmx.HxDisabledELT("this"),
 							html.Class("btn btn-neutral btn-square btn-ghost btn-sm"),
 							lucide.PlugZap(),
 						),
@@ -112,19 +83,49 @@ func listDestinations(
 					deleteDestinationButton(destination.ID),
 				),
 			),
-			html.Td(component.SpanText(destination.Name)),
-			html.Td(component.SpanText(destination.BucketName)),
-			html.Td(component.SpanText(destination.Endpoint)),
-			html.Td(component.SpanText(destination.Region)),
 			html.Td(
-				html.Class("space-x-1"),
-				component.CopyButtonSm(destination.DecryptedAccessKey),
-				component.SpanText("**********"),
+				html.Div(
+					html.Class("flex items-center space-x-2"),
+					component.HealthStatusPing(
+						destination.TestOk, destination.TestError, destination.LastTestAt,
+					),
+					component.SpanText(destination.Name),
+				),
 			),
 			html.Td(
-				html.Class("space-x-1"),
-				component.CopyButtonSm(destination.DecryptedSecretKey),
-				component.SpanText("**********"),
+				html.Div(
+					html.Class("flex items-center space-x-1"),
+					component.CopyButtonSm(destination.BucketName),
+					component.SpanText(destination.BucketName),
+				),
+			),
+			html.Td(
+				html.Div(
+					html.Class("flex items-center space-x-1"),
+					component.CopyButtonSm(destination.Endpoint),
+					component.SpanText(destination.Endpoint),
+				),
+			),
+			html.Td(
+				html.Div(
+					html.Class("flex items-center space-x-1"),
+					component.CopyButtonSm(destination.Region),
+					component.SpanText(destination.Region),
+				),
+			),
+			html.Td(
+				html.Div(
+					html.Class("flex items-center space-x-1"),
+					component.CopyButtonSm(destination.DecryptedAccessKey),
+					component.SpanText("**********"),
+				),
+			),
+			html.Td(
+				html.Div(
+					html.Class("flex items-center space-x-1"),
+					component.CopyButtonSm(destination.DecryptedSecretKey),
+					component.SpanText("**********"),
+				),
 			),
 			html.Td(component.SpanText(
 				destination.CreatedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),

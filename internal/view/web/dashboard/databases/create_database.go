@@ -17,27 +17,6 @@ type createDatabaseDTO struct {
 	ConnectionString string `form:"connection_string" validate:"required"`
 }
 
-func (h *handlers) testDatabaseHandler(c echo.Context) error {
-	ctx := c.Request().Context()
-
-	var formData createDatabaseDTO
-	if err := c.Bind(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
-	}
-	if err := validate.Struct(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
-	}
-
-	err := h.servs.DatabasesService.TestDatabase(
-		ctx, formData.Version, formData.ConnectionString,
-	)
-	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
-	}
-
-	return htmx.RespondToastSuccess(c, "Connection successful")
-}
-
 func (h *handlers) createDatabaseHandler(c echo.Context) error {
 	ctx := c.Request().Context()
 

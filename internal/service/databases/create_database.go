@@ -15,5 +15,9 @@ func (s *Service) CreateDatabase(
 	}
 
 	params.EncryptionKey = *s.env.PBW_ENCRYPTION_KEY
-	return s.dbgen.DatabasesServiceCreateDatabase(ctx, params)
+	db, err := s.dbgen.DatabasesServiceCreateDatabase(ctx, params)
+
+	_ = s.TestDatabaseAndStoreResult(ctx, db.ID)
+
+	return db, err
 }

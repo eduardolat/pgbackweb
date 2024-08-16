@@ -19,7 +19,7 @@ func showRestorationButton(
 			html.Div(
 				html.Class("overflow-x-auto"),
 				html.Table(
-					html.Class("table"),
+					html.Class("table [&_th]:text-nowrap"),
 					html.Tr(
 						html.Th(component.SpanText("ID")),
 						html.Td(component.SpanText(restoration.ID.String())),

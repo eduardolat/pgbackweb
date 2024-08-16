@@ -30,8 +30,8 @@ func createS3Client(
 	return s3.New(sess), nil
 }
 
-// S3Ping tests the connection to S3
-func (Client) S3Ping(
+// S3Test tests the connection to S3
+func (Client) S3Test(
 	accessKey, secretKey, region, endpoint, bucketName string,
 ) error {
 	s3Client, err := createS3Client(
@@ -45,7 +45,7 @@ func (Client) S3Ping(
 		Bucket: aws.String(bucketName),
 	})
 	if err != nil {
-		return fmt.Errorf("failed to ping S3 bucket: %w", err)
+		return fmt.Errorf("failed to test S3 bucket: %w", err)
 	}
 
 	return nil
