@@ -1,7 +1,13 @@
 package restorations
 
-import "context"
+import (
+	"context"
 
-func (s *Service) GetRestorationsQty(ctx context.Context) (int64, error) {
+	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
+)
+
+func (s *Service) GetRestorationsQty(
+	ctx context.Context,
+) (dbgen.RestorationsServiceGetRestorationsQtyRow, error) {
 	return s.dbgen.RestorationsServiceGetRestorationsQty(ctx)
 }

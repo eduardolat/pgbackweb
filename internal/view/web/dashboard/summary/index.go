@@ -1,13 +1,16 @@
 package summary
 
 import (
+	"fmt"
 	"net/http"
 
 	lucide "github.com/eduardolat/gomponents-lucide"
+	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/maragudk/gomponents"
 	"github.com/maragudk/gomponents/html"
@@ -46,35 +49,160 @@ func (h *handlers) indexPageHandler(c echo.Context) error {
 }
 
 func indexPage(
-	databasesQty, destinationsQty, backupsQty, executionsQty, restorationsQty int64,
+	databasesQty dbgen.DatabasesServiceGetDatabasesQtyRow,
+	destinationsQty dbgen.DestinationsServiceGetDestinationsQtyRow,
+	backupsQty dbgen.BackupsServiceGetBackupsQtyRow,
+	executionsQty dbgen.ExecutionsServiceGetExecutionsQtyRow,
+	restorationsQty dbgen.RestorationsServiceGetRestorationsQtyRow,
 ) gomponents.Node {
-	countCard := func(title string, count int64) gomponents.Node {
+	type ChartData struct {
+		Label    string
+		Labels   []string
+		Data     []int64
+		BgColors []string
+	}
+
+	countCard := func(
+		title string,
+		count int64,
+		chartData ChartData,
+	) gomponents.Node {
+		var chart gomponents.Node
+		if len(chartData.Data) > 0 {
+			chartID := "chart-" + uuid.NewString()
+
+			labels := ""
+			for _, label := range chartData.Labels {
+				labels += fmt.Sprintf("'%s',", label)
+			}
+
+			areAllZero := true
+			for _, d := range chartData.Data {
+				if d != 0 {
+					areAllZero = false
+					break
+				}
+			}
+
+			data := ""
+			for _, d := range chartData.Data {
+				if areAllZero {
+					data += "-1,"
+					continue
+				}
+				data += fmt.Sprintf("%d,", d)
+			}
+
+			bgColors := ""
+			for _, color := range chartData.BgColors {
+				if areAllZero {
+					bgColors += "'#e5e6e6',"
+					continue
+				}
+				bgColors += fmt.Sprintf("'%s',", color)
+			}
+
+			chart = html.Div(
+				html.Class("mt-2"),
+				html.Div(html.Canvas(html.ID(chartID))),
+				html.Script(gomponents.Raw(`
+					new Chart(document.getElementById('`+chartID+`'), {
+						type: 'doughnut',
+						data: {
+							labels: [`+labels+`],
+							datasets: [{
+								label: '`+chartData.Label+`',
+								data: [`+data+`],
+								backgroundColor: [`+bgColors+`],
+								borderColor: 'rgba(0, 0, 0, 0)',
+								borderWidth: 0
+							}]
+						},
+						options: {
+							plugins: {
+								legend: {
+									position: 'bottom'
+								},
+								tooltip: {
+									callbacks: {
+										label: function(tooltipItem) {
+											let value = tooltipItem.raw;
+											if (value === -1) {
+												value = 0;
+											}
+											return tooltipItem.label + ': ' + value;
+										}
+									}
+								}
+							}
+						}
+					});
+				`)),
+			)
+		}
+
 		return component.CardBox(component.CardBoxParams{
-			Class: "text-center",
+			Class: "text-center max-w-[250px]",
 			Children: []gomponents.Node{
-				component.H2Text(title),
-				html.Span(
-					html.Class("text-5xl font-bold"),
-					gomponents.Textf("%d", count),
-				),
+				component.H2Text(fmt.Sprintf("%d %s", count, title)),
+				chart,
 			},
 		})
 	}
 
+	const (
+		greenColor  = "#00a96e"
+		redColor    = "#ff5861"
+		yellowColor = "#ffbe00"
+		blueColor   = "#00b6ff"
+	)
+
 	content := []gomponents.Node{
 		component.H1Text("Summary"),
 		html.Div(
-			html.Class("mt-4 grid grid-cols-5 gap-4"),
-			countCard("Databases", databasesQty),
-			countCard("Destinations", destinationsQty),
-			countCard("Backups", backupsQty),
-			countCard("Executions", executionsQty),
-			countCard("Restorations", restorationsQty),
+			html.Class("mt-4 flex justify-start flex-wrap gap-4"),
+
+			countCard("Databases", databasesQty.All, ChartData{
+				Label:    "Quantity",
+				Labels:   []string{"Healthy", "Unhealthy"},
+				Data:     []int64{databasesQty.Healthy, databasesQty.Unhealthy},
+				BgColors: []string{greenColor, redColor},
+			}),
+			countCard("Destinations", destinationsQty.All, ChartData{
+				Label:    "Quantity",
+				Labels:   []string{"Healthy", "Unhealthy"},
+				Data:     []int64{destinationsQty.Healthy, destinationsQty.Unhealthy},
+				BgColors: []string{greenColor, redColor},
+			}),
+			countCard("Backups", backupsQty.All, ChartData{
+				Label:    "Quantity",
+				Labels:   []string{"Active", "Inactive"},
+				Data:     []int64{backupsQty.Active, backupsQty.Inactive},
+				BgColors: []string{greenColor, redColor},
+			}),
+			countCard("Executions", executionsQty.All, ChartData{
+				Label:  "Status",
+				Labels: []string{"Running", "Success", "Failed", "Deleted"},
+				Data: []int64{
+					executionsQty.Running, executionsQty.Success, executionsQty.Failed,
+					executionsQty.Deleted,
+				},
+				BgColors: []string{blueColor, greenColor, redColor, yellowColor},
+			}),
+			countCard("Restorations", restorationsQty.All, ChartData{
+				Label:  "Status",
+				Labels: []string{"Running", "Success", "Failed"},
+				Data: []int64{
+					restorationsQty.Running, restorationsQty.Success,
+					restorationsQty.Failed,
+				},
+				BgColors: []string{blueColor, greenColor, redColor},
+			}),
 		),
 		html.Div(
 			alpine.XData("genericSlider(4)"),
 			alpine.XCloak(),
-			html.Class("mt-6 flex flex-col justify-center items-center"),
+			html.Class("mt-6 flex flex-col justify-center items-start"),
 			component.H2Text("How to use PG Back Web"),
 
 			component.CardBox(component.CardBoxParams{

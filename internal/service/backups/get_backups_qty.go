@@ -1,7 +1,13 @@
 package backups
 
-import "context"
+import (
+	"context"
 
-func (s *Service) GetBackupsQty(ctx context.Context) (int64, error) {
+	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
+)
+
+func (s *Service) GetBackupsQty(
+	ctx context.Context,
+) (dbgen.BackupsServiceGetBackupsQtyRow, error) {
 	return s.dbgen.BackupsServiceGetBackupsQty(ctx)
 }
