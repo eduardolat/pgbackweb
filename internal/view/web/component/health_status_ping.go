@@ -60,6 +60,16 @@ func HealthStatusPing(
 								)),
 							),
 						),
+						html.Tr(
+							html.Td(
+								html.ColSpan("2"),
+								PText(`
+									The health check runs automatically every 10 minutes, when
+									PG Back Web starts, and when you click the "Test connection"
+									button.
+								`),
+							),
+						),
 					),
 				),
 			},
