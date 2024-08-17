@@ -306,7 +306,8 @@ func indexPage(
 	}
 
 	return layout.Dashboard(layout.DashboardParams{
-		Title: "Summary",
-		Body:  content,
+		Title:       "Summary",
+		Body:        content,
+		LoadChartJS: true,
 	})
 }

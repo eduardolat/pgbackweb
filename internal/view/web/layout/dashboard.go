@@ -7,8 +7,9 @@ import (
 )
 
 type DashboardParams struct {
-	Title string
-	Body  []gomponents.Node
+	Title       string
+	Body        []gomponents.Node
+	LoadChartJS bool
 }
 
 func Dashboard(params DashboardParams) gomponents.Node {
@@ -27,7 +28,6 @@ func Dashboard(params DashboardParams) gomponents.Node {
 
 			html.Script(html.Src("/libs/htmx/htmx-2.0.1.min.js"), html.Defer()),
 			html.Script(html.Src("/libs/alpinejs/alpinejs-3.14.1.min.js"), html.Defer()),
-			html.Script(html.Src("/libs/chartjs/chartjs-4.4.3.umd.min.js")),
 			html.Script(html.Src("/libs/theme-change/theme-change-2.0.2.min.js")),
 
 			html.Link(html.Rel("stylesheet"), html.Href("/libs/notyf/notyf-3.10.0.min.css")),
@@ -35,6 +35,11 @@ func Dashboard(params DashboardParams) gomponents.Node {
 
 			html.Link(html.Rel("stylesheet"), html.Href("/libs/slim-select/slimselect-2.8.2.css")),
 			html.Script(html.Src("/libs/slim-select/slimselect-2.8.2.min.js")),
+
+			gomponents.If(
+				params.LoadChartJS,
+				html.Script(html.Src("/libs/chartjs/chartjs-4.4.3.umd.min.js")),
+			),
 		},
 		Body: []gomponents.Node{
 			components.Classes{
