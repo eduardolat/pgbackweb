@@ -15,7 +15,7 @@ func MountRouter(app *echo.Echo, servs *service.Service) {
 	app.StaticFS("", static.StaticFs)
 
 	apiGroup := app.Group("/api")
-	api.MountRouter(apiGroup, servs)
+	api.MountRouter(apiGroup, mids, servs)
 
 	webGroup := app.Group("", mids.InjectReqctx)
 	web.MountRouter(webGroup, mids, servs)
