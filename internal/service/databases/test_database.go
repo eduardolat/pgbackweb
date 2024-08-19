@@ -37,10 +37,16 @@ func (s *Service) TestDatabaseAndStoreResult(
 	}
 
 	err = s.TestDatabase(ctx, db.PgVersion, db.DecryptedConnectionString)
+	if err != nil && db.TestOk.Valid && db.TestOk.Bool {
+		s.webhooksService.RunDatabaseUnhealthy(db.ID)
+	}
 	if err != nil {
 		return storeRes(false, err)
 	}
 
+	if db.TestOk.Valid && !db.TestOk.Bool {
+		s.webhooksService.RunDatabaseHealthy(db.ID)
+	}
 	return storeRes(true, nil)
 }
 

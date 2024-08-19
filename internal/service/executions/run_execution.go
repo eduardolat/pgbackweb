@@ -17,6 +17,14 @@ import (
 // RunExecution runs a backup execution
 func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	updateExec := func(params dbgen.ExecutionsServiceUpdateExecutionParams) error {
+		if params.Status.String == "success" {
+			s.webhooksService.RunExecutionSuccess(backupID)
+		}
+
+		if params.Status.String == "failed" {
+			s.webhooksService.RunExecutionFailed(backupID)
+		}
+
 		_, err := s.dbgen.ExecutionsServiceUpdateExecution(
 			ctx, params,
 		)

@@ -12,6 +12,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/service/executions"
 	"github.com/eduardolat/pgbackweb/internal/service/restorations"
 	"github.com/eduardolat/pgbackweb/internal/service/users"
+	"github.com/eduardolat/pgbackweb/internal/service/webhooks"
 )
 
 type Service struct {
@@ -22,16 +23,18 @@ type Service struct {
 	ExecutionsService   *executions.Service
 	UsersService        *users.Service
 	RestorationsService *restorations.Service
+	WebhooksService     *webhooks.Service
 }
 
 func New(
 	env *config.Env, dbgen *dbgen.Queries,
 	cr *cron.Cron, ints *integration.Integration,
 ) *Service {
+	webhooksService := webhooks.New(dbgen)
 	authService := auth.New(env, dbgen)
-	databasesService := databases.New(env, dbgen, ints)
-	destinationsService := destinations.New(env, dbgen, ints)
-	executionsService := executions.New(env, dbgen, ints)
+	databasesService := databases.New(env, dbgen, ints, webhooksService)
+	destinationsService := destinations.New(env, dbgen, ints, webhooksService)
+	executionsService := executions.New(env, dbgen, ints, webhooksService)
 	usersService := users.New(dbgen)
 	backupsService := backups.New(dbgen, cr, executionsService)
 	restorationsService := restorations.New(
@@ -46,5 +49,6 @@ func New(
 		ExecutionsService:   executionsService,
 		UsersService:        usersService,
 		RestorationsService: restorationsService,
+		WebhooksService:     webhooksService,
 	}
 }

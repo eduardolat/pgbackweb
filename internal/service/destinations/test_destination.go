@@ -40,10 +40,16 @@ func (s *Service) TestDestinationAndStoreResult(
 		dest.DecryptedAccessKey, dest.DecryptedSecretKey, dest.Region,
 		dest.Endpoint, dest.BucketName,
 	)
+	if err != nil && dest.TestOk.Valid && dest.TestOk.Bool {
+		s.webhooksService.RunDestinationUnhealthy(dest.ID)
+	}
 	if err != nil {
 		return storeRes(false, err)
 	}
 
+	if dest.TestOk.Valid && !dest.TestOk.Bool {
+		s.webhooksService.RunDestinationHealthy(dest.ID)
+	}
 	return storeRes(true, nil)
 }
 
