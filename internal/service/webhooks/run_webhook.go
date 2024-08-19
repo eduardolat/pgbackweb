@@ -71,7 +71,7 @@ func runWebhook(
 	webhooks, err := s.dbgen.WebhooksServiceGetWebhooksToRun(
 		ctx, dbgen.WebhooksServiceGetWebhooksToRunParams{
 			EventType: eventType.Value,
-			TargetID:  []uuid.UUID{targetID},
+			TargetID:  targetID,
 		},
 	)
 	if err != nil {

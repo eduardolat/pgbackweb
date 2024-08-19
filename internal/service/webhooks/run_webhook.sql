@@ -2,7 +2,7 @@
 SELECT * FROM webhooks
 WHERE is_active = true
 AND event_type = @event_type
-AND @target_id = ANY(target_ids);
+AND @target_id::UUID = ANY(target_ids);
 
 -- name: WebhooksServiceCreateWebhookResult :one
 INSERT INTO webhook_results (
