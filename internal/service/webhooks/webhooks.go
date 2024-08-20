@@ -5,18 +5,45 @@ import (
 	"github.com/orsinium-labs/enum"
 )
 
-type webhook = enum.Member[string]
+type (
+	eventType     = enum.Member[eventTypeData]
+	eventTypeData struct {
+		Key  string
+		Name string
+	}
+)
 
 var (
-	eventTypeDatabaseHealthy   = webhook{Value: "database_healthy"}
-	eventTypeDatabaseUnhealthy = webhook{Value: "database_unhealthy"}
+	EventTypeDatabaseHealthy = eventType{
+		Value: eventTypeData{Key: "database_healthy", Name: "Database healthy"},
+	}
+	EventTypeDatabaseUnhealthy = eventType{
+		Value: eventTypeData{Key: "database_unhealthy", Name: "Database unhealthy"},
+	}
 
-	eventTypeDestinationHealthy   = webhook{Value: "destination_healthy"}
-	eventTypeDestinationUnhealthy = webhook{Value: "destination_unhealthy"}
+	EventTypeDestinationHealthy = eventType{
+		Value: eventTypeData{Key: "destination_healthy", Name: "Destination healthy"},
+	}
+	EventTypeDestinationUnhealthy = eventType{
+		Value: eventTypeData{Key: "destination_unhealthy", Name: "Destination unhealthy"},
+	}
 
-	eventTypeExecutionSuccess = webhook{Value: "execution_success"}
-	eventTypeExecutionFailed  = webhook{Value: "execution_failed"}
+	EventTypeExecutionSuccess = eventType{
+		Value: eventTypeData{Key: "execution_success", Name: "Execution success"},
+	}
+	EventTypeExecutionFailed = eventType{
+		Value: eventTypeData{Key: "execution_failed", Name: "Execution failed"},
+	}
 )
+
+var FullEventTypes = map[string]string{
+	EventTypeDatabaseHealthy.Value.Key:      EventTypeDatabaseHealthy.Value.Name,
+	EventTypeDatabaseUnhealthy.Value.Key:    EventTypeDatabaseUnhealthy.Value.Name,
+	EventTypeDestinationHealthy.Value.Key:   EventTypeDestinationHealthy.Value.Name,
+	EventTypeDestinationUnhealthy.Value.Key: EventTypeDestinationUnhealthy.Value.Name,
+	EventTypeExecutionSuccess.Value.Key:     EventTypeExecutionSuccess.Value.Name,
+	EventTypeExecutionFailed.Value.Key:      EventTypeExecutionFailed.Value.Name,
+}
 
 type Service struct {
 	dbgen *dbgen.Queries

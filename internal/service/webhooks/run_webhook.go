@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -19,7 +20,7 @@ import (
 func (s *Service) RunDatabaseHealthy(databaseID uuid.UUID) {
 	go func() {
 		ctx := context.Background()
-		runWebhook(s, ctx, eventTypeDatabaseHealthy, databaseID)
+		runWebhook(s, ctx, EventTypeDatabaseHealthy, databaseID)
 	}()
 }
 
@@ -27,7 +28,7 @@ func (s *Service) RunDatabaseHealthy(databaseID uuid.UUID) {
 func (s *Service) RunDatabaseUnhealthy(databaseID uuid.UUID) {
 	go func() {
 		ctx := context.Background()
-		runWebhook(s, ctx, eventTypeDatabaseUnhealthy, databaseID)
+		runWebhook(s, ctx, EventTypeDatabaseUnhealthy, databaseID)
 	}()
 }
 
@@ -35,7 +36,7 @@ func (s *Service) RunDatabaseUnhealthy(databaseID uuid.UUID) {
 func (s *Service) RunDestinationHealthy(destinationID uuid.UUID) {
 	go func() {
 		ctx := context.Background()
-		runWebhook(s, ctx, eventTypeDestinationHealthy, destinationID)
+		runWebhook(s, ctx, EventTypeDestinationHealthy, destinationID)
 	}()
 }
 
@@ -44,7 +45,7 @@ func (s *Service) RunDestinationHealthy(destinationID uuid.UUID) {
 func (s *Service) RunDestinationUnhealthy(destinationID uuid.UUID) {
 	go func() {
 		ctx := context.Background()
-		runWebhook(s, ctx, eventTypeDestinationUnhealthy, destinationID)
+		runWebhook(s, ctx, EventTypeDestinationUnhealthy, destinationID)
 	}()
 }
 
@@ -52,7 +53,7 @@ func (s *Service) RunDestinationUnhealthy(destinationID uuid.UUID) {
 func (s *Service) RunExecutionSuccess(backupID uuid.UUID) {
 	go func() {
 		ctx := context.Background()
-		runWebhook(s, ctx, eventTypeExecutionSuccess, backupID)
+		runWebhook(s, ctx, EventTypeExecutionSuccess, backupID)
 	}()
 }
 
@@ -60,17 +61,17 @@ func (s *Service) RunExecutionSuccess(backupID uuid.UUID) {
 func (s *Service) RunExecutionFailed(backupID uuid.UUID) {
 	go func() {
 		ctx := context.Background()
-		runWebhook(s, ctx, eventTypeExecutionFailed, backupID)
+		runWebhook(s, ctx, EventTypeExecutionFailed, backupID)
 	}()
 }
 
 // runWebhook runs the webhooks for the given event type and target ID.
 func runWebhook(
-	s *Service, ctx context.Context, eventType webhook, targetID uuid.UUID,
+	s *Service, ctx context.Context, eventType eventType, targetID uuid.UUID,
 ) {
 	webhooks, err := s.dbgen.WebhooksServiceGetWebhooksToRun(
 		ctx, dbgen.WebhooksServiceGetWebhooksToRunParams{
-			EventType: eventType.Value,
+			EventType: eventType.Value.Key,
 			TargetID:  targetID,
 		},
 	)
@@ -108,21 +109,26 @@ func sendWebhookRequest(
 ) error {
 	timeStart := time.Now()
 
-	body := strings.NewReader(webhook.Body.String)
+	if !webhook.Body.Valid || webhook.Body.String == "" {
+		webhook.Body = sql.NullString{String: "{}", Valid: true}
+	}
+	bodyReader := strings.NewReader(webhook.Body.String)
+
+	if !webhook.Headers.Valid || webhook.Headers.String == "" {
+		webhook.Headers = sql.NullString{String: "{}", Valid: true}
+	}
 	headers := map[string]string{}
-	if webhook.Headers.Valid {
-		err := json.Unmarshal([]byte(webhook.Headers.String), &headers)
-		if err != nil {
-			return err
-		}
+	err := json.Unmarshal([]byte(webhook.Headers.String), &headers)
+	if err != nil {
+		return fmt.Errorf("error parsing headers: %w", err)
 	}
 
 	client := http.Client{Timeout: time.Second * 30}
 	req, err := http.NewRequestWithContext(
-		ctx, webhook.Method, webhook.Url, body,
+		ctx, webhook.Method, webhook.Url, bodyReader,
 	)
 	if err != nil {
-		return err
+		return fmt.Errorf("error creating request: %w", err)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -132,18 +138,18 @@ func sendWebhookRequest(
 
 	res, err := client.Do(req)
 	if err != nil {
-		return err
+		return fmt.Errorf("error sending request: %w", err)
 	}
 	defer res.Body.Close()
 
 	resHeaders, err := json.Marshal(res.Header)
 	if err != nil {
-		return err
+		return fmt.Errorf("error marshalling response headers: %w", err)
 	}
 
 	resBody, err := io.ReadAll(res.Body)
 	if err != nil {
-		return err
+		return fmt.Errorf("error reading response body: %w", err)
 	}
 
 	_, err = s.dbgen.WebhooksServiceCreateWebhookResult(
@@ -162,7 +168,7 @@ func sendWebhookRequest(
 		},
 	)
 	if err != nil {
-		return err
+		return fmt.Errorf("error updating webhook result: %w", err)
 	}
 
 	logger.Info("webhook sent successfully", logger.KV{
