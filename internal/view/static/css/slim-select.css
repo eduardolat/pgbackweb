@@ -44,3 +44,19 @@
 .ss-option.ss-disabled {
   @apply !text-opacity-80;
 }
+
+.ss-value {
+  @apply !bg-primary !rounded-badge;
+}
+
+.ss-value-text {
+  @apply !text-primary-content;
+}
+
+.ss-value-delete {
+  @apply !border-0 !border-l !border-primary-content;
+}
+
+.ss-value-delete svg path {
+  @apply !stroke-primary-content;
+}
