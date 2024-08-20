@@ -86,6 +86,13 @@ func dashboardAside() gomponents.Node {
 			),
 
 			dashboardAsideItem(
+				lucide.Webhook,
+				"Webhooks",
+				"/dashboard/webhooks",
+				false,
+			),
+
+			dashboardAsideItem(
 				lucide.User,
 				"Profile",
 				"/dashboard/profile",
