@@ -11,6 +11,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/dashboard/profile"
 	"github.com/eduardolat/pgbackweb/internal/view/web/dashboard/restorations"
 	"github.com/eduardolat/pgbackweb/internal/view/web/dashboard/summary"
+	"github.com/eduardolat/pgbackweb/internal/view/web/dashboard/webhooks"
 	"github.com/labstack/echo/v4"
 )
 
@@ -23,6 +24,7 @@ func MountRouter(
 	backups.MountRouter(parent.Group("/backups"), mids, servs)
 	executions.MountRouter(parent.Group("/executions"), mids, servs)
 	restorations.MountRouter(parent.Group("/restorations"), mids, servs)
+	webhooks.MountRouter(parent.Group("/webhooks"), mids, servs)
 	profile.MountRouter(parent.Group("/profile"), mids, servs)
 	about.MountRouter(parent.Group("/about"), mids, servs)
 }
