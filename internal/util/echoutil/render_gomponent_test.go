@@ -53,3 +53,15 @@ func TestRenderGomponent(t *testing.T) {
 		assert.Equal(t, "render nok", rec.Body.String())
 	})
 }
+
+func TestRenderNilGomponent(t *testing.T) {
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+
+	err := RenderGomponent(c, http.StatusOK, nil)
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusOK, rec.Code)
+	assert.Equal(t, "", rec.Body.String())
+}

@@ -15,6 +15,10 @@ type renderer interface {
 // RenderGomponent renders a gomponents component to the response of
 // the echo context.
 func RenderGomponent(c echo.Context, code int, component renderer) error {
+	if component == nil {
+		return c.NoContent(code)
+	}
+
 	buf := bytes.Buffer{}
 	err := component.Render(&buf)
 	if err != nil {
