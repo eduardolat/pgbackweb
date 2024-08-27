@@ -1,6 +1,4 @@
 # Environment
-.env
-.env.*
 !.env.dev
 !.env.example
 
@@ -30,3 +28,4 @@ tmp/
 # Go workspace file
 go.work
 go.work.sum
+config.bat
