@@ -172,7 +172,63 @@ func createAndUpdateWebhookForm(
 			Name:     "event_type",
 			Label:    "Event type",
 			Required: true,
-			HelpText: "The event type that will trigger the webhook",
+			HelpButtonChildren: []gomponents.Node{
+				component.H3Text("Event types"),
+				component.PText(`
+					These are the event types that can trigger a webhook.
+				`),
+
+				html.Div(
+					html.Class("space-y-2"),
+
+					component.CardBoxSimple(
+						component.H4Text("Database healthy"),
+						component.PText(`
+							This event will be triggered when a database changes it's
+							health status from unhealthy to healthy.
+						`),
+					),
+
+					component.CardBoxSimple(
+						component.H4Text("Database unhealthy"),
+						component.PText(`
+							This event will be triggered when a database changes it's
+							health status from healthy to unhealthy.
+						`),
+					),
+
+					component.CardBoxSimple(
+						component.H4Text("Destination healthy"),
+						component.PText(`
+							This event will be triggered when a destination changes it's
+							health status from unhealthy to healthy.
+						`),
+					),
+
+					component.CardBoxSimple(
+						component.H4Text("Destination unhealthy"),
+						component.PText(`
+							This event will be triggered when a destination changes it's
+							health status from healthy to unhealthy.
+						`),
+					),
+
+					component.CardBoxSimple(
+						component.H4Text("Execution success"),
+						component.PText(`
+							This event will be triggered when a backup execution is
+							successful.
+						`),
+					),
+
+					component.CardBoxSimple(
+						component.H4Text("Execution failed"),
+						component.PText(`
+							This event will be triggered when a backup execution fails.
+						`),
+					),
+				),
+			},
 			Children: []gomponents.Node{
 				alpine.XModel("eventType"),
 				eventTypeOptions,
@@ -237,7 +293,8 @@ func createAndUpdateWebhookForm(
 		component.TextareaControl(component.TextareaControlParams{
 			Name:        "headers",
 			Label:       "Headers",
-			Placeholder: `{"Authorization": "Bearer my-token"}`,
+			Placeholder: `{ "Authorization": "Bearer my-token" }`,
+			HelpText:    `By default it will send a { "Content-Type": "application/json" } header.`,
 			Children: []gomponents.Node{
 				gomponents.If(
 					shouldPrefill, gomponents.Text(pickedWebhook.Headers.String),
@@ -248,7 +305,8 @@ func createAndUpdateWebhookForm(
 		component.TextareaControl(component.TextareaControlParams{
 			Name:        "body",
 			Label:       "Body",
-			Placeholder: `{"key": "value"}`,
+			Placeholder: `{ "key": "value" }`,
+			HelpText:    `By default it will send an empty json object {}.`,
 			Children: []gomponents.Node{
 				gomponents.If(
 					shouldPrefill, gomponents.Text(pickedWebhook.Body.String),
