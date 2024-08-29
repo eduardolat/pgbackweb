@@ -4,12 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .normal-width {
-    @apply container mx-auto px-4 max-w-[1920px];
-  }
-}
-
 /* General */
 html {
   overflow-x: hidden;
