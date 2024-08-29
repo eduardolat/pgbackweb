@@ -23,8 +23,8 @@ type createWebhookDTO struct {
 	IsActive  string      `form:"is_active" validate:"required,oneof=true false"`
 	Url       string      `form:"url" validate:"required,url"`
 	Method    string      `form:"method" validate:"required,oneof=GET POST"`
-	Headers   string      `form:"headers"`
-	Body      string      `form:"body"`
+	Headers   string      `form:"headers" validate:"omitempty,json"`
+	Body      string      `form:"body" validate:"omitempty,json"`
 }
 
 func (h *handlers) createWebhookHandler(c echo.Context) error {
