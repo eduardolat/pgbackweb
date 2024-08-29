@@ -6,11 +6,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// Context keys to avoid typos
 const (
-	isAuthedKey  = "isAuthed"
-	sessionIDKey = "sessionId"
-	userKey      = "user"
+	ctxKey = "PGBackWebCTX"
 )
 
 // Ctx represents the values passed through a single request context.
@@ -22,30 +19,14 @@ type Ctx struct {
 
 // SetCtx inserts values into the Echo request context.
 func SetCtx(c echo.Context, ctx Ctx) {
-	c.Set(isAuthedKey, ctx.IsAuthed)
-	c.Set(sessionIDKey, ctx.SessionID)
-	c.Set(userKey, ctx.User)
+	c.Set(ctxKey, ctx)
 }
 
 // GetCtx retrieves values from the Echo request context.
 func GetCtx(c echo.Context) Ctx {
-	var isAuthed bool
-	var sessionID uuid.UUID
-	var user dbgen.User
-
-	if ia, ok := c.Get(isAuthedKey).(bool); ok {
-		isAuthed = ia
+	ctx, ok := c.Get(ctxKey).(Ctx)
+	if !ok {
+		return Ctx{}
 	}
-	if sid, ok := c.Get(sessionIDKey).(uuid.UUID); ok {
-		sessionID = sid
-	}
-	if au, ok := c.Get(userKey).(dbgen.User); ok {
-		user = au
-	}
-
-	return Ctx{
-		IsAuthed:  isAuthed,
-		SessionID: sessionID,
-		User:      user,
-	}
+	return ctx
 }
