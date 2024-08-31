@@ -1,0 +1,23 @@
+*,
+*:hover {
+  /* Reset scrollbar*/
+  scrollbar-color: auto;
+}
+
+*::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+  @apply bg-gray-500;
+  border-radius: 3px;
+}
+
+/* Fallback scrollbar style for Firefox */
+@-moz-document url-prefix() {
+  * {
+    scrollbar-width: thin;
+  }
+}

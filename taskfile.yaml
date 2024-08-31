@@ -50,7 +50,7 @@ tasks:
     cmd: >
       npm run tailwindcss --
       --config ./tailwind.config.js
-      --input ./internal/view/static/css/tailwind.css
+      --input ./internal/view/static/css/main.css
       --output ./internal/view/static/css/style.css --minify
 
   tidy:
