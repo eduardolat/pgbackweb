@@ -67,13 +67,17 @@ func indexPage(
 		count int64,
 		chartData ChartData,
 	) gomponents.Node {
-		var chart gomponents.Node
-		if len(chartData.Data) > 0 {
-			chartID := "chart-" + uuid.NewString()
+		chart := func() gomponents.Node {
+			notAvailable := html.Div(
+				html.Class("size-full flex flex-col justify-center items-center"),
+				html.Span(
+					html.Class("text-sm text-neutral-content pb-[32px]"),
+					gomponents.Text("Chart waiting for data"),
+				),
+			)
 
-			labels := ""
-			for _, label := range chartData.Labels {
-				labels += fmt.Sprintf("'%s',", label)
+			if len(chartData.Data) < 1 {
+				return notAvailable
 			}
 
 			areAllZero := true
@@ -84,25 +88,27 @@ func indexPage(
 				}
 			}
 
+			if areAllZero {
+				return notAvailable
+			}
+
+			chartID := "chart-" + uuid.NewString()
+			labels := ""
+			for _, label := range chartData.Labels {
+				labels += fmt.Sprintf("'%s',", label)
+			}
+
 			data := ""
 			for _, d := range chartData.Data {
-				if areAllZero {
-					data += "-1,"
-					continue
-				}
 				data += fmt.Sprintf("%d,", d)
 			}
 
 			bgColors := ""
 			for _, color := range chartData.BgColors {
-				if areAllZero {
-					bgColors += "'#e5e6e6',"
-					continue
-				}
 				bgColors += fmt.Sprintf("'%s',", color)
 			}
 
-			chart = html.Div(
+			return html.Div(
 				html.Class("mt-2"),
 				html.Div(html.Canvas(html.ID(chartID))),
 				html.Script(gomponents.Raw(`
@@ -122,17 +128,6 @@ func indexPage(
 							plugins: {
 								legend: {
 									position: 'bottom'
-								},
-								tooltip: {
-									callbacks: {
-										label: function(tooltipItem) {
-											let value = tooltipItem.raw;
-											if (value === -1) {
-												value = 0;
-											}
-											return tooltipItem.label + ': ' + value;
-										}
-									}
 								}
 							}
 						}
@@ -142,10 +137,10 @@ func indexPage(
 		}
 
 		return component.CardBox(component.CardBoxParams{
-			Class: "text-center max-w-[250px]",
+			Class: "flex-none text-center w-[250px]",
 			Children: []gomponents.Node{
 				component.H2Text(fmt.Sprintf("%d %s", count, title)),
-				chart,
+				chart(),
 			},
 		})
 	}
