@@ -28,7 +28,7 @@ BEFORE UPDATE ON webhooks FOR EACH ROW EXECUTE FUNCTION change_updated_at();
 CREATE INDEX IF NOT EXISTS
 idx_webhooks_target_ids ON webhooks USING GIN (target_ids);
 
-CREATE TABLE IF NOT EXISTS webhook_results (
+CREATE TABLE IF NOT EXISTS webhook_executions (
   id UUID NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
   webhook_id UUID NOT NULL REFERENCES webhooks(id) ON DELETE CASCADE,
 
@@ -45,11 +45,11 @@ CREATE TABLE IF NOT EXISTS webhook_results (
 );
 
 CREATE INDEX IF NOT EXISTS
-idx_webhook_results_webhook_id ON webhook_results(webhook_id);
+idx_webhook_executions_webhook_id ON webhook_executions(webhook_id);
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE IF EXISTS webhook_results;
+DROP TABLE IF EXISTS webhook_executions;
 DROP TABLE IF EXISTS webhooks;
 -- +goose StatementEnd

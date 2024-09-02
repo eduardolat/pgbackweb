@@ -4,8 +4,8 @@ WHERE is_active = true
 AND event_type = @event_type
 AND @target_id::UUID = ANY(target_ids);
 
--- name: WebhooksServiceCreateWebhookResult :one
-INSERT INTO webhook_results (
+-- name: WebhooksServiceCreateWebhookExecution :one
+INSERT INTO webhook_executions (
   webhook_id, req_method, req_headers, req_body,
   res_status, res_headers, res_body, res_duration
 )

@@ -64,8 +64,8 @@ func (s *Service) SendWebhookRequest(
 		return fmt.Errorf("error reading response body: %w", err)
 	}
 
-	_, err = s.dbgen.WebhooksServiceCreateWebhookResult(
-		ctx, dbgen.WebhooksServiceCreateWebhookResultParams{
+	_, err = s.dbgen.WebhooksServiceCreateWebhookExecution(
+		ctx, dbgen.WebhooksServiceCreateWebhookExecutionParams{
 			WebhookID:  webhook.ID,
 			ReqMethod:  sql.NullString{String: req.Method, Valid: true},
 			ReqHeaders: webhook.Headers,

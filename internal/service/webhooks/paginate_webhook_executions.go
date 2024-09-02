@@ -16,7 +16,7 @@ type PaginateWebhookExecutionsParams struct {
 
 func (s *Service) PaginateWebhookExecutions(
 	ctx context.Context, params PaginateWebhookExecutionsParams,
-) (paginateutil.PaginateResponse, []dbgen.WebhookResult, error) {
+) (paginateutil.PaginateResponse, []dbgen.WebhookExecution, error) {
 	page := max(params.Page, 1)
 	limit := min(max(params.Limit, 1), 100)
 
@@ -34,7 +34,7 @@ func (s *Service) PaginateWebhookExecutions(
 	offset := paginateutil.CreateOffsetFromParams(paginateParams)
 	paginateResponse := paginateutil.CreatePaginateResponse(paginateParams, int(count))
 
-	webhookResults, err := s.dbgen.WebhooksServicePaginateWebhookExecutions(
+	webhookExecutions, err := s.dbgen.WebhooksServicePaginateWebhookExecutions(
 		ctx, dbgen.WebhooksServicePaginateWebhookExecutionsParams{
 			WebhookID: params.WebhookID,
 			Limit:     int32(params.Limit),
@@ -45,5 +45,5 @@ func (s *Service) PaginateWebhookExecutions(
 		return paginateutil.PaginateResponse{}, nil, err
 	}
 
-	return paginateResponse, webhookResults, nil
+	return paginateResponse, webhookExecutions, nil
 }

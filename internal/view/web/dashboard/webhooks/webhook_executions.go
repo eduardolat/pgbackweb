@@ -58,7 +58,7 @@ func (h *handlers) paginateWebhookExecutionsHandler(c echo.Context) error {
 func webhookExecutionsList(
 	webhookID uuid.UUID,
 	pagination paginateutil.PaginateResponse,
-	execs []dbgen.WebhookResult,
+	execs []dbgen.WebhookExecution,
 ) gomponents.Node {
 	if len(execs) == 0 {
 		return html.Tr(
@@ -111,7 +111,7 @@ func webhookExecutionsList(
 }
 
 func webhookExecutionDetailsButton(
-	exec dbgen.WebhookResult,
+	exec dbgen.WebhookExecution,
 	duration time.Duration,
 ) gomponents.Node {
 	mo := component.Modal(component.ModalParams{
