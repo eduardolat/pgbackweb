@@ -28,7 +28,13 @@ func (h *handlers) runWebhookHandler(c echo.Context) error {
 			})
 			return
 		}
-		_ = h.servs.WebhooksService.SendWebhookRequest(ctx, webhook)
+		err = h.servs.WebhooksService.SendWebhookRequest(ctx, webhook)
+		if err != nil {
+			logger.Error("error sending webhook request", logger.KV{
+				"webhook_id": webhook.ID,
+				"error":      err.Error(),
+			})
+		}
 	}()
 
 	return htmx.RespondToastSuccess(c, "Running webhook, check the webhook executions for more details")
