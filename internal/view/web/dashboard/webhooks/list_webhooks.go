@@ -57,11 +57,17 @@ func listWebhooks(
 				html.Class("w-[40px]"),
 				html.Div(
 					html.Class("flex justify-start space-x-1"),
-					// editWebhookButton(webhook),
+					editWebhookButton(whook.ID),
 					// deleteWebhookButton(webhook.ID),
 				),
 			),
-			html.Td(component.SpanText(whook.Name)),
+			html.Td(
+				html.Div(
+					html.Class("flex items-center space-x-2"),
+					component.IsActivePing(whook.IsActive),
+					component.SpanText(whook.Name),
+				),
+			),
 			html.Td(component.SpanText(
 				func() string {
 					if name, ok := webhooks.FullEventTypes[whook.EventType]; ok {

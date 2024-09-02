@@ -21,8 +21,10 @@ func MountRouter(
 
 	parent.GET("", h.indexPageHandler)
 	parent.GET("/list", h.listWebhooksHandler)
-	parent.GET("/create-form", h.createWebhookFormHandler)
-	parent.POST("", h.createWebhookHandler)
+	parent.GET("/create", h.createWebhookFormHandler)
+	parent.POST("/create", h.createWebhookHandler)
+	parent.GET("/:webhookID/edit", h.editWebhookFormHandler)
+	parent.POST("/:webhookID/edit", h.editWebhookHandler)
 	// parent.DELETE("/:webhookID", h.deleteWebhookHandler)
 	// parent.POST("/:webhookID/edit", h.editWebhookHandler)
 }

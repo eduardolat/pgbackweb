@@ -16,7 +16,7 @@ import (
 	"github.com/maragudk/gomponents/html"
 )
 
-type createWebhookDTO struct {
+type editWebhookDTO struct {
 	Name      string      `form:"name" validate:"required"`
 	EventType string      `form:"event_type" validate:"required"`
 	TargetIds []uuid.UUID `form:"target_ids" validate:"required,gt=0"`
@@ -27,10 +27,14 @@ type createWebhookDTO struct {
 	Body      string      `form:"body" validate:"omitempty,json"`
 }
 
-func (h *handlers) createWebhookHandler(c echo.Context) error {
+func (h *handlers) editWebhookHandler(c echo.Context) error {
 	ctx := c.Request().Context()
+	webhookID, err := uuid.Parse(c.Param("webhookID"))
+	if err != nil {
+		return htmx.RespondToastError(c, err.Error())
+	}
 
-	var formData createWebhookDTO
+	var formData editWebhookDTO
 	if err := c.Bind(&formData); err != nil {
 		return htmx.RespondToastError(c, err.Error())
 	}
@@ -38,14 +42,15 @@ func (h *handlers) createWebhookHandler(c echo.Context) error {
 		return htmx.RespondToastError(c, err.Error())
 	}
 
-	_, err := h.servs.WebhooksService.CreateWebhook(
-		ctx, dbgen.WebhooksServiceCreateWebhookParams{
-			Name:      formData.Name,
-			EventType: formData.EventType,
+	_, err = h.servs.WebhooksService.UpdateWebhook(
+		ctx, dbgen.WebhooksServiceUpdateWebhookParams{
+			WebhookID: webhookID,
+			Name:      sql.NullString{String: formData.Name, Valid: true},
+			EventType: sql.NullString{String: formData.EventType, Valid: true},
 			TargetIds: formData.TargetIds,
-			IsActive:  formData.IsActive == "true",
-			Url:       formData.Url,
-			Method:    formData.Method,
+			IsActive:  sql.NullBool{Bool: formData.IsActive == "true", Valid: true},
+			Url:       sql.NullString{String: formData.Url, Valid: true},
+			Method:    sql.NullString{String: formData.Method, Valid: true},
 			Headers:   sql.NullString{String: formData.Headers, Valid: true},
 			Body:      sql.NullString{String: formData.Body, Valid: true},
 		},
@@ -54,11 +59,20 @@ func (h *handlers) createWebhookHandler(c echo.Context) error {
 		return htmx.RespondToastError(c, err.Error())
 	}
 
-	return htmx.RespondRedirect(c, "/dashboard/webhooks")
+	return htmx.RespondAlertWithRefresh(c, "Webhook updated")
 }
 
-func (h *handlers) createWebhookFormHandler(c echo.Context) error {
+func (h *handlers) editWebhookFormHandler(c echo.Context) error {
 	ctx := c.Request().Context()
+	webhookID, err := uuid.Parse(c.Param("webhookID"))
+	if err != nil {
+		return htmx.RespondToastError(c, err.Error())
+	}
+
+	webhook, err := h.servs.WebhooksService.GetWebhook(ctx, webhookID)
+	if err != nil {
+		return htmx.RespondToastError(c, err.Error())
+	}
 
 	databases, err := h.servs.DatabasesService.GetAllDatabases(ctx)
 	if err != nil {
@@ -75,22 +89,23 @@ func (h *handlers) createWebhookFormHandler(c echo.Context) error {
 		return htmx.RespondToastError(c, err.Error())
 	}
 
-	return echoutil.RenderGomponent(c, http.StatusOK, createWebhookForm(
-		databases, destinations, backups,
+	return echoutil.RenderGomponent(c, http.StatusOK, editWebhookForm(
+		webhook, databases, destinations, backups,
 	))
 }
 
-func createWebhookForm(
+func editWebhookForm(
+	webhook dbgen.Webhook,
 	databases []dbgen.DatabasesServiceGetAllDatabasesRow,
 	destinations []dbgen.DestinationsServiceGetAllDestinationsRow,
 	backups []dbgen.Backup,
 ) gomponents.Node {
 	return html.Form(
-		htmx.HxPost("/dashboard/webhooks/create"),
+		htmx.HxPost("/dashboard/webhooks/"+webhook.ID.String()+"/edit"),
 		htmx.HxDisabledELT("find button[type='submit']"),
 		html.Class("space-y-2"),
 
-		createAndUpdateWebhookForm(databases, destinations, backups),
+		createAndUpdateWebhookForm(databases, destinations, backups, webhook),
 
 		html.Div(
 			html.Class("flex justify-end items-center space-x-2 pt-2"),
@@ -105,13 +120,13 @@ func createWebhookForm(
 	)
 }
 
-func createWebhookButton() gomponents.Node {
+func editWebhookButton(webhookID uuid.UUID) gomponents.Node {
 	mo := component.Modal(component.ModalParams{
 		Size:  component.SizeLg,
-		Title: "Create webhook",
+		Title: "Edit webhook",
 		Content: []gomponents.Node{
 			html.Div(
-				htmx.HxGet("/dashboard/webhooks/create"),
+				htmx.HxGet("/dashboard/webhooks/"+webhookID.String()+"/edit"),
 				htmx.HxSwap("outerHTML"),
 				htmx.HxTrigger("intersect once"),
 				html.Class("p-10 flex justify-center"),
@@ -122,14 +137,17 @@ func createWebhookButton() gomponents.Node {
 
 	button := html.Button(
 		mo.OpenerAttr,
-		html.Class("btn btn-primary"),
-		component.SpanText("Create webhook"),
-		lucide.Plus(),
+		html.Class("btn btn-neutral btn-sm btn-square btn-ghost"),
+		lucide.Pencil(),
 	)
 
 	return html.Div(
 		html.Class("inline-block"),
 		mo.HTML,
-		button,
+		html.Div(
+			html.Class("inline-block tooltip tooltip-right"),
+			html.Data("tip", "Edit webhook"),
+			button,
+		),
 	)
 }

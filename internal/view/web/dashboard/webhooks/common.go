@@ -137,23 +137,53 @@ func createAndUpdateWebhookForm(
 		))
 	}
 
+	pickedTargetIds := ""
+	if len(pickedWebhook.TargetIds) > 0 {
+		for _, tid := range pickedWebhook.TargetIds {
+			pickedTargetIds += fmt.Sprintf("'%s',", tid.String())
+		}
+	}
+
 	return html.Div(
 		html.Class("space-y-2"),
 
 		alpine.XData(`{
-			eventType: "",
-			targetIds: [],
+			eventType: "`+pickedWebhook.EventType+`",
+			targetIds: [`+pickedTargetIds+`],
 
 			isEventType(eventType) {
 				return this.eventType === eventType
 			},
 
-			init () {
+			autoGrowHeadersTextarea() {
+				textareaAutoGrow($refs.headersTextarea)
+			},
+
+			autoGrowBodyTextarea() {
+				textareaAutoGrow($refs.bodyTextarea)
+			},
+
+			formatHeadersTextarea() {
+				const el = $refs.headersTextarea
+				el.value = formatJson(el.value)
+				this.autoGrowHeadersTextarea()
+			},
+
+			formatBodyTextarea() {
+				const el = $refs.bodyTextarea
+				el.value = formatJson(el.value)
+				this.autoGrowBodyTextarea()
+			},
+
+			init() {
 				$watch('eventType', (value, oldValue) => {
 					if (value !== oldValue) {
 						this.targetIds = []
 					}
 				})
+
+				this.formatHeadersTextarea()
+				this.formatBodyTextarea()
 			}
 		}`),
 
@@ -296,6 +326,9 @@ func createAndUpdateWebhookForm(
 			Placeholder: `{ "Authorization": "Bearer my-token" }`,
 			HelpText:    `By default it will send a { "Content-Type": "application/json" } header.`,
 			Children: []gomponents.Node{
+				alpine.XRef("headersTextarea"),
+				alpine.XOn("click.outside", "formatHeadersTextarea()"),
+				alpine.XOn("input", "autoGrowHeadersTextarea()"),
 				gomponents.If(
 					shouldPrefill, gomponents.Text(pickedWebhook.Headers.String),
 				),
@@ -308,6 +341,9 @@ func createAndUpdateWebhookForm(
 			Placeholder: `{ "key": "value" }`,
 			HelpText:    `By default it will send an empty json object {}.`,
 			Children: []gomponents.Node{
+				alpine.XRef("bodyTextarea"),
+				alpine.XOn("click.outside", "formatBodyTextarea()"),
+				alpine.XOn("input", "autoGrowBodyTextarea()"),
 				gomponents.If(
 					shouldPrefill, gomponents.Text(pickedWebhook.Body.String),
 				),
