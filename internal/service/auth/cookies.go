@@ -19,7 +19,6 @@ func (s *Service) SetSessionCookie(c echo.Context, token string) {
 		MaxAge:   int(maxSessionAge.Seconds()),
 		HttpOnly: true,
 		Path:     "/",
-		SameSite: http.SameSiteStrictMode,
 	}
 	c.SetCookie(&cookie)
 }
@@ -31,7 +30,6 @@ func (s *Service) ClearSessionCookie(c echo.Context) {
 		MaxAge:   -1,
 		HttpOnly: true,
 		Path:     "/",
-		SameSite: http.SameSiteStrictMode,
 	}
 	c.SetCookie(&cookie)
 }
