@@ -54,7 +54,6 @@ export function initHelpers () {
     try {
       return JSON.stringify(JSON.parse(inJSON), null, 2)
     } catch (e) {
-      console.error(e)
       return inJSON
     }
   }
