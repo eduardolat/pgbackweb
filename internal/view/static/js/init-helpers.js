@@ -1,4 +1,4 @@
-export function initCopyFunction () {
+export function initHelpers () {
   function copyToClipboard (textToCopy) {
     const successMessage = 'Text copied'
     const errorMessage = 'Error copying text'
@@ -43,5 +43,23 @@ export function initCopyFunction () {
     document.body.removeChild(textArea)
   }
 
+  function textareaAutoGrow (element) {
+    if (!element?.style) return
+    element.style.height = '1px'
+    element.style.height = (element.scrollHeight + 2) + 'px'
+  }
+
+  function formatJson (inJSON) {
+    if (typeof inJSON !== 'string' || inJSON === '') return inJSON
+    try {
+      return JSON.stringify(JSON.parse(inJSON), null, 2)
+    } catch (e) {
+      console.error(e)
+      return inJSON
+    }
+  }
+
   window.copyToClipboard = copyToClipboard
+  window.textareaAutoGrow = textareaAutoGrow
+  window.formatJson = formatJson
 }
