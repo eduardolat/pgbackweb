@@ -57,6 +57,7 @@ func listWebhooks(
 				html.Class("w-[40px]"),
 				html.Div(
 					html.Class("flex justify-start space-x-1"),
+					runWebhookButton(whook.ID),
 					editWebhookButton(whook.ID),
 					deleteWebhookButton(whook.ID),
 				),

@@ -25,5 +25,6 @@ func MountRouter(
 	parent.POST("/create", h.createWebhookHandler)
 	parent.GET("/:webhookID/edit", h.editWebhookFormHandler)
 	parent.POST("/:webhookID/edit", h.editWebhookHandler)
+	parent.POST("/:webhookID/run", h.runWebhookHandler)
 	parent.DELETE("/:webhookID", h.deleteWebhookHandler)
 }
