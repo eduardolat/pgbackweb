@@ -2,12 +2,13 @@ export function initHTMX () {
   const triggers = {
     ctm_alert: function (evt) {
       const message = decodeURIComponent(evt.detail.value)
-      alert(message)
+      window.swalAlert(message)
     },
     ctm_alert_with_refresh: function (evt) {
       const message = decodeURIComponent(evt.detail.value)
-      alert(message)
-      location.reload()
+      window.swalAlert(message).then(() => {
+        location.reload()
+      })
     },
     ctm_alert_with_redirect: function (evt) {
       const payload = decodeURIComponent(evt.detail.value)
@@ -18,8 +19,9 @@ export function initHTMX () {
       const message = parts[0]
       const url = parts[1]
 
-      alert(message)
-      location.href = url
+      window.swalAlert(message).then(() => {
+        location.href = url
+      })
     },
     ctm_toast_success: function (evt) {
       const message = decodeURIComponent(evt.detail.value)
@@ -43,10 +45,18 @@ export function initHTMX () {
     document.addEventListener(key, triggers[key])
   }
 
-  /*
-    This fixes this issue:
-    https://stackoverflow.com/questions/73658449/htmx-request-not-firing-when-hx-attributes-are-added-dynamically-from-javascrip
-  */
+  //  Add trigger to use sweetalert2 for confirms
+  document.addEventListener('htmx:confirm', function (e) {
+    if (!e.detail.target.hasAttribute('hx-confirm')) return
+
+    e.preventDefault()
+    window.swalConfirm(e.detail.question).then(function (result) {
+      if (result.isConfirmed) e.detail.issueRequest(true)
+    })
+  })
+
+  // This fixes this issue:
+  // https://stackoverflow.com/questions/73658449/htmx-request-not-firing-when-hx-attributes-are-added-dynamically-from-javascrip
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {

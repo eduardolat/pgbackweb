@@ -14,13 +14,13 @@
   "standard": {
     "globals": [
       "localStorage",
-      "alert",
       "location",
       "toaster",
       "Alpine",
       "Notyf",
       "htmx",
-      "MutationObserver"
+      "MutationObserver",
+      "Swal"
     ]
   }
 }
