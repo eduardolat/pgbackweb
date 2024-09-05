@@ -1,4 +1,14 @@
 export function initHelpers () {
+  function debounce (fn, delayMilliseconds) {
+    let timeoutInstance
+    return function (...args) {
+      clearTimeout(timeoutInstance)
+      timeoutInstance = setTimeout(() => {
+        fn.apply(this, args)
+      }, delayMilliseconds)
+    }
+  }
+
   function copyToClipboard (textToCopy) {
     const successMessage = 'Text copied'
     const errorMessage = 'Error copying text'
@@ -58,6 +68,7 @@ export function initHelpers () {
     }
   }
 
+  window.debounce = debounce
   window.copyToClipboard = copyToClipboard
   window.textareaAutoGrow = textareaAutoGrow
   window.formatJson = formatJson

@@ -4,10 +4,15 @@ export function initDashboardAsideScroll () {
 
   if (!el) return
 
-  window.addEventListener('beforeunload', function () {
-    const scrollPosition = el.scrollTop
-    localStorage.setItem(key, scrollPosition)
-  })
+  const saveScrollPosition = window.debounce(
+    () => {
+      const scrollPosition = el.scrollTop
+      localStorage.setItem(key, scrollPosition)
+      console.log(scrollPosition)
+    },
+    200
+  )
+  el.addEventListener('scroll', saveScrollPosition)
 
   document.addEventListener('DOMContentLoaded', function () {
     const scrollPosition = localStorage.getItem(key)
