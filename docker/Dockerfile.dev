@@ -21,7 +21,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y \
         wget=1.21.4-1ubuntu4.1 unzip=6.0-28ubuntu4 git=1:2.43.0-1ubuntu7.1 \
-        gnupg2=2.4.4-2ubuntu17 lsb-release=12.0-2 tzdata=2024a-2ubuntu1 && \
+        gnupg2=2.4.4-2ubuntu17 lsb-release=12.0-2 tzdata=2024a-2ubuntu1 \
+        lsof=4.95.0-1build3 && \
     rm -rf /var/lib/apt/lists/*
 
 # Add PostgreSQL repository and key
@@ -55,12 +56,6 @@ RUN wget --no-verbose https://github.com/cli/cli/releases/download/v2.52.0/gh_2.
     mv gh_2.52.0_linux_amd64/bin/gh /usr/local/bin/gh && \
     chmod 777 /usr/local/bin/gh
 
-# Install air
-RUN wget --no-verbose https://github.com/cosmtrek/air/releases/download/v1.52.3/air_1.52.3_linux_amd64.tar.gz && \
-    tar -xzf air_1.52.3_linux_amd64.tar.gz && \
-    mv ./air /usr/local/bin/air && \
-    chmod 777 /usr/local/bin/air
-
 # Install goose
 RUN wget --no-verbose https://github.com/pressly/goose/releases/download/v3.21.1/goose_linux_x86_64 && \
     mv ./goose_linux_x86_64 /usr/local/bin/goose && \
@@ -77,6 +72,9 @@ RUN wget --no-verbose https://github.com/golangci/golangci-lint/releases/downloa
     tar -xzf golangci-lint-1.59.1-linux-amd64.tar.gz && \
     mv ./golangci-lint-1.59.1-linux-amd64/golangci-lint /usr/local/bin/golangci-lint && \
     chmod 777 /usr/local/bin/golangci-lint
+
+# Install node utilities
+RUN npm install --global kill-port
 
 # Go to the app dir, delete the temporary dir and create backups dir
 WORKDIR /app

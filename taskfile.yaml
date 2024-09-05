@@ -1,5 +1,7 @@
 version: "3"
 
+interval: 500ms
+
 dotenv: [".env"]
 
 tasks:
@@ -12,7 +14,26 @@ tasks:
     cmd: docker compose down
 
   dev:
-    cmd: air -c .air.toml
+    watch: true
+    sources:
+      - "**/*.go"
+      - "**/*.sql"
+      - "**/*.js"
+      - "**/*.css"
+      - "**/*.json"
+      - ".env"
+      - exclude: "tmp/**"
+      - exclude: "dist/**"
+      - exclude: "internal/database/dbgen/**"
+      - exclude: "internal/view/static/css/style.css"
+      - exclude: "**/*.gen.go"
+      - exclude: "**/*.sql.go"
+      - exclude: "**/*_test.go"
+      - exclude: "**/_generated.go"
+    cmds:
+      - kill-port 8085
+      - task build
+      - task serve
 
   build:
     deps:
