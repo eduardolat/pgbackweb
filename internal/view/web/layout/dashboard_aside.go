@@ -5,6 +5,7 @@ import (
 
 	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/maragudk/gomponents"
 	"github.com/maragudk/gomponents/components"
 	"github.com/maragudk/gomponents/html"
@@ -41,6 +42,8 @@ func dashboardAside() gomponents.Node {
 		),
 
 		html.Div(
+			htmx.HxBoost("true"),
+			htmx.HxTarget("#dashboard-main"),
 			html.Class("mt-6 space-y-4"),
 
 			dashboardAsideItem(

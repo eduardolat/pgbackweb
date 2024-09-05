@@ -25,22 +25,22 @@ func (h *handlers) indexPageHandler(c echo.Context) error {
 	}
 
 	return echoutil.RenderGomponent(
-		c, http.StatusOK, indexPage(reqCtx.User, sessions),
+		c, http.StatusOK, indexPage(reqCtx, sessions),
 	)
 }
 
-func indexPage(user dbgen.User, sessions []dbgen.Session) gomponents.Node {
+func indexPage(reqCtx reqctx.Ctx, sessions []dbgen.Session) gomponents.Node {
 	content := []gomponents.Node{
 		component.H1Text("Profile"),
 
 		html.Div(
 			html.Class("mt-4 grid grid-cols-2 gap-4"),
-			html.Div(updateUserForm(user)),
+			html.Div(updateUserForm(reqCtx.User)),
 			html.Div(closeAllSessionsForm(sessions)),
 		),
 	}
 
-	return layout.Dashboard(layout.DashboardParams{
+	return layout.Dashboard(reqCtx, layout.DashboardParams{
 		Title: "Profile",
 		Body:  content,
 	})

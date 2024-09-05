@@ -6,6 +6,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
+	"github.com/eduardolat/pgbackweb/internal/view/reqctx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
@@ -22,6 +23,8 @@ type execsQueryData struct {
 }
 
 func (h *handlers) indexPageHandler(c echo.Context) error {
+	reqCtx := reqctx.GetCtx(c)
+
 	var queryData execsQueryData
 	if err := c.Bind(&queryData); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
@@ -30,10 +33,10 @@ func (h *handlers) indexPageHandler(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	return echoutil.RenderGomponent(c, http.StatusOK, indexPage(queryData))
+	return echoutil.RenderGomponent(c, http.StatusOK, indexPage(reqCtx, queryData))
 }
 
-func indexPage(queryData execsQueryData) gomponents.Node {
+func indexPage(reqCtx reqctx.Ctx, queryData execsQueryData) gomponents.Node {
 	content := []gomponents.Node{
 		component.H1Text("Executions"),
 		component.CardBox(component.CardBoxParams{
@@ -84,7 +87,7 @@ func indexPage(queryData execsQueryData) gomponents.Node {
 		}),
 	}
 
-	return layout.Dashboard(layout.DashboardParams{
+	return layout.Dashboard(reqCtx, layout.DashboardParams{
 		Title: "Executions",
 		Body:  content,
 	})

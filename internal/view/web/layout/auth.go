@@ -22,7 +22,7 @@ func Auth(params AuthParams) gomponents.Node {
 		Language: "en",
 		Title:    title,
 		Head: []gomponents.Node{
-			head(headParams{}),
+			head(),
 		},
 		Body: []gomponents.Node{
 			components.Classes{

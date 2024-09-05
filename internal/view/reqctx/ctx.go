@@ -12,9 +12,10 @@ const (
 
 // Ctx represents the values passed through a single request context.
 type Ctx struct {
-	IsAuthed  bool
-	SessionID uuid.UUID
-	User      dbgen.User
+	IsHTMXBoosted bool
+	IsAuthed      bool
+	SessionID     uuid.UUID
+	User          dbgen.User
 }
 
 // SetCtx inserts values into the Echo request context.

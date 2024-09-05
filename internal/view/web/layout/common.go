@@ -6,11 +6,7 @@ import (
 	"github.com/maragudk/gomponents/html"
 )
 
-type headParams struct {
-	LoadChartJS bool
-}
-
-func head(params headParams) gomponents.Node {
+func head() gomponents.Node {
 	href := func(path string) gomponents.Node {
 		return html.Href(static.GetVersionedFilePath(path))
 	}
@@ -28,16 +24,12 @@ func head(params headParams) gomponents.Node {
 		html.Script(src("/libs/alpinejs/alpinejs-3.14.1.min.js"), html.Defer()),
 		html.Script(src("/libs/theme-change/theme-change-2.0.2.min.js")),
 		html.Script(src("/libs/sweetalert2/sweetalert2-11.13.1.min.js")),
+		html.Script(src("/libs/chartjs/chartjs-4.4.3.umd.min.js")),
 
 		html.Link(html.Rel("stylesheet"), href("/libs/notyf/notyf-3.10.0.min.css")),
 		html.Script(src("/libs/notyf/notyf-3.10.0.min.js")),
 
 		html.Link(html.Rel("stylesheet"), href("/libs/slim-select/slimselect-2.8.2.css")),
 		html.Script(src("/libs/slim-select/slimselect-2.8.2.min.js")),
-
-		gomponents.If(
-			params.LoadChartJS,
-			html.Script(src("/libs/chartjs/chartjs-4.4.3.umd.min.js")),
-		),
 	})
 }

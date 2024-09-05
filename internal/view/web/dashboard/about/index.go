@@ -5,6 +5,7 @@ import (
 
 	"github.com/eduardolat/pgbackweb/internal/config"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
+	"github.com/eduardolat/pgbackweb/internal/view/reqctx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
 	"github.com/labstack/echo/v4"
@@ -13,10 +14,11 @@ import (
 )
 
 func (h *handlers) indexPageHandler(c echo.Context) error {
-	return echoutil.RenderGomponent(c, http.StatusOK, indexPage())
+	reqCtx := reqctx.GetCtx(c)
+	return echoutil.RenderGomponent(c, http.StatusOK, indexPage(reqCtx))
 }
 
-func indexPage() gomponents.Node {
+func indexPage(reqCtx reqctx.Ctx) gomponents.Node {
 	content := []gomponents.Node{
 		component.H1Text("About PG Back Web"),
 		component.H2Text(config.Version),
@@ -80,7 +82,7 @@ func indexPage() gomponents.Node {
 		),
 	}
 
-	return layout.Dashboard(layout.DashboardParams{
+	return layout.Dashboard(reqCtx, layout.DashboardParams{
 		Title: "About",
 		Body:  content,
 	})

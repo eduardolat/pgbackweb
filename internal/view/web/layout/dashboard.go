@@ -1,18 +1,23 @@
 package layout
 
 import (
+	"github.com/eduardolat/pgbackweb/internal/view/reqctx"
+	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/maragudk/gomponents"
 	"github.com/maragudk/gomponents/components"
 	"github.com/maragudk/gomponents/html"
 )
 
 type DashboardParams struct {
-	Title       string
-	Body        []gomponents.Node
-	LoadChartJS bool
+	Title string
+	Body  []gomponents.Node
 }
 
-func Dashboard(params DashboardParams) gomponents.Node {
+func Dashboard(reqCtx reqctx.Ctx, params DashboardParams) gomponents.Node {
+	if reqCtx.IsHTMXBoosted {
+		return component.RenderableGroup(params.Body)
+	}
+
 	title := "PG Back Web"
 	if params.Title != "" {
 		title = params.Title + " - " + title
@@ -22,9 +27,7 @@ func Dashboard(params DashboardParams) gomponents.Node {
 		Language: "en",
 		Title:    title,
 		Head: []gomponents.Node{
-			head(headParams{
-				LoadChartJS: params.LoadChartJS,
-			}),
+			head(),
 		},
 		Body: []gomponents.Node{
 			components.Classes{
@@ -36,6 +39,7 @@ func Dashboard(params DashboardParams) gomponents.Node {
 				html.Class("flex-grow overflow-y-auto"),
 				dashboardHeader(),
 				html.Main(
+					html.ID("dashboard-main"),
 					html.Class("p-4"),
 					gomponents.Group(params.Body),
 				),

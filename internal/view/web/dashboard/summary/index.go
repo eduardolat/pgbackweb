@@ -7,6 +7,7 @@ import (
 	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
+	"github.com/eduardolat/pgbackweb/internal/view/reqctx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
@@ -18,6 +19,7 @@ import (
 
 func (h *handlers) indexPageHandler(c echo.Context) error {
 	ctx := c.Request().Context()
+	reqCtx := reqctx.GetCtx(c)
 
 	databasesQty, err := h.servs.DatabasesService.GetDatabasesQty(ctx)
 	if err != nil {
@@ -43,12 +45,14 @@ func (h *handlers) indexPageHandler(c echo.Context) error {
 	return echoutil.RenderGomponent(
 		c, http.StatusOK,
 		indexPage(
-			databasesQty, destinationsQty, backupsQty, executionsQty, restorationsQty,
+			reqCtx, databasesQty, destinationsQty, backupsQty, executionsQty,
+			restorationsQty,
 		),
 	)
 }
 
 func indexPage(
+	reqCtx reqctx.Ctx,
 	databasesQty dbgen.DatabasesServiceGetDatabasesQtyRow,
 	destinationsQty dbgen.DestinationsServiceGetDestinationsQtyRow,
 	backupsQty dbgen.BackupsServiceGetBackupsQtyRow,
@@ -300,9 +304,8 @@ func indexPage(
 		),
 	}
 
-	return layout.Dashboard(layout.DashboardParams{
-		Title:       "Summary",
-		Body:        content,
-		LoadChartJS: true,
+	return layout.Dashboard(reqCtx, layout.DashboardParams{
+		Title: "Summary",
+		Body:  content,
 	})
 }

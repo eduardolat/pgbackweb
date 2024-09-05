@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
+	"github.com/eduardolat/pgbackweb/internal/view/reqctx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
@@ -13,10 +14,11 @@ import (
 )
 
 func (h *handlers) indexPageHandler(c echo.Context) error {
-	return echoutil.RenderGomponent(c, http.StatusOK, indexPage())
+	reqCtx := reqctx.GetCtx(c)
+	return echoutil.RenderGomponent(c, http.StatusOK, indexPage(reqCtx))
 }
 
-func indexPage() gomponents.Node {
+func indexPage(reqCtx reqctx.Ctx) gomponents.Node {
 	content := []gomponents.Node{
 		html.Div(
 			html.Class("flex justify-between items-start"),
@@ -55,7 +57,7 @@ func indexPage() gomponents.Node {
 		}),
 	}
 
-	return layout.Dashboard(layout.DashboardParams{
+	return layout.Dashboard(reqCtx, layout.DashboardParams{
 		Title: "Databases",
 		Body:  content,
 	})
