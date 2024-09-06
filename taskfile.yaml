@@ -20,11 +20,9 @@ tasks:
   build:
     desc: Build the project
     deps:
-      - clean
       - gen-db
       - build-static
     cmds:
-      - task fmt
       - go build -o ./dist/app ./cmd/app/.
       - go build -o ./dist/change-password ./cmd/changepw/.
 
@@ -55,7 +53,10 @@ tasks:
 
   gen-db:
     desc: Generate sqlc files
+    silent: true
     cmd: sqlc generate
+    sources:
+      - ./internal/**/*.sql
 
   reset-db:
     desc: Reset the database
@@ -73,6 +74,9 @@ tasks:
       - >
         npm run esbuild -- ./internal/view/static/js/app.js
         --bundle --minify --outfile=./internal/view/static/js/app.min.js
+    sources:
+      - ./internal/**/*.css
+      - ./internal/**/*.js
 
   tidy:
     desc: Tidy the go.mod file
