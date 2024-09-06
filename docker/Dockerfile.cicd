@@ -1,77 +1,66 @@
-# To make sure we have the node, npm, and golang binaries
-FROM node:21.5.0-slim AS node
-FROM golang:1.22.5 AS golang
+# To make sure we have the node, and golang binaries
+FROM node:20.17.0-bookworm AS node
+FROM golang:1.23.1-bookworm AS golang
 
-# This is the actual image we will use
-FROM ubuntu:24.04
+# Set the base image, general environment variables, and move to temp dir
+FROM debian:12.7
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PATH="$PATH:/usr/local/go/bin"
+WORKDIR /app/temp
 
-# Copy node and npm binaries from the node image
-COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
-COPY --from=node /usr/local/bin/node /usr/local/bin/node
-RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
+# Copy node binaries
+COPY --from=node /usr/local/bin/ /usr/local/bin/
+COPY --from=node /usr/local/include/ /usr/local/include/
+COPY --from=node /usr/local/lib/ /usr/local/lib/
+COPY --from=node /usr/local/share/ /usr/local/share/
 
-# Copy the golang binaries from the golang image
+# Copy the golang binaries
 COPY --from=golang /usr/local/go /usr/local/go
 ENV PATH="$PATH:/usr/local/go/bin"
 
-# Set general environment variables
-ENV DEBIAN_FRONTEND=noninteractive
+# Add PostgreSQL repository - https://www.postgresql.org/download/linux/debian/
+RUN apt update && apt install -y postgresql-common=248 && \
+    /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
 
-# Install system dependencies
-RUN apt-get update && \
-    apt-get install -y \
-        wget=1.21.4-1ubuntu4.1 unzip=6.0-28ubuntu4 git=1:2.43.0-1ubuntu7.1 \
-        gnupg2=2.4.4-2ubuntu17 lsb-release=12.0-2 tzdata=2024a-2ubuntu1 \
-        lsof=4.95.0-1build3 && \
+# Install system dependencies and PostgreSQL clients
+RUN apt update && \
+    apt install -y \
+        wget=1.21.3-1+b2 unzip=6.0-28 git=1:2.39.2-1.1 \
+        tzdata=2024a-0+deb12u1 lsof=4.95.0-1 \
+        postgresql-client-13 postgresql-client-14 \
+        postgresql-client-15 postgresql-client-16 && \
     rm -rf /var/lib/apt/lists/*
 
-# Add PostgreSQL repository and key
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
-    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-
-# Install supported PostgreSQL client versions
-RUN apt-get update && \
-    apt-get install -y postgresql-client-13 postgresql-client-14 \
-                       postgresql-client-15 postgresql-client-16 && \
-    rm -rf /var/lib/apt/lists/*
-
-# Create aliases for the different PostgreSQL client versions
-RUN echo 'alias pg_dump_13="/usr/lib/postgresql/13/bin/pg_dump"' >> /etc/bash.bashrc && \
-    echo 'alias pg_dump_14="/usr/lib/postgresql/14/bin/pg_dump"' >> /etc/bash.bashrc && \
-    echo 'alias pg_dump_15="/usr/lib/postgresql/15/bin/pg_dump"' >> /etc/bash.bashrc && \
-    echo 'alias pg_dump_16="/usr/lib/postgresql/16/bin/pg_dump"' >> /etc/bash.bashrc
-
-# Move to temporary directory to install additional tools
-WORKDIR /app/temp
-
-# Install task
-RUN wget --no-verbose https://github.com/go-task/task/releases/download/v3.37.2/task_linux_amd64.tar.gz && \
+# Install downloadable binaries
+RUN \
+    # Install task
+    wget --no-verbose https://github.com/go-task/task/releases/download/v3.38.0/task_linux_amd64.tar.gz && \
     tar -xzf task_linux_amd64.tar.gz && \
     mv ./task /usr/local/bin/task && \
-    chmod 777 /usr/local/bin/task
-
-# Install GitHub CLI
-RUN wget --no-verbose https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz && \
-    tar -xzf gh_2.52.0_linux_amd64.tar.gz && \
-    mv gh_2.52.0_linux_amd64/bin/gh /usr/local/bin/gh && \
-    chmod 777 /usr/local/bin/gh
-
-# Install goose
-RUN wget --no-verbose https://github.com/pressly/goose/releases/download/v3.21.1/goose_linux_x86_64 && \
+    chmod +x /usr/local/bin/task && \
+    \
+    # Install GitHub CLI
+    wget --no-verbose https://github.com/cli/cli/releases/download/v2.55.0/gh_2.55.0_linux_amd64.tar.gz && \
+    tar -xzf gh_2.55.0_linux_amd64.tar.gz && \
+    mv gh_2.55.0_linux_amd64/bin/gh /usr/local/bin/gh && \
+    chmod +x /usr/local/bin/gh && \
+    \
+    # Install goose
+    wget --no-verbose https://github.com/pressly/goose/releases/download/v3.22.0/goose_linux_x86_64 && \
     mv ./goose_linux_x86_64 /usr/local/bin/goose && \
-    chmod 777 /usr/local/bin/goose
-
-# Install sqlc
-RUN wget --no-verbose https://github.com/sqlc-dev/sqlc/releases/download/v1.26.0/sqlc_1.26.0_linux_amd64.tar.gz && \
-    tar -xzf sqlc_1.26.0_linux_amd64.tar.gz && \
+    chmod +x /usr/local/bin/goose && \
+    \
+    # Install sqlc
+    wget --no-verbose https://github.com/sqlc-dev/sqlc/releases/download/v1.27.0/sqlc_1.27.0_linux_amd64.tar.gz && \
+    tar -xzf sqlc_1.27.0_linux_amd64.tar.gz && \
     mv ./sqlc /usr/local/bin/sqlc && \
-    chmod 777 /usr/local/bin/sqlc
-
-# Install golangci-lint
-RUN wget --no-verbose https://github.com/golangci/golangci-lint/releases/download/v1.59.1/golangci-lint-1.59.1-linux-amd64.tar.gz && \
-    tar -xzf golangci-lint-1.59.1-linux-amd64.tar.gz && \
-    mv ./golangci-lint-1.59.1-linux-amd64/golangci-lint /usr/local/bin/golangci-lint && \
-    chmod 777 /usr/local/bin/golangci-lint
+    chmod +x /usr/local/bin/sqlc && \
+    \
+    # Install golangci-lint
+    wget --no-verbose https://github.com/golangci/golangci-lint/releases/download/v1.60.3/golangci-lint-1.60.3-linux-amd64.tar.gz && \
+    tar -xzf golangci-lint-1.60.3-linux-amd64.tar.gz && \
+    mv ./golangci-lint-1.60.3-linux-amd64/golangci-lint /usr/local/bin/golangci-lint && \
+    chmod +x /usr/local/bin/golangci-lint
 
 # Install node utilities
 RUN npm install --global kill-port

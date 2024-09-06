@@ -1,6 +1,6 @@
 module github.com/eduardolat/pgbackweb
 
-go 1.22.5
+go 1.23.1
 
 require (
 	github.com/adhocore/gronx v1.8.1
