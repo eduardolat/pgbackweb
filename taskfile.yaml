@@ -1,7 +1,5 @@
 version: "3"
 
-interval: 500ms
-
 dotenv: [".env"]
 
 tasks:
@@ -17,27 +15,7 @@ tasks:
 
   dev:
     desc: Build and serve the project with hot reloading
-    watch: true
-    sources:
-      - "**/*.go"
-      - "**/*.sql"
-      - "**/*.js"
-      - "**/*.css"
-      - "**/*.json"
-      - ".env"
-      - exclude: "tmp/**"
-      - exclude: "dist/**"
-      - exclude: "internal/database/dbgen/**"
-      - exclude: "internal/view/static/css/style.min.css"
-      - exclude: "internal/view/static/js/app.min.js"
-      - exclude: "**/*.gen.go"
-      - exclude: "**/*.sql.go"
-      - exclude: "**/*_test.go"
-      - exclude: "**/_generated.go"
-    cmds:
-      - npm run kill-port -- 8085
-      - task build
-      - task serve
+    cmd: air -c .air.toml
 
   build:
     desc: Build the project

@@ -5,13 +5,11 @@
   "scripts": {
     "tailwindcss": "tailwindcss",
     "standard": "standard",
-    "kill-port": "kill-port",
     "esbuild": "esbuild"
   },
   "devDependencies": {
     "daisyui": "4.12.10",
     "esbuild": "0.23.1",
-    "kill-port": "2.0.1",
     "standard": "17.1.0",
     "tailwindcss": "3.4.6"
   },
