@@ -74,9 +74,6 @@ tasks:
       - >
         npm run esbuild -- ./internal/view/static/js/app.js
         --bundle --minify --outfile=./internal/view/static/js/app.min.js
-    sources:
-      - ./internal/**/*.css
-      - ./internal/**/*.js
 
   tidy:
     desc: Tidy the go.mod file
