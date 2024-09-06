@@ -60,7 +60,12 @@ tasks:
       - task serve
 
   goose:
-    cmd: eval $(go run ./cmd/goose/. {{.CLI_ARGS}})
+    silent: true
+    cmd: >
+      goose
+      -dir ./internal/database/migrations
+      postgres "{{.PBW_POSTGRES_CONN_STRING}}"
+      {{.CLI_ARGS}}
 
   gen-db:
     cmd: sqlc generate
