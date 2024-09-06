@@ -17,8 +17,8 @@ func head() gomponents.Node {
 
 	return gomponents.Group([]gomponents.Node{
 		html.Link(html.Rel("shortcut icon"), href("/favicon.ico")),
-		html.Link(html.Rel("stylesheet"), href("/css/style.css")),
-		html.Script(gomponents.Attr("type", "module"), src("/js/app.js")),
+		html.Link(html.Rel("stylesheet"), href("/css/style.min.css")),
+		html.Script(src("/js/app.min.js")),
 
 		html.Script(src("/libs/htmx/htmx-2.0.1.min.js"), html.Defer()),
 		html.Script(src("/libs/alpinejs/alpinejs-3.14.1.min.js"), html.Defer()),

@@ -25,13 +25,14 @@ tasks:
       - exclude: "tmp/**"
       - exclude: "dist/**"
       - exclude: "internal/database/dbgen/**"
-      - exclude: "internal/view/static/css/style.css"
+      - exclude: "internal/view/static/css/style.min.css"
+      - exclude: "internal/view/static/js/app.min.js"
       - exclude: "**/*.gen.go"
       - exclude: "**/*.sql.go"
       - exclude: "**/*_test.go"
       - exclude: "**/_generated.go"
     cmds:
-      - kill-port 8085
+      - npm run kill-port -- 8085
       - task build
       - task serve
 
@@ -39,7 +40,7 @@ tasks:
     deps:
       - clean
       - gen-db
-      - gen-css
+      - build-static
     cmds:
       - task fmt
       - go build -o ./dist/app ./cmd/app/.
@@ -67,12 +68,17 @@ tasks:
   reset-db:
     cmd: go run ./cmd/resetdb/.
 
-  gen-css:
-    cmd: >
-      npm run tailwindcss --
-      --config ./tailwind.config.js
-      --input ./internal/view/static/css/main.css
-      --output ./internal/view/static/css/style.css --minify
+  build-static:
+    silent: true
+    cmds:
+      - >
+        npm run tailwindcss --
+        --config ./tailwind.config.js
+        --input ./internal/view/static/css/style.css
+        --output ./internal/view/static/css/style.min.css --minify
+      - >
+        npm run esbuild -- ./internal/view/static/js/app.js
+        --bundle --minify --outfile=./internal/view/static/js/app.min.js
 
   tidy:
     cmd: go mod tidy
@@ -80,7 +86,7 @@ tasks:
   fmt:
     cmds:
       - go fmt ./...
-      - npm run standard
+      - npm run standard -- --fix
 
   lint-only:
     cmds:

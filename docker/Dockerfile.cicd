@@ -62,9 +62,6 @@ RUN \
     mv ./golangci-lint-1.60.3-linux-amd64/golangci-lint /usr/local/bin/golangci-lint && \
     chmod +x /usr/local/bin/golangci-lint
 
-# Install node utilities
-RUN npm install --global kill-port
-
 # Go to the app dir, delete the temporary dir and create backups dir
 WORKDIR /app
 RUN rm -rf /app/temp && \
