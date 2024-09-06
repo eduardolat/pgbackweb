@@ -6,14 +6,17 @@ dotenv: [".env"]
 
 tasks:
   on:
+    desc: Start development environment, should be run from the host machine
     cmds:
       - docker compose up -d --build
       - docker compose exec app /bin/bash
 
   off:
+    desc: Stop development environment, should be run from the host machine
     cmd: docker compose down
 
   dev:
+    desc: Build and serve the project with hot reloading
     watch: true
     sources:
       - "**/*.go"
@@ -37,6 +40,7 @@ tasks:
       - task serve
 
   build:
+    desc: Build the project
     deps:
       - clean
       - gen-db
@@ -47,19 +51,23 @@ tasks:
       - go build -o ./dist/change-password ./cmd/changepw/.
 
   serve:
+    desc: Serve the built project
     cmd: ./dist/app
 
   migrate-serve:
+    desc: Run migrations and then serve the built project
     cmds:
       - task goose -- up
       - task serve
 
   run:
+    desc: Build the project and then serve it
     cmds:
       - task build
       - task serve
 
   goose:
+    desc: Run goose commands Ex. task goose -- up
     silent: true
     cmd: >
       goose
@@ -68,12 +76,15 @@ tasks:
       {{.CLI_ARGS}}
 
   gen-db:
+    desc: Generate sqlc files
     cmd: sqlc generate
 
   reset-db:
+    desc: Reset the database
     cmd: go run ./cmd/resetdb/.
 
   build-static:
+    desc: Build the static files (css and js)
     silent: true
     cmds:
       - >
@@ -86,32 +97,40 @@ tasks:
         --bundle --minify --outfile=./internal/view/static/js/app.min.js
 
   tidy:
+    desc: Tidy the go.mod file
     cmd: go mod tidy
 
   fmt:
+    desc: Format the go and js files
     cmds:
       - go fmt ./...
       - npm run standard -- --fix
 
   lint-only:
+    desc: Lint the go and js files
     cmds:
       - task gen-db
       - golangci-lint run ./...
+      - npm run standard
 
   test-only:
+    desc: Run the tests
     cmds:
       - task gen-db
       - go test ./...
 
   test:
+    desc: Run the linters and tests
     cmds:
       - task lint-only
       - task test-only
 
   clean:
+    desc: Clean the temporary and distribution folders
     cmds:
       - rm -rf ./tmp
       - rm -rf ./dist
 
   fixperms: # Fixes the permissions of the files in the project
+    desc: Fixes the permissions of the files in the project
     cmd: ./scripts/fixperms.sh
