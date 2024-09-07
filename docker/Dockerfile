@@ -23,43 +23,78 @@ RUN apt update && apt install -y postgresql-common=248 && \
     /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
 
 # Install system dependencies and PostgreSQL clients
-RUN apt update && \
-    apt install -y \
-        wget=1.21.3-1+b2 unzip=6.0-28 \
-        tzdata=2024a-0+deb12u1 git=1:2.39.2-1.1 \
-        postgresql-client-13 postgresql-client-14 \
-        postgresql-client-15 postgresql-client-16 && \
+RUN set -e && \
+    apt update && \
+    if [ "${TARGETPLATFORM}" = "linux/arm64" ]; then \
+        apt install -y \
+            wget=1.21.3-1+b1 unzip=6.0-28 \
+            tzdata=2024a-0+deb12u1 git=1:2.39.2-1.1 \
+            postgresql-client-13 postgresql-client-14 \
+            postgresql-client-15 postgresql-client-16; \
+    else \
+        apt install -y \
+            wget=1.21.3-1+b2 unzip=6.0-28 \
+            tzdata=2024a-0+deb12u1 git=1:2.39.2-1.1 \
+            postgresql-client-13 postgresql-client-14 \
+            postgresql-client-15 postgresql-client-16; \
+    fi && \
     rm -rf /var/lib/apt/lists/*
 
 # Install downloadable binaries
-RUN \
-    # Install task
-    wget --no-verbose https://github.com/go-task/task/releases/download/v3.38.0/task_linux_amd64.tar.gz && \
-    tar -xzf task_linux_amd64.tar.gz && \
-    mv ./task /usr/local/bin/task && \
+RUN set -e && \
+    if [ "${TARGETPLATFORM}" = "linux/arm64" ]; then \
+        # Install task
+        wget --no-verbose https://github.com/go-task/task/releases/download/v3.38.0/task_linux_arm64.tar.gz && \
+        tar -xzf task_linux_arm64.tar.gz && \
+        mv ./task /usr/local/bin/task && \
+
+        # Install goose
+        wget --no-verbose https://github.com/pressly/goose/releases/download/v3.22.0/goose_linux_arm64 && \
+        mv ./goose_linux_arm64 /usr/local/bin/goose && \
+
+        # Install sqlc
+        wget --no-verbose https://github.com/sqlc-dev/sqlc/releases/download/v1.27.0/sqlc_1.27.0_linux_arm64.tar.gz && \
+        tar -xzf sqlc_1.27.0_linux_arm64.tar.gz && \
+        mv ./sqlc /usr/local/bin/sqlc && \
+
+        # Install golangci-lint
+        wget --no-verbose https://github.com/golangci/golangci-lint/releases/download/v1.60.3/golangci-lint-1.60.3-linux-arm64.tar.gz && \
+        tar -xzf golangci-lint-1.60.3-linux-arm64.tar.gz && \
+        mv ./golangci-lint-1.60.3-linux-arm64/golangci-lint /usr/local/bin/golangci-lint && \
+
+        # Install air
+        wget --no-verbose https://github.com/air-verse/air/releases/download/v1.52.3/air_1.52.3_linux_arm64 && \
+        mv ./air_1.52.3_linux_arm64 /usr/local/bin/air; \
+    else \
+        # Install task
+        wget --no-verbose https://github.com/go-task/task/releases/download/v3.38.0/task_linux_amd64.tar.gz && \
+        tar -xzf task_linux_amd64.tar.gz && \
+        mv ./task /usr/local/bin/task && \
+
+        # Install goose
+        wget --no-verbose https://github.com/pressly/goose/releases/download/v3.22.0/goose_linux_x86_64 && \
+        mv ./goose_linux_x86_64 /usr/local/bin/goose && \
+
+        # Install sqlc
+        wget --no-verbose https://github.com/sqlc-dev/sqlc/releases/download/v1.27.0/sqlc_1.27.0_linux_amd64.tar.gz && \
+        tar -xzf sqlc_1.27.0_linux_amd64.tar.gz && \
+        mv ./sqlc /usr/local/bin/sqlc && \
+
+        # Install golangci-lint
+        wget --no-verbose https://github.com/golangci/golangci-lint/releases/download/v1.60.3/golangci-lint-1.60.3-linux-amd64.tar.gz && \
+        tar -xzf golangci-lint-1.60.3-linux-amd64.tar.gz && \
+        mv ./golangci-lint-1.60.3-linux-amd64/golangci-lint /usr/local/bin/golangci-lint && \
+
+        # Install air
+        wget --no-verbose https://github.com/air-verse/air/releases/download/v1.52.3/air_1.52.3_linux_amd64 && \
+        mv ./air_1.52.3_linux_amd64 /usr/local/bin/air; \
+    fi && \
+
+    # Make binaries executable
     chmod +x /usr/local/bin/task && \
-
-    # Install goose
-    wget --no-verbose https://github.com/pressly/goose/releases/download/v3.22.0/goose_linux_x86_64 && \
-    mv ./goose_linux_x86_64 /usr/local/bin/goose && \
     chmod +x /usr/local/bin/goose && \
-
-    # Install sqlc
-    wget --no-verbose https://github.com/sqlc-dev/sqlc/releases/download/v1.27.0/sqlc_1.27.0_linux_amd64.tar.gz && \
-    tar -xzf sqlc_1.27.0_linux_amd64.tar.gz && \
-    mv ./sqlc /usr/local/bin/sqlc && \
     chmod +x /usr/local/bin/sqlc && \
-
-    # Install golangci-lint
-    wget --no-verbose https://github.com/golangci/golangci-lint/releases/download/v1.60.3/golangci-lint-1.60.3-linux-amd64.tar.gz && \
-    tar -xzf golangci-lint-1.60.3-linux-amd64.tar.gz && \
-    mv ./golangci-lint-1.60.3-linux-amd64/golangci-lint /usr/local/bin/golangci-lint && \
     chmod +x /usr/local/bin/golangci-lint && \
-
-    # Install air
-    wget --no-verbose https://github.com/cosmtrek/air/releases/download/v1.52.3/air_1.52.3_linux_amd64.tar.gz && \
-    tar -xzf air_1.52.3_linux_amd64.tar.gz && \
-    mv ./air /usr/local/bin/air && \
     chmod +x /usr/local/bin/air
 
 # Go to the app dir, delete the temporary dir and create backups dir
