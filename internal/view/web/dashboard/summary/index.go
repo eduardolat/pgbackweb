@@ -73,7 +73,7 @@ func indexPage(
 	) gomponents.Node {
 		chart := func() gomponents.Node {
 			notAvailable := html.Div(
-				html.Class("size-full flex flex-col justify-center items-center"),
+				html.Class("size-[218px] flex flex-col justify-center items-center"),
 				html.Span(
 					html.Class("text-sm text-base-content pb-[32px]"),
 					gomponents.Text("Chart waiting for data"),
@@ -157,9 +157,12 @@ func indexPage(
 	)
 
 	content := []gomponents.Node{
-		component.H1Text("Summary"),
 		html.Div(
-			html.Class("mt-4 flex justify-start flex-wrap gap-4"),
+			html.Class("flex justify-center"),
+			component.H1Text("Summary"),
+		),
+		html.Div(
+			html.Class("mt-4 flex justify-center flex-wrap gap-4"),
 
 			countCard("Databases", databasesQty.All, ChartData{
 				Label:    "Quantity",
@@ -201,9 +204,8 @@ func indexPage(
 		html.Div(
 			alpine.XData("genericSlider(4)"),
 			alpine.XCloak(),
-			html.Class("mt-6 flex flex-col justify-center items-start"),
+			html.Class("mt-6 flex flex-col justify-center items-center mx-auto"),
 			component.H2Text("How to use PG Back Web"),
-
 			component.CardBox(component.CardBoxParams{
 				Class: "mt-4 space-y-4 max-w-[600px]",
 				Children: []gomponents.Node{
