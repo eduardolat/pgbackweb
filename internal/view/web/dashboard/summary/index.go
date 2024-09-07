@@ -75,7 +75,7 @@ func indexPage(
 			notAvailable := html.Div(
 				html.Class("size-full flex flex-col justify-center items-center"),
 				html.Span(
-					html.Class("text-sm text-neutral-content pb-[32px]"),
+					html.Class("text-sm text-base-content pb-[32px]"),
 					gomponents.Text("Chart waiting for data"),
 				),
 			)
