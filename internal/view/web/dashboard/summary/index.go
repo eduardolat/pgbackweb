@@ -249,12 +249,14 @@ func indexPage(
 
 					html.Div(
 						alpine.XShow("currentSlide === 2"),
-						component.H3Text("Create destination"),
+						component.H3Text("Create S3 destination (optional)"),
 						component.PText(`
 							To create a destination, click on the "Destinations" menu item on
 							the left sidebar. Then click on the "Create destination" button.
 							Fill in the form and click on the "Save" button. You can create
-							as many destinations as you want to store the backups.
+							as many destinations as you want to store the backups. If you
+							don't want to use S3 destinations and store the backups locally,
+							you can skip this step.
 						`),
 					),
 
