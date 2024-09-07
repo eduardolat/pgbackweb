@@ -62,7 +62,7 @@ func indexPage(
 	type ChartData struct {
 		Label    string
 		Labels   []string
-		Data     []int64
+		Data     []int32
 		BgColors []string
 	}
 
@@ -164,25 +164,25 @@ func indexPage(
 			countCard("Databases", databasesQty.All, ChartData{
 				Label:    "Quantity",
 				Labels:   []string{"Healthy", "Unhealthy"},
-				Data:     []int64{databasesQty.Healthy, databasesQty.Unhealthy},
+				Data:     []int32{databasesQty.Healthy, databasesQty.Unhealthy},
 				BgColors: []string{greenColor, redColor},
 			}),
 			countCard("Destinations", destinationsQty.All, ChartData{
 				Label:    "Quantity",
 				Labels:   []string{"Healthy", "Unhealthy"},
-				Data:     []int64{destinationsQty.Healthy, destinationsQty.Unhealthy},
+				Data:     []int32{destinationsQty.Healthy, destinationsQty.Unhealthy},
 				BgColors: []string{greenColor, redColor},
 			}),
 			countCard("Backups", backupsQty.All, ChartData{
 				Label:    "Quantity",
 				Labels:   []string{"Active", "Inactive"},
-				Data:     []int64{backupsQty.Active, backupsQty.Inactive},
+				Data:     []int32{backupsQty.Active, backupsQty.Inactive},
 				BgColors: []string{greenColor, redColor},
 			}),
 			countCard("Executions", executionsQty.All, ChartData{
 				Label:  "Status",
 				Labels: []string{"Running", "Success", "Failed", "Deleted"},
-				Data: []int64{
+				Data: []int32{
 					executionsQty.Running, executionsQty.Success, executionsQty.Failed,
 					executionsQty.Deleted,
 				},
@@ -191,7 +191,7 @@ func indexPage(
 			countCard("Restorations", restorationsQty.All, ChartData{
 				Label:  "Status",
 				Labels: []string{"Running", "Success", "Failed"},
-				Data: []int64{
+				Data: []int32{
 					restorationsQty.Running, restorationsQty.Success,
 					restorationsQty.Failed,
 				},
