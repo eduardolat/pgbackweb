@@ -25,7 +25,8 @@ RUN apt update && apt install -y postgresql-common=248 && \
 # Install system dependencies and PostgreSQL clients
 RUN apt update && \
     apt install -y \
-        wget=1.21.3-1+b2 unzip=6.0-28 tzdata=2024a-0+deb12u1 \
+        wget=1.21.3-1+b2 unzip=6.0-28 \
+        tzdata=2024a-0+deb12u1 git=1:2.39.2-1.1 \
         postgresql-client-13 postgresql-client-14 \
         postgresql-client-15 postgresql-client-16 && \
     rm -rf /var/lib/apt/lists/*
