@@ -58,6 +58,7 @@ func indexPage(reqCtx reqctx.Ctx, queryData resQueryData) gomponents.Node {
 							),
 						),
 						html.TBody(
+							component.SkeletonTr(8),
 							htmx.HxGet(func() string {
 								url := "/dashboard/restorations/list?page=1"
 								if queryData.Execution != uuid.Nil {

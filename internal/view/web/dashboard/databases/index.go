@@ -42,6 +42,7 @@ func indexPage(reqCtx reqctx.Ctx) gomponents.Node {
 							),
 						),
 						html.TBody(
+							component.SkeletonTr(8),
 							htmx.HxGet("/dashboard/databases/list?page=1"),
 							htmx.HxTrigger("load"),
 						),

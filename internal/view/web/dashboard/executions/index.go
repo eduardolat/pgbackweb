@@ -60,6 +60,7 @@ func indexPage(reqCtx reqctx.Ctx, queryData execsQueryData) gomponents.Node {
 							),
 						),
 						html.TBody(
+							component.SkeletonTr(8),
 							htmx.HxGet(func() string {
 								url := "/dashboard/executions/list?page=1"
 								if queryData.Database != uuid.Nil {
