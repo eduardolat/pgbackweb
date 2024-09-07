@@ -50,6 +50,14 @@ func listDatabases(
 	pagination paginateutil.PaginateResponse,
 	databases []dbgen.DatabasesServicePaginateDatabasesRow,
 ) gomponents.Node {
+	if len(databases) < 1 {
+		return component.EmptyResultsTr(component.EmptyResultsParams{
+			IsLarge:  true,
+			Title:    "No databases found",
+			Subtitle: "Wait for the first database to appear here",
+		})
+	}
+
 	trs := []gomponents.Node{}
 	for _, database := range databases {
 		trs = append(trs, html.Tr(

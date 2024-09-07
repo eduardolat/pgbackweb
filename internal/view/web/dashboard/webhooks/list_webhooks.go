@@ -50,6 +50,14 @@ func listWebhooks(
 	pagination paginateutil.PaginateResponse,
 	whooks []dbgen.Webhook,
 ) gomponents.Node {
+	if len(whooks) < 1 {
+		return component.EmptyResultsTr(component.EmptyResultsParams{
+			IsLarge:  true,
+			Title:    "No webhooks found",
+			Subtitle: "Wait for the first webhook to appear here",
+		})
+	}
+
 	trs := []gomponents.Node{}
 	for _, whook := range whooks {
 		trs = append(trs, html.Tr(

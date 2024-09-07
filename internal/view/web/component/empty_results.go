@@ -42,3 +42,13 @@ func EmptyResults(params EmptyResultsParams) gomponents.Node {
 		),
 	)
 }
+
+func EmptyResultsTr(params EmptyResultsParams) gomponents.Node {
+	return html.Tr(
+		html.Td(
+			html.ColSpan("100%"),
+			html.Class("py-10"),
+			EmptyResults(params),
+		),
+	)
+}

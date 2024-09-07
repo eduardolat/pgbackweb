@@ -50,6 +50,14 @@ func listDestinations(
 	pagination paginateutil.PaginateResponse,
 	destinations []dbgen.DestinationsServicePaginateDestinationsRow,
 ) gomponents.Node {
+	if len(destinations) < 1 {
+		return component.EmptyResultsTr(component.EmptyResultsParams{
+			IsLarge:  true,
+			Title:    "No destinations found",
+			Subtitle: "Wait for the first destination to appear here",
+		})
+	}
+
 	trs := []gomponents.Node{}
 	for _, destination := range destinations {
 		trs = append(trs, html.Tr(

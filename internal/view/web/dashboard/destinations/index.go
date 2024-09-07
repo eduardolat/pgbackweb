@@ -21,15 +21,19 @@ func (h *handlers) indexPageHandler(c echo.Context) error {
 func indexPage(reqCtx reqctx.Ctx) gomponents.Node {
 	content := []gomponents.Node{
 		html.Div(
-			html.Class("flex justify-between items-start"),
-			component.H1Text("S3 Destinations"),
-			createDestinationButton(),
+			html.Class("flex justify-between items-start space-x-2"),
+			html.Div(
+				component.H1Text("S3 Destinations"),
+				component.PText(`
+					Here you can manage your S3 destinations. You can skip creating a S3
+					destination if you want to use the local storage for your backups.
+				`),
+			),
+			html.Div(
+				html.Class("flex-none"),
+				createDestinationButton(),
+			),
 		),
-
-		component.PText(`
-			Here you can manage your S3 destinations. You can skip creating a S3
-			destination if you want to use the local storage for your backups.
-		`),
 
 		component.CardBox(component.CardBoxParams{
 			Class: "mt-4",

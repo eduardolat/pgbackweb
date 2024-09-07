@@ -62,6 +62,14 @@ func listRestorations(
 	pagination paginateutil.PaginateResponse,
 	restorations []dbgen.RestorationsServicePaginateRestorationsRow,
 ) gomponents.Node {
+	if len(restorations) < 1 {
+		return component.EmptyResultsTr(component.EmptyResultsParams{
+			IsLarge:  true,
+			Title:    "No restorations found",
+			Subtitle: "Wait for the first restoration to appear here",
+		})
+	}
+
 	trs := []gomponents.Node{}
 	for _, restoration := range restorations {
 		trs = append(trs, html.Tr(

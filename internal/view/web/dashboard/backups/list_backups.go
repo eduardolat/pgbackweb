@@ -50,6 +50,14 @@ func listBackups(
 	pagination paginateutil.PaginateResponse,
 	backups []dbgen.BackupsServicePaginateBackupsRow,
 ) gomponents.Node {
+	if len(backups) < 1 {
+		return component.EmptyResultsTr(component.EmptyResultsParams{
+			IsLarge:  true,
+			Title:    "No backups found",
+			Subtitle: "Wait for the first backup to appear here",
+		})
+	}
+
 	yesNoSpan := func(b bool) gomponents.Node {
 		if b {
 			return component.SpanText("Yes")

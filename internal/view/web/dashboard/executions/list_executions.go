@@ -66,6 +66,14 @@ func listExecutions(
 	pagination paginateutil.PaginateResponse,
 	executions []dbgen.ExecutionsServicePaginateExecutionsRow,
 ) gomponents.Node {
+	if len(executions) < 1 {
+		return component.EmptyResultsTr(component.EmptyResultsParams{
+			IsLarge:  true,
+			Title:    "No executions found",
+			Subtitle: "Wait for the first execution to appear here",
+		})
+	}
+
 	trs := []gomponents.Node{}
 	for _, execution := range executions {
 		trs = append(trs, html.Tr(

@@ -61,16 +61,10 @@ func webhookExecutionsList(
 	execs []dbgen.WebhookExecution,
 ) gomponents.Node {
 	if len(execs) == 0 {
-		return html.Tr(
-			html.Td(
-				html.ColSpan("4"),
-				html.Class("py-10"),
-				component.EmptyResults(component.EmptyResultsParams{
-					Title:    "No executions found",
-					Subtitle: "Wait for the first execution to appear here",
-				}),
-			),
-		)
+		return component.EmptyResultsTr(component.EmptyResultsParams{
+			Title:    "No executions found",
+			Subtitle: "Wait for the first execution to appear here",
+		})
 	}
 
 	trs := []gomponents.Node{}
@@ -136,106 +130,100 @@ func webhookExecutionDetailsButton(
 				}`),
 				alpine.XOn("mouseenter.once", "processTextareas()"),
 
-				component.CardBoxSimple(
-					html.Table(
-						html.Class("table [&_th]:text-nowrap"),
-						html.Tr(
-							html.Td(
-								html.ColSpan("2"),
-								component.H3Text("General"),
-							),
+				html.Table(
+					html.Class("table [&_th]:text-nowrap"),
+					html.Tr(
+						html.Td(
+							html.ColSpan("100%"),
+							component.H3Text("General"),
 						),
-						html.Tr(
-							html.Th(component.SpanText("ID")),
-							html.Td(component.SpanText(exec.ID.String())),
+					),
+					html.Tr(
+						html.Th(component.SpanText("ID")),
+						html.Td(component.SpanText(exec.ID.String())),
+					),
+					html.Tr(
+						html.Th(component.SpanText("Date")),
+						html.Td(component.SpanText(
+							exec.CreatedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
+						)),
+					),
+				),
+
+				html.Table(
+					html.Class("table [&_th]:text-nowrap"),
+					html.Tr(
+						html.Td(
+							html.ColSpan("100%"),
+							component.H3Text("Request"),
 						),
-						html.Tr(
-							html.Th(component.SpanText("Date")),
-							html.Td(component.SpanText(
-								exec.CreatedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
-							)),
+					),
+					html.Tr(
+						html.Th(component.SpanText("Method")),
+						html.Td(component.SpanText(exec.ReqMethod.String)),
+					),
+					html.Tr(
+						html.Th(component.SpanText("Headers")),
+						html.Td(
+							component.TextareaControl(component.TextareaControlParams{
+								Children: []gomponents.Node{
+									alpine.XRef("reqHeadersTextarea"),
+									gomponents.Text(exec.ReqHeaders.String),
+								},
+							}),
+						),
+					),
+					html.Tr(
+						html.Th(component.SpanText("Body")),
+						html.Td(
+							component.TextareaControl(component.TextareaControlParams{
+								Children: []gomponents.Node{
+									alpine.XRef("reqBodyTextarea"),
+									gomponents.Text(exec.ReqBody.String),
+								},
+							}),
 						),
 					),
 				),
 
-				component.CardBoxSimple(
-					html.Table(
-						html.Class("table [&_th]:text-nowrap"),
-						html.Tr(
-							html.Td(
-								html.ColSpan("2"),
-								component.H3Text("Request"),
-							),
-						),
-						html.Tr(
-							html.Th(component.SpanText("Method")),
-							html.Td(component.SpanText(exec.ReqMethod.String)),
-						),
-						html.Tr(
-							html.Th(component.SpanText("Headers")),
-							html.Td(
-								component.TextareaControl(component.TextareaControlParams{
-									Children: []gomponents.Node{
-										alpine.XRef("reqHeadersTextarea"),
-										gomponents.Text(exec.ReqHeaders.String),
-									},
-								}),
-							),
-						),
-						html.Tr(
-							html.Th(component.SpanText("Body")),
-							html.Td(
-								component.TextareaControl(component.TextareaControlParams{
-									Children: []gomponents.Node{
-										alpine.XRef("reqBodyTextarea"),
-										gomponents.Text(exec.ReqBody.String),
-									},
-								}),
-							),
+				html.Table(
+					html.Class("table [&_th]:text-nowrap"),
+					html.Tr(
+						html.Td(
+							html.ColSpan("100%"),
+							component.H3Text("Response"),
 						),
 					),
-				),
-
-				component.CardBoxSimple(
-					html.Table(
-						html.Class("table [&_th]:text-nowrap"),
-						html.Tr(
-							html.Td(
-								html.ColSpan("2"),
-								component.H3Text("Response"),
-							),
+					html.Tr(
+						html.Th(component.SpanText("Status")),
+						html.Td(component.SpanText(
+							fmt.Sprintf("%d", exec.ResStatus.Int16),
+						)),
+					),
+					html.Tr(
+						html.Th(component.SpanText("Duration")),
+						html.Td(component.SpanText(duration.String())),
+					),
+					html.Tr(
+						html.Th(component.SpanText("Headers")),
+						html.Td(
+							component.TextareaControl(component.TextareaControlParams{
+								Children: []gomponents.Node{
+									alpine.XRef("resHeadersTextarea"),
+									gomponents.Text(exec.ResHeaders.String),
+								},
+							}),
 						),
-						html.Tr(
-							html.Th(component.SpanText("Status")),
-							html.Td(component.SpanText(
-								fmt.Sprintf("%d", exec.ResStatus.Int16),
-							)),
-						),
-						html.Tr(
-							html.Th(component.SpanText("Duration")),
-							html.Td(component.SpanText(duration.String())),
-						),
-						html.Tr(
-							html.Th(component.SpanText("Headers")),
-							html.Td(
-								component.TextareaControl(component.TextareaControlParams{
-									Children: []gomponents.Node{
-										alpine.XRef("resHeadersTextarea"),
-										gomponents.Text(exec.ResHeaders.String),
-									},
-								}),
-							),
-						),
-						html.Tr(
-							html.Th(component.SpanText("Body")),
-							html.Td(
-								component.TextareaControl(component.TextareaControlParams{
-									Children: []gomponents.Node{
-										alpine.XRef("resBodyTextarea"),
-										gomponents.Text(exec.ResBody.String),
-									},
-								}),
-							),
+					),
+					html.Tr(
+						html.Th(component.SpanText("Body")),
+						html.Td(
+							component.TextareaControl(component.TextareaControlParams{
+								Children: []gomponents.Node{
+									alpine.XRef("resBodyTextarea"),
+									gomponents.Text(exec.ResBody.String),
+								},
+							}),
 						),
 					),
 				),
