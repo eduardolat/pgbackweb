@@ -17,7 +17,6 @@
 
 .ss-list {
   all: unset;
-  scrollbar-width: thin;
   @apply space-y-1 !important;
 }
 
