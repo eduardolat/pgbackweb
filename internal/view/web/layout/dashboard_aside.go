@@ -44,6 +44,7 @@ func dashboardAside() gomponents.Node {
 		html.Div(
 			htmx.HxBoost("true"),
 			htmx.HxTarget("#dashboard-main"),
+			htmx.HxSwap("transition:true"),
 			html.Class("mt-6 space-y-4"),
 
 			dashboardAsideItem(
