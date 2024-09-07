@@ -9,21 +9,64 @@ on:
       - main
 
 jobs:
-  run_all:
-    name: Run all
+  run_all_amd64:
+    name: Build, test & lint on amd64
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build docker image
-        run: docker build -t pbw-test -f ./docker/Dockerfile.cicd .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Build Docker image
+        run: |
+          docker buildx create --use
+          docker buildx build \
+            --platform linux/amd64 \
+            -t pbw-test-amd64:latest \
+            -f ./docker/Dockerfile.cicd \
+            --load .
 
       - name: Run linter
-        run: docker run --rm pbw-test task lint-only
+        run: docker run --rm --platform linux/amd64 pbw-test-amd64 task lint-only
 
       - name: Run tests
-        run: docker run --rm pbw-test task test-only
+        run: docker run --rm --platform linux/amd64 pbw-test-amd64 task test-only
 
-      - name: Run build
-        run: docker run --rm pbw-test task build
+      - name: Build project
+        run: docker run --rm --platform linux/amd64 pbw-test-amd64 task build
+
+  run_all_arm64:
+    name: Build, test & lint on arm64
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Build Docker image
+        run: |
+          docker buildx create --use
+          docker buildx build \
+            --platform linux/arm64 \
+            -t pbw-test-arm64:latest \
+            -f ./docker/Dockerfile.cicd \
+            --load .
+
+      - name: Run linter
+        run: docker run --rm --platform linux/arm64 pbw-test-arm64 task lint-only
+
+      - name: Run tests
+        run: docker run --rm --platform linux/arm64 pbw-test-arm64 task test-only
+
+      - name: Build project
+        run: docker run --rm --platform linux/arm64 pbw-test-arm64 task build
