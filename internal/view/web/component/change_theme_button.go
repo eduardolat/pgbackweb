@@ -18,8 +18,6 @@ func ChangeThemeButton(params ChangeThemeButtonParams) gomponents.Node {
 	return html.Div(
 		alpine.XData("changeThemeButton"),
 		alpine.XCloak(),
-		alpine.XOn("click", "getCurrentTheme()"),
-		alpine.XOn("click.outside", "getCurrentTheme()"),
 
 		components.Classes{
 			"dropdown":        true,
@@ -58,7 +56,7 @@ func ChangeThemeButton(params ChangeThemeButtonParams) gomponents.Node {
 			},
 			html.Li(
 				html.Button(
-					html.Data("set-theme", ""),
+					alpine.XOn("click", "setTheme('')"),
 					html.Class("btn btn-neutral btn-block"),
 					html.Type("button"),
 					lucide.Laptop(html.Class("mr-1")),
@@ -67,7 +65,7 @@ func ChangeThemeButton(params ChangeThemeButtonParams) gomponents.Node {
 			),
 			html.Li(
 				html.Button(
-					html.Data("set-theme", "light"),
+					alpine.XOn("click", "setTheme('light')"),
 					html.Class("btn btn-neutral btn-block"),
 					html.Type("button"),
 					lucide.Sun(html.Class("mr-1")),
@@ -76,7 +74,7 @@ func ChangeThemeButton(params ChangeThemeButtonParams) gomponents.Node {
 			),
 			html.Li(
 				html.Button(
-					html.Data("set-theme", "dark"),
+					alpine.XOn("click", "setTheme('dark')"),
 					html.Class("btn btn-neutral btn-block"),
 					html.Type("button"),
 					lucide.Moon(html.Class("mr-1")),

@@ -3,20 +3,18 @@ export const changeThemeButton = {
   fn: () => ({
     theme: '',
 
-    getCurrentTheme () {
-      const el = document.querySelector('html')
-      const theme = el.getAttribute('data-theme')
-      if (theme) {
-        this.theme = theme
-        return
-      }
-      this.theme = 'system'
+    loadTheme () {
+      const theme = window.getTheme()
+      this.theme = theme || 'system'
+    },
+
+    setTheme (theme) {
+      window.setTheme(theme)
+      this.theme = theme || 'system'
     },
 
     init () {
-      setTimeout(() => {
-        this.getCurrentTheme()
-      }, 200)
+      this.loadTheme()
     }
   })
 }
