@@ -31,6 +31,9 @@ jobs:
             -f ./docker/Dockerfile.cicd \
             --load .
 
+      - name: Run dependencies check
+        run: docker run --rm --platform linux/amd64 pbw-test-amd64 task check-deps
+
       - name: Run linter
         run: docker run --rm --platform linux/amd64 pbw-test-amd64 task lint-only
 
@@ -61,6 +64,9 @@ jobs:
             -t pbw-test-arm64:latest \
             -f ./docker/Dockerfile.cicd \
             --load .
+
+      - name: Run dependencies check
+        run: docker run --rm --platform linux/arm64 pbw-test-arm64 task check-deps
 
       - name: Run linter
         run: docker run --rm --platform linux/arm64 pbw-test-arm64 task lint-only

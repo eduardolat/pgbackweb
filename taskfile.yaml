@@ -98,9 +98,14 @@ tasks:
       - task gen-db
       - go test ./...
 
+  check-deps:
+    desc: Check if all required dependencies are installed
+    cmd: ./scripts/check_deps.sh
+
   test:
-    desc: Run the linters and tests
+    desc: Run the checks, linters and tests
     cmds:
+      - task check-deps
       - task lint-only
       - task test-only
 
