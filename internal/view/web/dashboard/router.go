@@ -18,6 +18,8 @@ import (
 func MountRouter(
 	parent *echo.Group, mids *middleware.Middleware, servs *service.Service,
 ) {
+	parent.GET("/health-button", healthButtonHandler(servs))
+
 	summary.MountRouter(parent.Group(""), mids, servs)
 	databases.MountRouter(parent.Group("/databases"), mids, servs)
 	destinations.MountRouter(parent.Group("/destinations"), mids, servs)

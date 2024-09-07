@@ -33,6 +33,11 @@ func dashboardHeader() gomponents.Node {
 		),
 		html.Div(
 			html.Class("flex justify-end items-center space-x-2"),
+			html.Div(
+				htmx.HxGet("/dashboard/health-button"),
+				htmx.HxSwap("outerHTML"),
+				htmx.HxTrigger("load once"),
+			),
 			html.A(
 				html.Href("https://discord.gg/BmAwq29UZ8"),
 				html.Target("_blank"),

@@ -9,15 +9,72 @@ import (
 	"github.com/maragudk/gomponents/html"
 )
 
+func Ping(color color) gomponents.Node {
+	if color.Value == "" {
+		color = ColorNeutral
+	}
+
+	bgClass := ""
+	switch color {
+	case ColorPrimary:
+		bgClass = "bg-primary"
+	case ColorSecondary:
+		bgClass = "bg-secondary"
+	case ColorAccent:
+		bgClass = "bg-accent"
+	case ColorNeutral:
+		bgClass = "bg-neutral"
+	case ColorInfo:
+		bgClass = "bg-info"
+	case ColorSuccess:
+		bgClass = "bg-success"
+	case ColorWarning:
+		bgClass = "bg-warning"
+	case ColorError:
+		bgClass = "bg-error"
+	}
+
+	return html.Span(
+		html.Class("relative flex h-3 w-3"),
+		html.Span(
+			components.Classes{
+				"absolute inline-flex h-full w-full":   true,
+				"animate-ping rounded-full opacity-75": true,
+				bgClass:                                true,
+			},
+		),
+		html.Span(
+			components.Classes{
+				"relative inline-flex rounded-full h-3 w-3": true,
+				bgClass: true,
+			},
+		),
+	)
+}
+
+func IsActivePing(isActive bool) gomponents.Node {
+	pingColor := ColorSuccess
+	if !isActive {
+		pingColor = ColorError
+	}
+
+	return html.Div(
+		html.Class("tooltip tooltip-right"),
+		gomponents.If(isActive, html.Data("tip", "Active")),
+		gomponents.If(!isActive, html.Data("tip", "Inactive")),
+		Ping(pingColor),
+	)
+}
+
 func HealthStatusPing(
 	testOk sql.NullBool, testError sql.NullString, lastTestAt sql.NullTime,
 ) gomponents.Node {
-	bgClass := "bg-warning"
+	pingColor := ColorWarning
 	if testOk.Valid {
 		if testOk.Bool {
-			bgClass = "bg-success"
+			pingColor = ColorSuccess
 		} else {
-			bgClass = "bg-error"
+			pingColor = ColorError
 		}
 	}
 
@@ -95,20 +152,8 @@ func HealthStatusPing(
 		moHTML,
 		html.Span(
 			moOpenerAttr,
-			html.Class("relative flex h-3 w-3 cursor-pointer"),
-			html.Span(
-				components.Classes{
-					"absolute inline-flex h-full w-full":   true,
-					"animate-ping rounded-full opacity-75": true,
-					bgClass:                                true,
-				},
-			),
-			html.Span(
-				components.Classes{
-					"relative inline-flex rounded-full h-3 w-3": true,
-					bgClass: true,
-				},
-			),
+			html.Class("cursor-pointer"),
+			Ping(pingColor),
 		),
 	)
 }
