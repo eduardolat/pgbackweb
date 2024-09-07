@@ -5,58 +5,58 @@
 
 .ss-main {
   all: unset;
-  @apply !input !input-bordered !text-base-content;
+  @apply input input-bordered text-base-content !important;
 }
 
 .ss-content {
   all: unset;
-  @apply !bg-base-100 !text-base-content !rounded-btn;
-  @apply !px-2 !py-2 !space-y-1;
-  @apply !border !border-base-content/20;
+  @apply bg-base-100 text-base-content rounded-btn !important;
+  @apply px-2 py-2 space-y-1 !important;
+  @apply border border-base-content/20 !important;
 }
 
 .ss-list {
   all: unset;
   scrollbar-width: thin;
-  @apply !space-y-1;
+  @apply space-y-1 !important;
 }
 
 .ss-search input {
   all: unset;
-  @apply !input !input-bordered !input-sm;
+  @apply input input-bordered input-sm !important;
 }
 
 .ss-option {
   all: unset;
-  @apply !bg-base-100 !text-base-content !rounded-btn;
+  @apply bg-base-100 text-base-content rounded-btn !important;
 }
 
 .ss-option:hover {
   all: unset;
-  @apply !bg-base-200;
+  @apply bg-base-200 !important;
 }
 
 .ss-option.ss-selected {
   all: unset;
-  @apply !bg-base-200;
+  @apply bg-base-200 !important;
 }
 
 .ss-option.ss-disabled {
-  @apply !text-opacity-80;
+  @apply text-opacity-80 !important;
 }
 
 .ss-value {
-  @apply !bg-primary !rounded-badge;
+  @apply bg-primary rounded-badge !important;
 }
 
 .ss-value-text {
-  @apply !text-primary-content;
+  @apply text-primary-content !important;
 }
 
 .ss-value-delete {
-  @apply !border-0 !border-l !border-primary-content;
+  @apply border-0 border-l border-primary-content !important;
 }
 
 .ss-value-delete svg path {
-  @apply !stroke-primary-content;
+  @apply stroke-primary-content !important;
 }
