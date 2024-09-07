@@ -137,7 +137,6 @@ func listBackups(
 			)),
 			htmx.HxTrigger("intersect once"),
 			htmx.HxSwap("afterend"),
-			htmx.HxIndicator("#list-backups-loading"),
 		))
 	}
 

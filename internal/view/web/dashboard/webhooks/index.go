@@ -47,13 +47,7 @@ func indexPage(reqCtx reqctx.Ctx) gomponents.Node {
 						html.TBody(
 							htmx.HxGet("/dashboard/webhooks/list?page=1"),
 							htmx.HxTrigger("load"),
-							htmx.HxIndicator("#list-webhooks-loading"),
 						),
-					),
-
-					html.Div(
-						html.Class("flex justify-center mt-4"),
-						component.HxLoadingLg("list-webhooks-loading"),
 					),
 				),
 			},

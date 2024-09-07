@@ -74,14 +74,8 @@ func indexPage(reqCtx reqctx.Ctx, queryData execsQueryData) gomponents.Node {
 								return url
 							}()),
 							htmx.HxTrigger("load"),
-							htmx.HxIndicator("#list-executions-loading"),
 						),
 					),
-				),
-
-				html.Div(
-					html.Class("flex justify-center mt-4"),
-					component.HxLoadingLg("list-executions-loading"),
 				),
 			},
 		}),

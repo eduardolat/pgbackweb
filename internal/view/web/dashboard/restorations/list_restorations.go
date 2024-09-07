@@ -126,7 +126,6 @@ func listRestorations(
 			}()),
 			htmx.HxTrigger("intersect once"),
 			htmx.HxSwap("afterend"),
-			htmx.HxIndicator("#list-restorations-loading"),
 		))
 	}
 

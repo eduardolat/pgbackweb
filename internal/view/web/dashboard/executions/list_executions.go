@@ -137,7 +137,6 @@ func listExecutions(
 			}()),
 			htmx.HxTrigger("intersect once"),
 			htmx.HxSwap("afterend"),
-			htmx.HxIndicator("#list-executions-loading"),
 		))
 	}
 

@@ -3,6 +3,7 @@ package layout
 import (
 	"github.com/eduardolat/pgbackweb/internal/view/reqctx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/maragudk/gomponents"
 	"github.com/maragudk/gomponents/components"
 	"github.com/maragudk/gomponents/html"
@@ -30,6 +31,7 @@ func Dashboard(reqCtx reqctx.Ctx, params DashboardParams) gomponents.Node {
 			head(),
 		},
 		Body: []gomponents.Node{
+			htmx.HxIndicator("#header-indicator"),
 			components.Classes{
 				"w-screen h-screen bg-base-200":      true,
 				"flex justify-start overflow-hidden": true,

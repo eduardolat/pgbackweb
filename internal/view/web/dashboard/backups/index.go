@@ -52,14 +52,8 @@ func indexPage(reqCtx reqctx.Ctx) gomponents.Node {
 						html.TBody(
 							htmx.HxGet("/dashboard/backups/list?page=1"),
 							htmx.HxTrigger("load"),
-							htmx.HxIndicator("#list-backups-loading"),
 						),
 					),
-				),
-
-				html.Div(
-					html.Class("flex justify-center mt-4"),
-					component.HxLoadingLg("list-backups-loading"),
 				),
 			},
 		}),

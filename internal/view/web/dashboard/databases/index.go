@@ -44,14 +44,8 @@ func indexPage(reqCtx reqctx.Ctx) gomponents.Node {
 						html.TBody(
 							htmx.HxGet("/dashboard/databases/list?page=1"),
 							htmx.HxTrigger("load"),
-							htmx.HxIndicator("#list-databases-loading"),
 						),
 					),
-				),
-
-				html.Div(
-					html.Class("flex justify-center mt-4"),
-					component.HxLoadingLg("list-databases-loading"),
 				),
 			},
 		}),

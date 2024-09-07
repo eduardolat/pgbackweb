@@ -102,7 +102,6 @@ func listWebhooks(
 			}()),
 			htmx.HxTrigger("intersect once"),
 			htmx.HxSwap("afterend"),
-			htmx.HxIndicator("#list-webhooks-loading"),
 		))
 	}
 

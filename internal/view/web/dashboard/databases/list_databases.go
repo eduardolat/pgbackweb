@@ -119,7 +119,6 @@ func listDatabases(
 			)),
 			htmx.HxTrigger("intersect once"),
 			htmx.HxSwap("afterend"),
-			htmx.HxIndicator("#list-databases-loading"),
 		))
 	}
 

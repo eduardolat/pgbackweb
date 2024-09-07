@@ -148,7 +148,6 @@ func listDestinations(
 			)),
 			htmx.HxTrigger("intersect once"),
 			htmx.HxSwap("afterend"),
-			htmx.HxIndicator("#list-destinations-loading"),
 		))
 	}
 

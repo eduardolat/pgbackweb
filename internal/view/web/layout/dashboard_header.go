@@ -29,6 +29,7 @@ func dashboardHeader() gomponents.Node {
 			}),
 			component.StarOnGithub(component.SizeMd),
 			dashboardHeaderCheckForUpdates(),
+			component.HxLoadingMd("header-indicator"),
 		),
 		html.Div(
 			html.Class("flex justify-end items-center space-x-2"),
