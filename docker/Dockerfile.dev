@@ -16,28 +16,15 @@ COPY --from=node /usr/local/share/ /usr/local/share/
 
 # Copy the golang binaries
 COPY --from=golang /usr/local/go /usr/local/go
-ENV PATH="$PATH:/usr/local/go/bin"
 
-# Add PostgreSQL repository - https://www.postgresql.org/download/linux/debian/
+# Add PostgreSQL repository and install system dependencies
+# https://www.postgresql.org/download/linux/debian/
 RUN apt update && apt install -y postgresql-common=248 && \
-    /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
-
-# Install system dependencies and PostgreSQL clients
-RUN set -e && \
-    apt update && \
-    if [ "${TARGETPLATFORM}" = "linux/arm64" ]; then \
-        apt install -y \
-            wget=1.21.3-1+b1 unzip=6.0-28 \
-            tzdata=2024a-0+deb12u1 git=1:2.39.2-1.1 \
-            postgresql-client-13 postgresql-client-14 \
-            postgresql-client-15 postgresql-client-16; \
-    else \
-        apt install -y \
-            wget=1.21.3-1+b2 unzip=6.0-28 \
-            tzdata=2024a-0+deb12u1 git=1:2.39.2-1.1 \
-            postgresql-client-13 postgresql-client-14 \
-            postgresql-client-15 postgresql-client-16; \
-    fi && \
+    /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \
+    apt update && apt install -y \
+        wget unzip tzdata git \
+        postgresql-client-13 postgresql-client-14 \
+        postgresql-client-15 postgresql-client-16 && \
     rm -rf /var/lib/apt/lists/*
 
 # Install downloadable binaries
