@@ -52,7 +52,6 @@ func listBackups(
 ) gomponents.Node {
 	if len(backups) < 1 {
 		return component.EmptyResultsTr(component.EmptyResultsParams{
-			IsLarge:  true,
 			Title:    "No backups found",
 			Subtitle: "Wait for the first backup to appear here",
 		})

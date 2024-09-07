@@ -64,7 +64,6 @@ func listRestorations(
 ) gomponents.Node {
 	if len(restorations) < 1 {
 		return component.EmptyResultsTr(component.EmptyResultsParams{
-			IsLarge:  true,
 			Title:    "No restorations found",
 			Subtitle: "Wait for the first restoration to appear here",
 		})

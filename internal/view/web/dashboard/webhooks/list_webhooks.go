@@ -52,7 +52,6 @@ func listWebhooks(
 ) gomponents.Node {
 	if len(whooks) < 1 {
 		return component.EmptyResultsTr(component.EmptyResultsParams{
-			IsLarge:  true,
 			Title:    "No webhooks found",
 			Subtitle: "Wait for the first webhook to appear here",
 		})

@@ -52,7 +52,6 @@ func listDestinations(
 ) gomponents.Node {
 	if len(destinations) < 1 {
 		return component.EmptyResultsTr(component.EmptyResultsParams{
-			IsLarge:  true,
 			Title:    "No destinations found",
 			Subtitle: "Wait for the first destination to appear here",
 		})

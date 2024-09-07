@@ -52,7 +52,6 @@ func listDatabases(
 ) gomponents.Node {
 	if len(databases) < 1 {
 		return component.EmptyResultsTr(component.EmptyResultsParams{
-			IsLarge:  true,
 			Title:    "No databases found",
 			Subtitle: "Wait for the first database to appear here",
 		})

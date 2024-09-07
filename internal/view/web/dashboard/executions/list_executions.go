@@ -68,7 +68,6 @@ func listExecutions(
 ) gomponents.Node {
 	if len(executions) < 1 {
 		return component.EmptyResultsTr(component.EmptyResultsParams{
-			IsLarge:  true,
 			Title:    "No executions found",
 			Subtitle: "Wait for the first execution to appear here",
 		})
