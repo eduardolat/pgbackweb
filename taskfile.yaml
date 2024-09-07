@@ -100,7 +100,10 @@ tasks:
 
   check-deps:
     desc: Check if all required dependencies are installed
-    cmd: ./scripts/check_deps.sh
+    silent: true
+    cmds:
+      - chmod +x ./scripts/check_deps.sh
+      - ./scripts/check_deps.sh
 
   test:
     desc: Run the checks, linters and tests
