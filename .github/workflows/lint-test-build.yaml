@@ -45,7 +45,7 @@ jobs:
 
   run_all_arm64:
     name: Build, test & lint on arm64
-    runs-on: macos-14 # To use Apple M1 chip and be more realistic
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
