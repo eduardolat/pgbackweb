@@ -4,12 +4,12 @@ services:
   app:
     container_name: pbw_app
     build:
-      context: .
+      context: ../
       dockerfile: ./docker/Dockerfile.dev
     ports:
       - "8085:8085"
     volumes:
-      - ./:/app
+      - ../:/app
       - pbw_vol_app_ssh:/root/.ssh
       - pbw_vol_app_gh:/root/.config/gh
       - pbw_vol_app_go_mod_cache:/root/go/pkg/mod
