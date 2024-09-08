@@ -15,13 +15,14 @@ type DashboardParams struct {
 }
 
 func Dashboard(reqCtx reqctx.Ctx, params DashboardParams) gomponents.Node {
-	if reqCtx.IsHTMXBoosted {
-		return component.RenderableGroup(params.Body)
-	}
-
 	title := "PG Back Web"
 	if params.Title != "" {
 		title = params.Title + " - " + title
+	}
+
+	if reqCtx.IsHTMXBoosted {
+		body := append(params.Body, html.TitleEl(gomponents.Text(title)))
+		return component.RenderableGroup(body)
 	}
 
 	return components.HTML5(components.HTML5Props{
