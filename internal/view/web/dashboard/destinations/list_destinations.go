@@ -60,36 +60,24 @@ func listDestinations(
 	trs := []gomponents.Node{}
 	for _, destination := range destinations {
 		trs = append(trs, html.Tr(
-			html.Td(
-				html.Class("w-[40px]"),
-				html.Div(
-					html.Class("flex justify-start space-x-1"),
-					html.Div(
-						html.Class("inline-block tooltip tooltip-right"),
-						html.Data("tip", "Show executions"),
-						html.A(
-							html.Class("btn btn-sm btn-ghost btn-square"),
-							html.Href(
-								fmt.Sprintf("/dashboard/executions?destination=%s", destination.ID),
-							),
-							html.Target("_blank"),
-							lucide.List(),
-						),
+			html.Td(component.OptionsDropdown(
+				component.OptionsDropdownA(
+					html.Href(
+						fmt.Sprintf("/dashboard/executions?destination=%s", destination.ID),
 					),
-					editDestinationButton(destination),
-					html.Div(
-						html.Class("inline-block tooltip tooltip-right"),
-						html.Data("tip", "Test connection"),
-						html.Button(
-							htmx.HxPost("/dashboard/destinations/"+destination.ID.String()+"/test"),
-							htmx.HxDisabledELT("this"),
-							html.Class("btn btn-neutral btn-square btn-ghost btn-sm"),
-							lucide.PlugZap(),
-						),
-					),
-					deleteDestinationButton(destination.ID),
+					html.Target("_blank"),
+					lucide.List(),
+					component.SpanText("Show executions"),
 				),
-			),
+				editDestinationButton(destination),
+				component.OptionsDropdownButton(
+					htmx.HxPost("/dashboard/destinations/"+destination.ID.String()+"/test"),
+					htmx.HxDisabledELT("this"),
+					lucide.PlugZap(),
+					component.SpanText("Test connection"),
+				),
+				deleteDestinationButton(destination.ID),
+			)),
 			html.Td(
 				html.Div(
 					html.Class("flex items-center space-x-2"),

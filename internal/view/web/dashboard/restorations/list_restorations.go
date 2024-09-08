@@ -73,11 +73,7 @@ func listRestorations(
 	for _, restoration := range restorations {
 		trs = append(trs, html.Tr(
 			html.Td(
-				html.Class("w-[50px]"),
-				html.Div(
-					html.Class("flex justify-start space-x-1"),
-					showRestorationButton(restoration),
-				),
+				showRestorationButton(restoration),
 			),
 			html.Td(component.StatusBadge(restoration.Status)),
 			html.Td(component.SpanText(restoration.BackupName)),

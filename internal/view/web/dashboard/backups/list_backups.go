@@ -67,27 +67,20 @@ func listBackups(
 	trs := []gomponents.Node{}
 	for _, backup := range backups {
 		trs = append(trs, html.Tr(
-			html.Td(
-				html.Class("w-[40px]"),
-				html.Div(
-					html.Class("flex justify-start space-x-1"),
-					html.Div(
-						html.Class("inline-block tooltip tooltip-right"),
-						html.Data("tip", "Show executions"),
-						html.A(
-							html.Class("btn btn-sm btn-ghost btn-square"),
-							html.Href(
-								fmt.Sprintf("/dashboard/executions?backup=%s", backup.ID),
-							),
-							html.Target("_blank"),
-							lucide.List(),
-						),
+			html.Td(component.OptionsDropdown(
+				component.OptionsDropdownA(
+					html.Class("btn btn-sm btn-ghost btn-square"),
+					html.Href(
+						fmt.Sprintf("/dashboard/executions?backup=%s", backup.ID),
 					),
-					manualRunbutton(backup.ID),
-					editBackupButton(backup),
-					deleteBackupButton(backup.ID),
+					html.Target("_blank"),
+					lucide.List(),
+					component.SpanText("Show executions"),
 				),
-			),
+				manualRunbutton(backup.ID),
+				editBackupButton(backup),
+				deleteBackupButton(backup.ID),
+			)),
 			html.Td(
 				html.Div(
 					html.Class("flex items-center space-x-2"),

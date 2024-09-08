@@ -44,7 +44,7 @@ func indexPage(reqCtx reqctx.Ctx) gomponents.Node {
 						html.Class("table text-nowrap"),
 						html.THead(
 							html.Tr(
-								html.Th(component.SpanText("Actions")),
+								html.Th(html.Class("w-1")),
 								html.Th(component.SpanText("Name")),
 								html.Th(component.SpanText("Bucket name")),
 								html.Th(component.SpanText("Endpoint")),

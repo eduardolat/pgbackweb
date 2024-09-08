@@ -60,16 +60,12 @@ func listWebhooks(
 	trs := []gomponents.Node{}
 	for _, whook := range whooks {
 		trs = append(trs, html.Tr(
-			html.Td(
-				html.Class("w-[40px]"),
-				html.Div(
-					html.Class("flex justify-start space-x-1"),
-					webhookExecutionsButton(whook.ID),
-					runWebhookButton(whook.ID),
-					editWebhookButton(whook.ID),
-					deleteWebhookButton(whook.ID),
-				),
-			),
+			html.Td(component.OptionsDropdown(
+				webhookExecutionsButton(whook.ID),
+				runWebhookButton(whook.ID),
+				editWebhookButton(whook.ID),
+				deleteWebhookButton(whook.ID),
+			)),
 			html.Td(
 				html.Div(
 					html.Class("flex items-center space-x-2"),

@@ -231,16 +231,12 @@ func restoreExecutionButton(execution dbgen.ExecutionsServicePaginateExecutionsR
 		},
 	})
 
-	button := html.Button(
-		mo.OpenerAttr,
-		html.Class("btn btn-square btn-sm btn-ghost"),
-		lucide.ArchiveRestore(),
-	)
-
 	return html.Div(
-		html.Class("inline-block tooltip tooltip-right"),
-		html.Data("tip", "Restore backup execution"),
 		mo.HTML,
-		button,
+		component.OptionsDropdownButton(
+			mo.OpenerAttr,
+			lucide.ArchiveRestore(),
+			component.SpanText("Restore execution"),
+		),
 	)
 }

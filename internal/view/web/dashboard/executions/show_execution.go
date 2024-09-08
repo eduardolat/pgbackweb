@@ -134,16 +134,12 @@ func showExecutionButton(
 		},
 	})
 
-	button := html.Button(
-		mo.OpenerAttr,
-		html.Class("btn btn-square btn-sm btn-ghost"),
-		lucide.Eye(),
-	)
-
 	return html.Div(
-		html.Class("inline-block tooltip tooltip-right"),
-		html.Data("tip", "Show details"),
 		mo.HTML,
-		button,
+		component.OptionsDropdownButton(
+			mo.OpenerAttr,
+			lucide.Eye(),
+			component.SpanText("Show details"),
+		),
 	)
 }

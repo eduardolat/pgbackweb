@@ -177,19 +177,12 @@ func editDestinationButton(
 		},
 	})
 
-	button := html.Button(
-		mo.OpenerAttr,
-		html.Class("btn btn-neutral btn-sm btn-square btn-ghost"),
-		lucide.Pencil(),
-	)
-
 	return html.Div(
-		html.Class("inline-block"),
 		mo.HTML,
-		html.Div(
-			html.Class("inline-block tooltip tooltip-right"),
-			html.Data("tip", "Edit destination"),
-			button,
+		component.OptionsDropdownButton(
+			mo.OpenerAttr,
+			lucide.Pencil(),
+			component.SpanText("Edit destination"),
 		),
 	)
 }

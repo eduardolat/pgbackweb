@@ -76,14 +76,10 @@ func listExecutions(
 	trs := []gomponents.Node{}
 	for _, execution := range executions {
 		trs = append(trs, html.Tr(
-			html.Td(
-				html.Class("w-[50px]"),
-				html.Div(
-					html.Class("flex justify-start space-x-1"),
-					showExecutionButton(execution),
-					restoreExecutionButton(execution),
-				),
-			),
+			html.Td(component.OptionsDropdown(
+				showExecutionButton(execution),
+				restoreExecutionButton(execution),
+			)),
 			html.Td(component.StatusBadge(execution.Status)),
 			html.Td(component.SpanText(execution.BackupName)),
 			html.Td(component.SpanText(execution.DatabaseName)),

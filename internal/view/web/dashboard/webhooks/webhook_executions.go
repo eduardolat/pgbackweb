@@ -74,12 +74,9 @@ func webhookExecutionsList(
 
 		trs = append(trs, html.Tr(
 			html.Td(
-				html.Div(
-					html.Class("flex items-center space-x-2"),
-					webhookExecutionDetailsButton(exec, duration),
-					component.SpanText(fmt.Sprintf("%d", exec.ResStatus.Int16)),
-				),
+				webhookExecutionDetailsButton(exec, duration),
 			),
+			html.Td(component.SpanText(fmt.Sprintf("%d", exec.ResStatus.Int16))),
 			html.Td(component.SpanText(exec.ReqMethod.String)),
 			html.Td(component.SpanText(duration.String())),
 			html.Td(component.SpanText(
@@ -233,7 +230,7 @@ func webhookExecutionDetailsButton(
 
 	return html.Div(
 		html.Class("inline-block tooltip tooltip-right"),
-		html.Data("tip", "Show webhook execution details"),
+		html.Data("tip", "More details"),
 		mo.HTML,
 		html.Button(
 			html.Class("btn btn-error btn-square btn-sm btn-ghost"),
@@ -252,12 +249,8 @@ func webhookExecutionsButton(webhookID uuid.UUID) gomponents.Node {
 				html.Class("table"),
 				html.THead(
 					html.Tr(
-						html.Th(
-							html.Div(
-								html.Class("ml-10"),
-								component.SpanText("Status"),
-							),
-						),
+						html.Th(html.Class("w-1")),
+						html.Th(component.SpanText("Status")),
 						html.Th(component.SpanText("Method")),
 						html.Th(component.SpanText("Duration")),
 						html.Th(component.SpanText("Date")),
@@ -279,13 +272,11 @@ func webhookExecutionsButton(webhookID uuid.UUID) gomponents.Node {
 	})
 
 	return html.Div(
-		html.Class("inline-block tooltip tooltip-right"),
-		html.Data("tip", "Show webhook executions"),
 		mo.HTML,
-		html.Button(
-			html.Class("btn btn-error btn-square btn-sm btn-ghost"),
-			lucide.List(),
+		component.OptionsDropdownButton(
 			mo.OpenerAttr,
+			lucide.List(),
+			component.SpanText("Show executions"),
 		),
 	)
 }

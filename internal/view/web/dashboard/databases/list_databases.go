@@ -60,36 +60,27 @@ func listDatabases(
 	trs := []gomponents.Node{}
 	for _, database := range databases {
 		trs = append(trs, html.Tr(
-			html.Td(
-				html.Class("w-[40px]"),
+			html.Td(component.OptionsDropdown(
 				html.Div(
-					html.Class("flex justify-start space-x-1"),
-					html.Div(
-						html.Class("inline-block tooltip tooltip-right"),
-						html.Data("tip", "Show executions"),
-						html.A(
-							html.Class("btn btn-sm btn-ghost btn-square"),
-							html.Href(
-								fmt.Sprintf("/dashboard/executions?database=%s", database.ID),
-							),
-							html.Target("_blank"),
-							lucide.List(),
+					html.Class("flex flex-col space-y-1"),
+					component.OptionsDropdownA(
+						html.Href(
+							fmt.Sprintf("/dashboard/executions?database=%s", database.ID),
 						),
+						html.Target("_blank"),
+						lucide.List(),
+						component.SpanText("Show executions"),
 					),
 					editDatabaseButton(database),
-					html.Div(
-						html.Class("inline-block tooltip tooltip-right"),
-						html.Data("tip", "Test connection"),
-						html.Button(
-							htmx.HxPost("/dashboard/databases/"+database.ID.String()+"/test"),
-							htmx.HxDisabledELT("this"),
-							html.Class("btn btn-neutral btn-square btn-ghost btn-sm"),
-							lucide.DatabaseZap(),
-						),
+					component.OptionsDropdownButton(
+						htmx.HxPost("/dashboard/databases/"+database.ID.String()+"/test"),
+						htmx.HxDisabledELT("this"),
+						lucide.DatabaseZap(),
+						component.SpanText("Test connection"),
 					),
 					deleteDatabaseButton(database.ID),
 				),
-			),
+			)),
 			html.Td(
 				html.Div(
 					html.Class("flex items-center space-x-2"),

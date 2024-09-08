@@ -48,7 +48,7 @@ func indexPage(reqCtx reqctx.Ctx, queryData execsQueryData) gomponents.Node {
 						html.Class("table text-nowrap"),
 						html.THead(
 							html.Tr(
-								html.Th(component.SpanText("Actions")),
+								html.Th(html.Class("w-1")),
 								html.Th(component.SpanText("Status")),
 								html.Th(component.SpanText("Backup")),
 								html.Th(component.SpanText("Database")),

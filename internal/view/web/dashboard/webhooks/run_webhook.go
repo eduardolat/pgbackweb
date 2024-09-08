@@ -5,11 +5,11 @@ import (
 
 	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/logger"
+	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
 )
 
 func (h *handlers) runWebhookHandler(c echo.Context) error {
@@ -41,14 +41,10 @@ func (h *handlers) runWebhookHandler(c echo.Context) error {
 }
 
 func runWebhookButton(webhookID uuid.UUID) gomponents.Node {
-	return html.Div(
-		html.Class("inline-block tooltip tooltip-right"),
-		html.Data("tip", "Run webhook now"),
-		html.Button(
-			htmx.HxPost("/dashboard/webhooks/"+webhookID.String()+"/run"),
-			htmx.HxDisabledELT("this"),
-			html.Class("btn btn-sm btn-ghost btn-square"),
-			lucide.Zap(),
-		),
+	return component.OptionsDropdownButton(
+		htmx.HxPost("/dashboard/webhooks/"+webhookID.String()+"/run"),
+		htmx.HxDisabledELT("this"),
+		lucide.Zap(),
+		component.SpanText("Run webhook now"),
 	)
 }
