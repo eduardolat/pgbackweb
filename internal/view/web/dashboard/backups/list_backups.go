@@ -79,6 +79,7 @@ func listBackups(
 				),
 				manualRunbutton(backup.ID),
 				editBackupButton(backup),
+				duplicateBackupButton(backup.ID),
 				deleteBackupButton(backup.ID),
 			)),
 			html.Td(

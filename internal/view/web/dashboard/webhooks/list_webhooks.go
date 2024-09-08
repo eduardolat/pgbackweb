@@ -64,6 +64,7 @@ func listWebhooks(
 				webhookExecutionsButton(whook.ID),
 				runWebhookButton(whook.ID),
 				editWebhookButton(whook.ID),
+				duplicateWebhookButton(whook.ID),
 				deleteWebhookButton(whook.ID),
 			)),
 			html.Td(
