@@ -6,3 +6,13 @@
 @import "./partials/slim-select.css";
 @import "./partials/notyf.css";
 @import "./partials/scrollbar.css";
+
+/*
+  Fix sweetalert2 scroll issue
+  https://github.com/sweetalert2/sweetalert2/issues/781#issuecomment-475108658
+*/
+body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown),
+html.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
+  height: 100% !important;
+  overflow-y: visible !important;
+}
