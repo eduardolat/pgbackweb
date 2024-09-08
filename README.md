@@ -44,6 +44,8 @@ PG Back Web isn't just another backup tool. It's your trusted ally in ensuring t
 - 📤 **Instant download & restore**: Restore and download your backups when you need them, directly from the web interface.
 - 🖥 **Multi-version support**: Compatible with PostgreSQL 13, 14, 15, and 16.
 - 📁 **Local & S3 storage**: Store backups locally or add as many S3 buckets as you want for greater flexibility.
+- ❤️‍🩹 **Health checks**: Automatically check the health of your databases and destinations.
+- 🔔 **Webhooks**: Get notified when a backup finishes, failed, health check fails, or other events.
 - 🔒 **Security first**: PGP encryption to protect your sensitive information.
 - 🛡️ **Open-source trust**: Open-source code under MIT license, backed by the robust pg_dump tool.
 - 🌚 **Dark mode**: Because we all love dark mode.
@@ -97,11 +99,9 @@ You only need to configure the following environment variables:
 
 - `TZ`: Your [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)  (optional). Default is `UTC`. This impacts logging, backup filenames and default timezone in the web interface.
 
-## Screenshots
+## Screenshot
 
-<img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/main/screenshots/summary.png" />
-<img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/main/screenshots/backups.png" />
-<img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/main/screenshots/executions.png" />
+<img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/main/screenshot.png" />
 
 ## Reset password
 
