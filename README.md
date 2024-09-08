@@ -89,6 +89,8 @@ services:
       retries: 5
 ```
 
+You can watch [this youtube video](https://www.youtube.com/watch?v=vf7SLrSO8sw) to see how easy it is to set up PG Back Web.
+
 ## Configuration
 
 You only need to configure the following environment variables:
