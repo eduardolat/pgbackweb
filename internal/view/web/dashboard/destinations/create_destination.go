@@ -52,19 +52,19 @@ func createDestinationButton() gomponents.Node {
 	htmxAttributes := func(url string) gomponents.Node {
 		return gomponents.Group([]gomponents.Node{
 			htmx.HxPost(url),
-			htmx.HxInclude("#create-destination-form"),
-			htmx.HxDisabledELT(".create-destination-btn"),
-			htmx.HxIndicator("#create-destination-loading"),
+			htmx.HxInclude("#add-destination-form"),
+			htmx.HxDisabledELT(".add-destination-btn"),
+			htmx.HxIndicator("#add-destination-loading"),
 			htmx.HxValidate("true"),
 		})
 	}
 
 	mo := component.Modal(component.ModalParams{
 		Size:  component.SizeMd,
-		Title: "Create destination",
+		Title: "Add destination",
 		Content: []gomponents.Node{
 			html.Form(
-				html.ID("create-destination-form"),
+				html.ID("add-destination-form"),
 				html.Class("space-y-2"),
 
 				component.InputControl(component.InputControlParams{
@@ -124,7 +124,7 @@ func createDestinationButton() gomponents.Node {
 				html.Div(
 					html.Button(
 						htmxAttributes("/dashboard/destinations/test"),
-						html.Class("create-destination-btn btn btn-neutral btn-outline"),
+						html.Class("add-destination-btn btn btn-neutral btn-outline"),
 						html.Type("button"),
 						component.SpanText("Test connection"),
 						lucide.PlugZap(),
@@ -132,10 +132,10 @@ func createDestinationButton() gomponents.Node {
 				),
 				html.Div(
 					html.Class("flex justify-end items-center space-x-2"),
-					component.HxLoadingMd("create-destination-loading"),
+					component.HxLoadingMd("add-destination-loading"),
 					html.Button(
 						htmxAttributes("/dashboard/destinations"),
-						html.Class("create-destination-btn btn btn-primary"),
+						html.Class("add-destination-btn btn btn-primary"),
 						html.Type("button"),
 						component.SpanText("Save"),
 						lucide.Save(),
@@ -148,7 +148,7 @@ func createDestinationButton() gomponents.Node {
 	button := html.Button(
 		mo.OpenerAttr,
 		html.Class("btn btn-primary"),
-		component.SpanText("Create destination"),
+		component.SpanText("Add destination"),
 		lucide.Plus(),
 	)
 

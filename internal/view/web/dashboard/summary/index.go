@@ -221,7 +221,7 @@ func indexPage(
 							html.Li(
 								html.Class("step"),
 								alpine.XBind("class", "currentSlide >= 2 ? 'step-primary' : ''"),
-								gomponents.Text("Create destination"),
+								gomponents.Text("Add destination"),
 							),
 							html.Li(
 								html.Class("step"),
@@ -252,7 +252,7 @@ func indexPage(
 						component.H3Text("Create S3 destination (optional)"),
 						component.PText(`
 							To create a destination, click on the "Destinations" menu item on
-							the left sidebar. Then click on the "Create destination" button.
+							the left sidebar. Then click on the "Add destination" button.
 							Fill in the form and click on the "Save" button. You can create
 							as many destinations as you want to store the backups. If you
 							don't want to use S3 destinations and store the backups locally,
