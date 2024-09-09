@@ -46,19 +46,19 @@ func createDatabaseButton() gomponents.Node {
 	htmxAttributes := func(url string) gomponents.Node {
 		return gomponents.Group([]gomponents.Node{
 			htmx.HxPost(url),
-			htmx.HxInclude("#create-database-form"),
-			htmx.HxDisabledELT(".create-database-btn"),
-			htmx.HxIndicator("#create-database-loading"),
+			htmx.HxInclude("#add-database-form"),
+			htmx.HxDisabledELT(".add-database-btn"),
+			htmx.HxIndicator("#add-database-loading"),
 			htmx.HxValidate("true"),
 		})
 	}
 
 	mo := component.Modal(component.ModalParams{
 		Size:  component.SizeMd,
-		Title: "Create database",
+		Title: "Add database",
 		Content: []gomponents.Node{
 			html.Form(
-				html.ID("create-database-form"),
+				html.ID("add-database-form"),
 				html.Class("space-y-2"),
 
 				component.InputControl(component.InputControlParams{
@@ -99,7 +99,7 @@ func createDatabaseButton() gomponents.Node {
 				html.Div(
 					html.Button(
 						htmxAttributes("/dashboard/databases/test"),
-						html.Class("create-database-btn btn btn-neutral btn-outline"),
+						html.Class("add-database-btn btn btn-neutral btn-outline"),
 						html.Type("button"),
 						component.SpanText("Test connection"),
 						lucide.DatabaseZap(),
@@ -107,10 +107,10 @@ func createDatabaseButton() gomponents.Node {
 				),
 				html.Div(
 					html.Class("flex justify-end items-center space-x-2"),
-					component.HxLoadingMd("create-database-loading"),
+					component.HxLoadingMd("add-database-loading"),
 					html.Button(
 						htmxAttributes("/dashboard/databases"),
-						html.Class("create-database-btn btn btn-primary"),
+						html.Class("add-database-btn btn btn-primary"),
 						html.Type("button"),
 						component.SpanText("Save"),
 						lucide.Save(),
@@ -123,7 +123,7 @@ func createDatabaseButton() gomponents.Node {
 	button := html.Button(
 		mo.OpenerAttr,
 		html.Class("btn btn-primary"),
-		component.SpanText("Create database"),
+		component.SpanText("Add database"),
 		lucide.Plus(),
 	)
 

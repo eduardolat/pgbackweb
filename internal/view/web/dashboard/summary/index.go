@@ -216,7 +216,7 @@ func indexPage(
 							html.Li(
 								html.Class("step"),
 								alpine.XBind("class", "currentSlide >= 1 ? 'step-primary' : ''"),
-								gomponents.Text("Create database"),
+								gomponents.Text("Add database"),
 							),
 							html.Li(
 								html.Class("step"),
@@ -238,10 +238,10 @@ func indexPage(
 
 					html.Div(
 						alpine.XShow("currentSlide === 1"),
-						component.H3Text("Create database"),
+						component.H3Text("Add database"),
 						component.PText(`
 							To create a database, click on the "Databases" menu item on the
-							left sidebar. Then click on the "Create database" button. Fill
+							left sidebar. Then click on the "Add database" button. Fill
 							in the form and click on the "Save" button. You can create as
 							many databases as you want to backup.
 						`),
