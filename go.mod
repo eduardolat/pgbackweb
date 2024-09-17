@@ -15,6 +15,7 @@ require (
 	github.com/maragudk/gomponents v0.20.4
 	github.com/orsinium-labs/enum v1.4.0
 	github.com/stretchr/testify v1.9.0
+	github.com/alexmullins/zip v0.0.0-20180717182244-4affb64b04d0
 	golang.org/x/crypto v0.25.0
 	golang.org/x/sync v0.7.0
 )
