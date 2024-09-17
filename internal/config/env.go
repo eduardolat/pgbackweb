@@ -7,6 +7,7 @@ import (
 
 type Env struct {
 	PBW_ENCRYPTION_KEY       *string
+	PBW_BACKUP_PASSWORD      *string
 	PBW_POSTGRES_CONN_STRING *string
 }
 
@@ -25,6 +26,10 @@ func GetEnv(disableLogs ...bool) *Env {
 		PBW_ENCRYPTION_KEY: getEnvAsString(getEnvAsStringParams{
 			name:       "PBW_ENCRYPTION_KEY",
 			isRequired: true,
+		}),
+		PBW_BACKUP_PASSWORD: getEnvAsString(getEnvAsStringParams{
+			name:       "PBW_BACKUP_PASSWORD",
+			isRequired: false,
 		}),
 		PBW_POSTGRES_CONN_STRING: getEnvAsString(getEnvAsStringParams{
 			name:       "PBW_POSTGRES_CONN_STRING",
