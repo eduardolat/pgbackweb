@@ -22,7 +22,7 @@ COPY --from=golang /usr/local/go /usr/local/go
 RUN apt update && apt install -y postgresql-common && \
     /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \
     apt update && apt install -y \
-        wget p7zip-full tzdata git \
+        wget unzip tzdata git \
         postgresql-client-13 postgresql-client-14 \
         postgresql-client-15 postgresql-client-16 && \
     rm -rf /var/lib/apt/lists/*

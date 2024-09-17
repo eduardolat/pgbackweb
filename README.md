@@ -66,7 +66,6 @@ services:
       - ./backups:/backups # If you only use S3 destinations, you don't need this volume
     environment:
       PBW_ENCRYPTION_KEY: "my_secret_key" # Change this to a strong key
-      PBW_BACKUP_PASSWORD: "zip_password" # Optional password for ZIP files (both local and S3) 
       PBW_POSTGRES_CONN_STRING: "postgresql://postgres:password@postgres:5432/pgbackweb?sslmode=disable"
       TZ: "America/Guatemala" # Set your timezone, optional
     depends_on:
@@ -97,8 +96,6 @@ You can watch [this youtube video](https://www.youtube.com/watch?v=vf7SLrSO8sw) 
 You only need to configure the following environment variables:
 
 - `PBW_ENCRYPTION_KEY`: Your encryption key. Generate a strong one and store it in a safe place, as PG Back Web uses it to encrypt sensitive data.
-
-- `PBW_BACKUP_PASSWORD`: (Optional) Password to protect ZIP files for both local and remote backups. Once password changes, old backups won't be available for restoration. 
 
 - `PBW_POSTGRES_CONN_STRING`: The connection string for the PostgreSQL database that will store PG Back Web data.
 

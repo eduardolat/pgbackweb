@@ -8,10 +8,6 @@ services:
       dockerfile: ./docker/Dockerfile.dev
     ports:
       - "8085:8085"
-    environment:
-      PBW_ENCRYPTION_KEY: "my_secret_key" # Change this to a strong key
-      PBW_BACKUP_PASSWORD: "testpassword"
-      PBW_POSTGRES_CONN_STRING: "postgresql://postgres:password@postgres:5432/pgbackweb?sslmode=disable"
     volumes:
       - ../:/app
       - pbw_vol_app_ssh:/root/.ssh

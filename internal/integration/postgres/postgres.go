@@ -1,14 +1,13 @@
 package postgres
 
 import (
+	"archive/zip"
 	"bytes"
 	"fmt"
-	"github.com/alexmullins/zip"
 	"io"
 	"os"
 	"os/exec"
 
-	"github.com/eduardolat/pgbackweb/internal/config"
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 	"github.com/orsinium-labs/enum"
 )
@@ -177,7 +176,6 @@ func (c *Client) DumpZip(
 ) io.Reader {
 	dumpReader := c.Dump(version, connString, params...)
 	reader, writer := io.Pipe()
-	env := config.GetEnv()
 
 	go func() {
 		defer writer.Close()
@@ -185,15 +183,7 @@ func (c *Client) DumpZip(
 		zipWriter := zip.NewWriter(writer)
 		defer zipWriter.Close()
 
-		var fileWriter io.Writer
-		var err error
-
-		if env.PBW_BACKUP_PASSWORD != nil {
-			fileWriter, err = zipWriter.Encrypt("dump.sql", *env.PBW_BACKUP_PASSWORD)
-		} else {
-			fileWriter, err = zipWriter.Create("dump.sql")
-		}
-
+		fileWriter, err := zipWriter.Create("dump.sql")
 		if err != nil {
 			writer.CloseWithError(fmt.Errorf("error creating zip file: %w", err))
 			return
@@ -220,7 +210,6 @@ func (c *Client) DumpZip(
 func (Client) RestoreZip(
 	version PGVersion, connString string, isLocal bool, zipURLOrPath string,
 ) error {
-	env := config.GetEnv()
 	workDir, err := os.MkdirTemp("", "pbw-restore-*")
 	if err != nil {
 		return fmt.Errorf("error creating temp dir: %w", err)
@@ -249,12 +238,7 @@ func (Client) RestoreZip(
 		return fmt.Errorf("zip file not found: %s", zipPath)
 	}
 
-	var cmd *exec.Cmd
-	if env.PBW_BACKUP_PASSWORD != nil {
-		cmd = exec.Command("7z", "x", "-p"+*env.PBW_BACKUP_PASSWORD, "-o"+workDir, zipPath)
-	} else {
-		cmd = exec.Command("7z", "x", "-o"+workDir, zipPath)
-	}
+	cmd := exec.Command("unzip", "-o", zipPath, "dump.sql", "-d", workDir)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("error unzipping ZIP file: %s", output)
