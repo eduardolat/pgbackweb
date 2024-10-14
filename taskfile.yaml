@@ -54,9 +54,14 @@ tasks:
   gen-db:
     desc: Generate sqlc files
     silent: true
-    cmd: sqlc generate
+    cmds:
+      - ./scripts/sqlc-prebuild.mjs
+      - sqlc generate
     sources:
-      - ./internal/**/*.sql
+      - ./internal/service/**/*.sql
+    generates:
+      - ./internal/database/queries.gen.sql
+      - ./internal/database/dbgen/*.go
 
   reset-db:
     desc: Reset the database
