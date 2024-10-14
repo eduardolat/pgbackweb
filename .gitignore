@@ -13,6 +13,7 @@ dist/
 
 # Temp files/folders
 tmp/
+temp/
 .task/
 
 # Binaries for programs and plugins
