@@ -1,10 +1,12 @@
+# Declare the target platform to support multi-arch builds
+ARG TARGETPLATFORM
+
 # To make sure we have the node, and golang binaries
 FROM node:20.17.0-bookworm AS node
 FROM golang:1.23.1-bookworm AS golang
 
 # Set the base image, general environment variables, and move to temp dir
 FROM debian:12.7
-ARG TARGETPLATFORM
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PATH="$PATH:/usr/local/go/bin"
 WORKDIR /app/temp
