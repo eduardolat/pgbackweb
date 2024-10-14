@@ -5,22 +5,22 @@ Thank you for your interest in contributing to the PG Back Web project! Please f
 ### Main Branch Policy  
 - The **main branch** reflects the latest **stable release** of the project.  
 - **No direct commits** should ever be made to the main branch.  
-- All development work should happen in feature branches and merged via **Pull Requests (PRs)** into the **development** branch.  
-- The **development branch** contains the latest code under active development. Once a new release is ready, the main branch will be updated by merging from the development branch.
+- All development work should happen in feature branches and merged via **Pull Requests (PRs)** into the **develop** branch.  
+- The **develop branch** contains the latest code under active development. Once a new release is ready, the main branch will be updated by merging from the development branch.
 
 ### Development Workflow  
-1. **Fork the repository** and create a feature branch from the `development` branch.  
+1. **Fork the repository** and create a feature branch from the `develop` branch.  
    - Use descriptive names for your branches, e.g., `feature/add-new-endpoint` or `bugfix/fix-connection-issue`.  
 
 2. **Make your changes** in your feature branch.
 
 3. **Ensure all tests pass** and the code follows the project’s style guidelines.
 
-4. **Open a Pull Request (PR)** against the `development` branch.
+4. **Open a Pull Request (PR)** against the `develop` branch.
 
 5. Your PR will be reviewed by maintainers. Please be responsive to feedback.
 
-6. Once approved, the changes will be merged into the `development` branch. A merge into the `main` branch will only occur when releasing a new version.
+6. Once approved, the changes will be merged into the `develop` branch. A merge into the `main` branch will only occur when releasing a new version.
 
 ### Project Dependencies  
 This project requires the following dependencies installed on your system:  
@@ -42,7 +42,7 @@ This project requires the following dependencies installed on your system:
 
 ### Additional Notes  
 - Always **write clear commit messages** that explain the purpose of your changes.
-- **Keep your fork up to date** with the latest changes from the `development` branch.
+- **Keep your fork up to date** with the latest changes from the `develop` branch.
 - Be respectful and follow the project’s code of conduct when interacting with other contributors.
 
 We appreciate your contributions and are excited to have you on board!
