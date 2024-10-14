@@ -21,34 +21,41 @@ import (
 */
 
 type version struct {
-	version string
-	pgDump  string
-	psql    string
+	Version string
+	PGDump  string
+	PSQL    string
 }
 
 type PGVersion enum.Member[version]
 
 var (
 	PG13 = PGVersion{version{
-		version: "13",
-		pgDump:  "/usr/lib/postgresql/13/bin/pg_dump",
-		psql:    "/usr/lib/postgresql/13/bin/psql",
+		Version: "13",
+		PGDump:  "/usr/lib/postgresql/13/bin/pg_dump",
+		PSQL:    "/usr/lib/postgresql/13/bin/psql",
 	}}
 	PG14 = PGVersion{version{
-		version: "14",
-		pgDump:  "/usr/lib/postgresql/14/bin/pg_dump",
-		psql:    "/usr/lib/postgresql/14/bin/psql",
+		Version: "14",
+		PGDump:  "/usr/lib/postgresql/14/bin/pg_dump",
+		PSQL:    "/usr/lib/postgresql/14/bin/psql",
 	}}
 	PG15 = PGVersion{version{
-		version: "15",
-		pgDump:  "/usr/lib/postgresql/15/bin/pg_dump",
-		psql:    "/usr/lib/postgresql/15/bin/psql",
+		Version: "15",
+		PGDump:  "/usr/lib/postgresql/15/bin/pg_dump",
+		PSQL:    "/usr/lib/postgresql/15/bin/psql",
 	}}
 	PG16 = PGVersion{version{
-		version: "16",
-		pgDump:  "/usr/lib/postgresql/16/bin/pg_dump",
-		psql:    "/usr/lib/postgresql/16/bin/psql",
+		Version: "16",
+		PGDump:  "/usr/lib/postgresql/16/bin/pg_dump",
+		PSQL:    "/usr/lib/postgresql/16/bin/psql",
 	}}
+	PG17 = PGVersion{version{
+		Version: "17",
+		PGDump:  "/usr/lib/postgresql/17/bin/pg_dump",
+		PSQL:    "/usr/lib/postgresql/17/bin/psql",
+	}}
+
+	PGVersions = []PGVersion{PG13, PG14, PG15, PG16, PG17}
 )
 
 type Client struct{}
@@ -69,6 +76,8 @@ func (Client) ParseVersion(version string) (PGVersion, error) {
 		return PG15, nil
 	case "16":
 		return PG16, nil
+	case "17":
+		return PG17, nil
 	default:
 		return PGVersion{}, fmt.Errorf("pg version not allowed: %s", version)
 	}
@@ -76,12 +85,12 @@ func (Client) ParseVersion(version string) (PGVersion, error) {
 
 // Test tests the connection to the PostgreSQL database
 func (Client) Test(version PGVersion, connString string) error {
-	cmd := exec.Command(version.Value.psql, connString, "-c", "SELECT 1;")
+	cmd := exec.Command(version.Value.PSQL, connString, "-c", "SELECT 1;")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf(
 			"error running psql test v%s: %s",
-			version.Value.version, output,
+			version.Value.Version, output,
 		)
 	}
 
@@ -152,7 +161,7 @@ func (Client) Dump(
 
 	errorBuffer := &bytes.Buffer{}
 	reader, writer := io.Pipe()
-	cmd := exec.Command(version.Value.pgDump, args...)
+	cmd := exec.Command(version.Value.PGDump, args...)
 	cmd.Stdout = writer
 	cmd.Stderr = errorBuffer
 
@@ -161,7 +170,7 @@ func (Client) Dump(
 		if err := cmd.Run(); err != nil {
 			writer.CloseWithError(fmt.Errorf(
 				"error running pg_dump v%s: %s",
-				version.Value.version, errorBuffer.String(),
+				version.Value.Version, errorBuffer.String(),
 			))
 		}
 	}()
@@ -248,12 +257,12 @@ func (Client) RestoreZip(
 		return fmt.Errorf("dump.sql file not found in ZIP file: %s", zipPath)
 	}
 
-	cmd = exec.Command(version.Value.psql, connString, "-f", dumpPath)
+	cmd = exec.Command(version.Value.PSQL, connString, "-f", dumpPath)
 	output, err = cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf(
 			"error running psql v%s command: %s",
-			version.Value.version, output,
+			version.Value.Version, output,
 		)
 	}
 

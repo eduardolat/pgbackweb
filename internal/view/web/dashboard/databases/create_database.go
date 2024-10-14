@@ -1,6 +1,8 @@
 package databases
 
 import (
+	"database/sql"
+
 	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/validate"
@@ -77,10 +79,7 @@ func createDatabaseButton() gomponents.Node {
 					Required:    true,
 					HelpText:    "The version of the database",
 					Children: []gomponents.Node{
-						html.Option(html.Value("13"), gomponents.Text("PostgreSQL 13")),
-						html.Option(html.Value("14"), gomponents.Text("PostgreSQL 14")),
-						html.Option(html.Value("15"), gomponents.Text("PostgreSQL 15")),
-						html.Option(html.Value("16"), gomponents.Text("PostgreSQL 16")),
+						component.PGVersionSelectOptions(sql.NullString{}),
 					},
 				}),
 
