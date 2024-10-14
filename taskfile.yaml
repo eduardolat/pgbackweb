@@ -73,12 +73,11 @@ tasks:
     cmds:
       - >
         npm run tailwindcss --
+        --minify
         --config ./tailwind.config.js
         --input ./internal/view/static/css/style.css
-        --output ./internal/view/static/css/style.min.css --minify
-      - >
-        npm run esbuild -- ./internal/view/static/js/app.js
-        --bundle --minify --outfile=./internal/view/static/js/app.min.js
+        --output ./internal/view/static/build/style.min.css
+      - ./scripts/build-js.mjs
 
   tidy:
     desc: Tidy the go.mod file
