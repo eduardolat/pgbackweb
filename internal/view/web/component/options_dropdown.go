@@ -11,7 +11,7 @@ import (
 func OptionsDropdown(children ...gomponents.Node) gomponents.Node {
 	return html.Div(
 		html.Class("inline-block"),
-		alpine.XData("options_dropdown"),
+		alpine.XData("alpineOptionsDropdown()"),
 		alpine.XOn("mouseenter", "open()"),
 		alpine.XOn("mouseleave", "close()"),
 		html.Button(
