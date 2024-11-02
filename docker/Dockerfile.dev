@@ -1,12 +1,13 @@
 # Declare the target platform to support multi-arch builds
 ARG TARGETPLATFORM
+RUN echo "Building for $TARGETPLATFORM"
 
 # To make sure we have the node, and golang binaries
-FROM node:20.17.0-bookworm AS node
-FROM golang:1.23.1-bookworm AS golang
+FROM --platform=$TARGETPLATFORM node:20.17.0-bookworm AS node
+FROM --platform=$TARGETPLATFORM golang:1.23.1-bookworm AS golang
 
 # Set the base image, general environment variables, and move to temp dir
-FROM debian:12.7
+FROM --platform=$TARGETPLATFORM debian:12.7
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV GOBIN="/usr/local/go-bin"
 ENV PATH="$PATH:/usr/local/go-bin:/usr/local/dl-bin:/usr/local/go/bin"
@@ -36,6 +37,7 @@ RUN apt update && apt install -y postgresql-common && \
 # Install downloadable binaries
 RUN set -e && \
     if [ "${TARGETPLATFORM}" = "linux/arm64" ]; then \
+        echo "Downloading arm64 binaries" \
         # Install task
         wget --no-verbose https://github.com/go-task/task/releases/download/v3.38.0/task_linux_arm64.tar.gz && \
         tar -xzf task_linux_arm64.tar.gz && \
@@ -52,6 +54,7 @@ RUN set -e && \
         tar -xzf golangci-lint-1.60.3-linux-arm64.tar.gz && \
         mv ./golangci-lint-1.60.3-linux-arm64/golangci-lint /usr/local/dl-bin/golangci-lint; \
     else \
+        echo "Downloading amd64 binaries" \
         # Install task
         wget --no-verbose https://github.com/go-task/task/releases/download/v3.38.0/task_linux_amd64.tar.gz && \
         tar -xzf task_linux_amd64.tar.gz && \
