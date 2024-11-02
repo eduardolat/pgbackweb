@@ -122,6 +122,6 @@ tasks:
       - rm -rf ./tmp
       - rm -rf ./dist
 
-  fixperms: # Fixes the permissions of the files in the project
+  fixperms:
     desc: Fixes the permissions of the files in the project
-    cmd: ./scripts/fixperms.sh
+    cmd: chmod -R 777 ./

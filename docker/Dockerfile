@@ -101,6 +101,9 @@ RUN go mod download
 # Copy the rest of the files
 COPY . .
 
+# Fix permissions if needed
+RUN task fixperms
+
 # Build the app
 RUN task build
 
