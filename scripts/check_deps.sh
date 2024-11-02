@@ -41,6 +41,5 @@ check_command "task --version" "task"
 check_command "goose --version" "goose"
 check_command "sqlc version" "sqlc"
 check_command "golangci-lint --version" "golangci-lint"
-check_command "air -v" "air"
 
 echo "All dependencies are working correctly!"

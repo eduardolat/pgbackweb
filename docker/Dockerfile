@@ -7,8 +7,10 @@ FROM golang:1.23.1-bookworm AS golang
 
 # Set the base image, general environment variables, and move to temp dir
 FROM debian:12.7
-ENV DEBIAN_FRONTEND=noninteractive
-ENV PATH="$PATH:/usr/local/go/bin"
+ENV DEBIAN_FRONTEND="noninteractive"
+ENV GOBIN="/usr/local/go-bin"
+ENV PATH="$PATH:/usr/local/go-bin:/usr/local/dl-bin:/usr/local/go/bin"
+RUN mkdir -p /app/temp /usr/local/go-bin /usr/local/dl-bin
 WORKDIR /app/temp
 
 # Copy node binaries
@@ -37,47 +39,37 @@ RUN set -e && \
         # Install task
         wget --no-verbose https://github.com/go-task/task/releases/download/v3.38.0/task_linux_arm64.tar.gz && \
         tar -xzf task_linux_arm64.tar.gz && \
-        mv ./task /usr/local/bin/task && \
+        mv ./task /usr/local/dl-bin/task && \
         # Install goose
         wget --no-verbose https://github.com/pressly/goose/releases/download/v3.22.0/goose_linux_arm64 && \
-        mv ./goose_linux_arm64 /usr/local/bin/goose && \
+        mv ./goose_linux_arm64 /usr/local/dl-bin/goose && \
         # Install sqlc
         wget --no-verbose https://github.com/sqlc-dev/sqlc/releases/download/v1.27.0/sqlc_1.27.0_linux_arm64.tar.gz && \
         tar -xzf sqlc_1.27.0_linux_arm64.tar.gz && \
-        mv ./sqlc /usr/local/bin/sqlc && \
+        mv ./sqlc /usr/local/dl-bin/sqlc && \
         # Install golangci-lint
         wget --no-verbose https://github.com/golangci/golangci-lint/releases/download/v1.60.3/golangci-lint-1.60.3-linux-arm64.tar.gz && \
         tar -xzf golangci-lint-1.60.3-linux-arm64.tar.gz && \
-        mv ./golangci-lint-1.60.3-linux-arm64/golangci-lint /usr/local/bin/golangci-lint && \
-        # Install air
-        wget --no-verbose https://github.com/air-verse/air/releases/download/v1.52.3/air_1.52.3_linux_arm64 && \
-        mv ./air_1.52.3_linux_arm64 /usr/local/bin/air; \
+        mv ./golangci-lint-1.60.3-linux-arm64/golangci-lint /usr/local/dl-bin/golangci-lint; \
     else \
         # Install task
         wget --no-verbose https://github.com/go-task/task/releases/download/v3.38.0/task_linux_amd64.tar.gz && \
         tar -xzf task_linux_amd64.tar.gz && \
-        mv ./task /usr/local/bin/task && \
+        mv ./task /usr/local/dl-bin/task && \
         # Install goose
         wget --no-verbose https://github.com/pressly/goose/releases/download/v3.22.0/goose_linux_x86_64 && \
-        mv ./goose_linux_x86_64 /usr/local/bin/goose && \
+        mv ./goose_linux_x86_64 /usr/local/dl-bin/goose && \
         # Install sqlc
         wget --no-verbose https://github.com/sqlc-dev/sqlc/releases/download/v1.27.0/sqlc_1.27.0_linux_amd64.tar.gz && \
         tar -xzf sqlc_1.27.0_linux_amd64.tar.gz && \
-        mv ./sqlc /usr/local/bin/sqlc && \
+        mv ./sqlc /usr/local/dl-bin/sqlc && \
         # Install golangci-lint
         wget --no-verbose https://github.com/golangci/golangci-lint/releases/download/v1.60.3/golangci-lint-1.60.3-linux-amd64.tar.gz && \
         tar -xzf golangci-lint-1.60.3-linux-amd64.tar.gz && \
-        mv ./golangci-lint-1.60.3-linux-amd64/golangci-lint /usr/local/bin/golangci-lint && \
-        # Install air
-        wget --no-verbose https://github.com/air-verse/air/releases/download/v1.52.3/air_1.52.3_linux_amd64 && \
-        mv ./air_1.52.3_linux_amd64 /usr/local/bin/air; \
+        mv ./golangci-lint-1.60.3-linux-amd64/golangci-lint /usr/local/dl-bin/golangci-lint; \
     fi && \
     # Make binaries executable
-    chmod +x /usr/local/bin/task && \
-    chmod +x /usr/local/bin/goose && \
-    chmod +x /usr/local/bin/sqlc && \
-    chmod +x /usr/local/bin/golangci-lint && \
-    chmod +x /usr/local/bin/air
+    chmod +x /usr/local/dl-bin/*
 
 # Go to the app dir, delete the temporary dir and create backups dir
 WORKDIR /app
