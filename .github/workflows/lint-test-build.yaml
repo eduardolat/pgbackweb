@@ -32,6 +32,7 @@ jobs:
           docker buildx create --use
           docker buildx build \
             --platform ${{ matrix.platform }} \
+            --build-arg TARGETPLATFORM=${{ matrix.platform }} \
             -t pbw-test-${{ matrix.platform }}:latest \
             -f ./docker/Dockerfile.cicd \
             --load .
