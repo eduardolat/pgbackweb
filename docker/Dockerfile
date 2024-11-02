@@ -5,9 +5,14 @@ ARG TARGETPLATFORM
 FROM node:20.17.0-bookworm AS node
 FROM golang:1.23.1-bookworm AS golang
 
-# Set the base image, general environment variables, and move to temp dir
+# Set the base image
 FROM debian:12.7
+
+# Re-declare ARG after FROM to make it available in this build stage
+ARG TARGETPLATFORM
 RUN echo "Building for ${TARGETPLATFORM}"
+
+# Set the general environment variables, and move to temp dir
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV GOBIN="/usr/local/go-bin"
 ENV PATH="$PATH:/usr/local/go-bin:/usr/local/dl-bin:/usr/local/go/bin"
