@@ -1,6 +1,5 @@
 # Declare the target platform to support multi-arch builds
 ARG TARGETPLATFORM
-RUN echo "Building for $TARGETPLATFORM"
 
 # To make sure we have the node, and golang binaries
 FROM --platform=$TARGETPLATFORM node:20.17.0-bookworm AS node
@@ -8,6 +7,7 @@ FROM --platform=$TARGETPLATFORM golang:1.23.1-bookworm AS golang
 
 # Set the base image, general environment variables, and move to temp dir
 FROM --platform=$TARGETPLATFORM debian:12.7
+RUN echo "Building for $TARGETPLATFORM"
 ENV DEBIAN_FRONTEND="noninteractive"
 ENV GOBIN="/usr/local/go-bin"
 ENV PATH="$PATH:/usr/local/go-bin:/usr/local/dl-bin:/usr/local/go/bin"
