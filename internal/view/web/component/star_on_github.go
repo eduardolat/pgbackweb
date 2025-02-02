@@ -10,7 +10,7 @@ import (
 
 func StarOnGithub(size size) gomponents.Node {
 	return html.A(
-		alpine.XData("githubRepoInfo"),
+		alpine.XData("alpineStarOnGithub()"),
 		alpine.XCloak(),
 		components.Classes{
 			"btn btn-neutral": true,

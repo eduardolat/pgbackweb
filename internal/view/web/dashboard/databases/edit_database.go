@@ -90,22 +90,10 @@ func editDatabaseButton(
 					Required: true,
 					HelpText: "The version of the database",
 					Children: []gomponents.Node{
-						html.Option(
-							gomponents.If(database.PgVersion == "13", html.Selected()),
-							html.Value("13"), gomponents.Text("PostgreSQL 13"),
-						),
-						html.Option(
-							gomponents.If(database.PgVersion == "14", html.Selected()),
-							html.Value("14"), gomponents.Text("PostgreSQL 14"),
-						),
-						html.Option(
-							gomponents.If(database.PgVersion == "15", html.Selected()),
-							html.Value("15"), gomponents.Text("PostgreSQL 15"),
-						),
-						html.Option(
-							gomponents.If(database.PgVersion == "16", html.Selected()),
-							html.Value("16"), gomponents.Text("PostgreSQL 16"),
-						),
+						component.PGVersionSelectOptions(sql.NullString{
+							Valid:  true,
+							String: database.PgVersion,
+						}),
 					},
 				}),
 

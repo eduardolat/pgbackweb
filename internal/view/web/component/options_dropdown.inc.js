@@ -1,6 +1,5 @@
-export const optionsDropdown = {
-  name: 'options_dropdown',
-  fn: () => ({
+window.alpineOptionsDropdown = function () {
+  return {
     isOpen: false,
     buttonEl: null,
     contentEl: null,
@@ -43,5 +42,5 @@ export const optionsDropdown = {
         this.contentEl.style.top = `${buttonRect.top - contentHeight}px`
       }
     }
-  })
+  }
 }

@@ -16,7 +16,7 @@ type ChangeThemeButtonParams struct {
 
 func ChangeThemeButton(params ChangeThemeButtonParams) gomponents.Node {
 	return html.Div(
-		alpine.XData("changeThemeButton"),
+		alpine.XData("alpineChangeThemeButton()"),
 		alpine.XCloak(),
 
 		components.Classes{

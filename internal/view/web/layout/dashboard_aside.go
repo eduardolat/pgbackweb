@@ -118,7 +118,7 @@ func dashboardAsideItem(
 	text, link string, strict bool,
 ) gomponents.Node {
 	return html.A(
-		alpine.XData(fmt.Sprintf("dashboardAsideItem('%s', %t)", link, strict)),
+		alpine.XData(fmt.Sprintf("alpineDashboardAsideItem('%s', %t)", link, strict)),
 		html.Class("block flex flex-col items-center justify-center group"),
 		html.Href(link),
 		html.Button(

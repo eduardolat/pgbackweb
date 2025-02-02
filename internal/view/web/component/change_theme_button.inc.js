@@ -1,6 +1,5 @@
-export const changeThemeButton = {
-  name: 'changeThemeButton',
-  fn: () => ({
+window.alpineChangeThemeButton = function () {
+  return {
     theme: '',
 
     loadTheme () {
@@ -16,5 +15,5 @@ export const changeThemeButton = {
     init () {
       this.loadTheme()
     }
-  })
+  }
 }

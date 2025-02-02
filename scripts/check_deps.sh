@@ -33,12 +33,13 @@ check_command "/usr/lib/postgresql/15/bin/psql --version" "PostgreSQL 15 psql"
 check_command "/usr/lib/postgresql/15/bin/pg_dump --version" "PostgreSQL 15 pg_dump"
 check_command "/usr/lib/postgresql/16/bin/psql --version" "PostgreSQL 16 psql"
 check_command "/usr/lib/postgresql/16/bin/pg_dump --version" "PostgreSQL 16 pg_dump"
+check_command "/usr/lib/postgresql/17/bin/psql --version" "PostgreSQL 17 psql"
+check_command "/usr/lib/postgresql/17/bin/pg_dump --version" "PostgreSQL 17 pg_dump"
 
 # Check software installed by downloading binaries
 check_command "task --version" "task"
 check_command "goose --version" "goose"
 check_command "sqlc version" "sqlc"
 check_command "golangci-lint --version" "golangci-lint"
-check_command "air -v" "air"
 
 echo "All dependencies are working correctly!"
