@@ -1,0 +1,85 @@
+{
+  "dockerComposeFile": "./compose.yaml",
+  "service": "devcontainer",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.go",
+        "bradlc.vscode-tailwindcss",
+        "standard.vscode-standard",
+        "denoland.vscode-deno",
+        "mhutchie.git-graph",
+        "mutantdino.resourcemonitor",
+        "Compile-TomaszKasperczyk.copy-to-llm"
+      ],
+      "settings": {
+        /////
+        // Editor settings
+        /////
+        "editor.formatOnSave": true,
+        "editor.foldingStrategy": "indentation",
+        "editor.rulers": [
+          80
+        ],
+        "files.eol": "\n",
+        /////
+        // Language specific settings
+        /////
+        "[json]": {
+          "editor.defaultFormatter": "vscode.json-language-features"
+        },
+        "[jsonc]": {
+          "editor.defaultFormatter": "vscode.json-language-features"
+        },
+        // JavaScript & Standard
+        "standard.enable": true,
+        "standard.autoFixOnSave": true,
+        "[typescript]": {
+          "editor.defaultFormatter": "denoland.vscode-deno"
+        },
+        "[javascript]": {
+          "editor.defaultFormatter": "standard.vscode-standard"
+        },
+        "[css]": {
+          "editor.defaultFormatter": "vscode.css-language-features"
+        },
+        "[html]": {
+          "editor.defaultFormatter": "vscode.html-language-features"
+        },
+        "[markdown]": {
+          "editor.defaultFormatter": "vscode.markdown-language-features"
+        },
+        // Go & Golangci-lint
+        "[go]": {
+          "editor.defaultFormatter": "golang.go"
+        },
+        "go.lintTool": "golangci-lint",
+        "go.lintFlags": [
+          "--fast"
+        ],
+        // Deno
+        "deno.enable": true,
+        "deno.enablePaths": [
+          "./scripts"
+        ],
+        /////
+        // Tailwind CSS + NodX
+        /////
+        "tailwindCSS.includeLanguages": {
+          "go": "go"
+        },
+        "tailwindCSS.experimental.classRegex": [
+          [
+            "Class\\(([^)]*)\\)",
+            "[\"`]([^\"`]*)[\"`]"
+          ], // Class("...") or Class(`...`)
+          [
+            "ClassMap\\{([^)]*)\\}",
+            "[\"`]([^\"`]*)[\"`]"
+          ] // ClassMap{"..."} or ClassMap{`...`}
+        ]
+      }
+    }
+  }
+}

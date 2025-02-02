@@ -91,4 +91,4 @@ RUN echo "\n\n" >> /root/.bashrc && \
     cat /usr/local/bin/startup.sh >> /root/.bashrc
 
 # Command just to keep the container running
-CMD ["tail", "-f", "/dev/null"]
+CMD ["sleep", "infinity"]
