@@ -28,9 +28,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Docker buildx for multi-architecture builds
-        uses: docker/setup-buildx-action@v3
-        with:
-          use: true
+        run: docker buildx create --use
 
       - name: Run lint, test, and build
         uses: devcontainers/ci@v0.3
