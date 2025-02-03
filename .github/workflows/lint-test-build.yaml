@@ -32,25 +32,17 @@ jobs:
         with:
           use: true
 
-      - name: Install Skopeo # For some reason required by devcontainers/ci
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y skopeo
-
-      - name: Prepare devcontainer-ci.json
-        run: |
-          rm -f .devcontainer/devcontainer.json
-          mv .devcontainer/devcontainer-ci.json .devcontainer/devcontainer.json
+      - name: Build the Docker image
+        run: docker buildx build --platform ${{ matrix.vars.platform }} -t pgbackweb:latest .  
 
       - name: Run lint, test, and build
-        uses: devcontainers/ci@v0.3
-        with:
-          push: never
-          platform: ${{ matrix.vars.platform }}
-          runCmd: >
+        run: >
+          docker run --rm -v $PWD:/app -w /app pgbackweb:latest /bin/bash -c "\
             npm install && \
+            go mod download && \
             task fixperms && \
             task check-deps && \
             task lint-only && \
             task test-only && \
-            task build
+            task build \
+          "
