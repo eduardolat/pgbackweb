@@ -37,12 +37,12 @@ jobs:
 
       - name: Run lint, test, and build
         run: >
-          docker run --rm -v $PWD:/app -w /app pgbackweb:latest /bin/bash -c "\
-            npm install && \
-            go mod download && \
-            task fixperms && \
-            task check-deps && \
-            task lint-only && \
-            task test-only && \
-            task build \
+          docker run --rm -v $PWD:/app -w /app pgbackweb:latest /bin/bash -c "
+            npm install &&
+            go mod download &&
+            task fixperms &&
+            task check-deps &&
+            task lint-only &&
+            task test-only &&
+            task build
           "
