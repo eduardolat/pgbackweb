@@ -5,6 +5,7 @@
 // https://github.com/devcontainers/cli/issues/404
 {
   "build": {
-    "dockerfile": "../docker/Dockerfile.dev"
+    "context": "..",
+    "dockerfile": "docker/Dockerfile.dev"
   }
 }
