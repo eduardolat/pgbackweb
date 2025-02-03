@@ -27,11 +27,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare devcontainer-ci.json
-        run: |
-          rm -f .devcontainer/devcontainer.json
-          mv .devcontainer/devcontainer-ci.json .devcontainer/devcontainer.json
-
       - name: Setup Docker buildx for multi-architecture builds
         uses: docker/setup-buildx-action@v3
         with:
@@ -41,6 +36,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y skopeo
+
+      - name: Prepare devcontainer-ci.json
+        run: |
+          rm -f .devcontainer/devcontainer.json
+          mv .devcontainer/devcontainer-ci.json .devcontainer/devcontainer.json
 
       - name: Run lint, test, and build
         uses: devcontainers/ci@v0.3
