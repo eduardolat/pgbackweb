@@ -3,7 +3,6 @@ package auth
 import (
 	"net/http"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
@@ -12,8 +11,8 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func (h *handlers) createFirstUserPageHandler(c echo.Context) error {
@@ -32,19 +31,19 @@ func (h *handlers) createFirstUserPageHandler(c echo.Context) error {
 		return c.Redirect(http.StatusFound, "/auth/login")
 	}
 
-	return echoutil.RenderGomponent(c, http.StatusOK, createFirstUserPage())
+	return echoutil.RenderNodx(c, http.StatusOK, createFirstUserPage())
 }
 
-func createFirstUserPage() gomponents.Node {
-	content := []gomponents.Node{
+func createFirstUserPage() nodx.Node {
+	content := []nodx.Node{
 		component.H1Text("Create first user"),
 
-		html.Form(
+		nodx.FormEl(
 			htmx.HxPost("/auth/create-first-user"),
 			htmx.HxDisabledELT("find button"),
-			html.Class("mt-4 space-y-2"),
+			nodx.Class("mt-4 space-y-2"),
 
-			html.Div(
+			nodx.Div(
 				component.InputControl(component.InputControlParams{
 					Name:         "name",
 					Label:        "Full name",
@@ -70,9 +69,9 @@ func createFirstUserPage() gomponents.Node {
 					Required:     true,
 					Type:         component.InputTypePassword,
 					AutoComplete: "new-password",
-					Children: []gomponents.Node{
-						html.MinLength("6"),
-						html.MaxLength("50"),
+					Children: []nodx.Node{
+						nodx.Minlength("6"),
+						nodx.Maxlength("50"),
 					},
 				}),
 
@@ -82,19 +81,19 @@ func createFirstUserPage() gomponents.Node {
 					Placeholder: "******",
 					Required:    true,
 					Type:        component.InputTypePassword,
-					Children: []gomponents.Node{
-						html.MinLength("6"),
-						html.MaxLength("50"),
+					Children: []nodx.Node{
+						nodx.Minlength("6"),
+						nodx.Maxlength("50"),
 					},
 				}),
 
-				html.Div(
-					html.Class("pt-2 flex justify-end items-center space-x-2"),
+				nodx.Div(
+					nodx.Class("pt-2 flex justify-end items-center space-x-2"),
 					component.HxLoadingMd(),
-					html.Button(
-						html.ID("create-first-user-button"),
-						html.Class("btn btn-primary"),
-						html.Type("submit"),
+					nodx.Button(
+						nodx.Id("create-first-user-button"),
+						nodx.Class("btn btn-primary"),
+						nodx.Type("submit"),
 						component.SpanText("Create user and continue"),
 						lucide.UserPlus(),
 					),

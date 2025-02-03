@@ -1,11 +1,9 @@
 package component
 
 import (
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/google/uuid"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/components"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 type InputControlParams struct {
@@ -19,11 +17,11 @@ type InputControlParams struct {
 	Color              color
 	AutoComplete       string
 	Pattern            string
-	Children           []gomponents.Node
-	HelpButtonChildren []gomponents.Node
+	Children           []nodx.Node
+	HelpButtonChildren []nodx.Node
 }
 
-func InputControl(params InputControlParams) gomponents.Node {
+func InputControl(params InputControlParams) nodx.Node {
 	id := params.ID
 	if id == "" {
 		id = "input-control-" + uuid.NewString()
@@ -33,23 +31,23 @@ func InputControl(params InputControlParams) gomponents.Node {
 		params.Type = InputTypeText
 	}
 
-	return html.Div(
-		components.Classes{
+	return nodx.Div(
+		nodx.ClassMap{
 			"form-control w-full":           true,
 			getTextColorClass(params.Color): true,
 		},
-		html.Div(
-			html.Class("label flex justify-start"),
-			html.Label(
-				html.For(id),
-				html.Class("flex justify-start items-center space-x-1"),
+		nodx.Div(
+			nodx.Class("label flex justify-start"),
+			nodx.LabelEl(
+				nodx.For(id),
+				nodx.Class("flex justify-start items-center space-x-1"),
 				SpanText(params.Label),
-				gomponents.If(
+				nodx.If(
 					params.Required,
-					lucide.Asterisk(html.Class("text-error")),
+					lucide.Asterisk(nodx.Class("text-error")),
 				),
 			),
-			gomponents.If(
+			nodx.If(
 				len(params.HelpButtonChildren) > 0,
 				HelpButtonModal(HelpButtonModalParams{
 					ModalTitle: params.Label,
@@ -57,34 +55,34 @@ func InputControl(params InputControlParams) gomponents.Node {
 				}),
 			),
 		),
-		html.Input(
-			components.Classes{
+		nodx.Input(
+			nodx.ClassMap{
 				"input input-bordered w-full":    true,
 				getInputColorClass(params.Color): true,
 			},
-			html.ID(id),
-			html.Type(params.Type.Value),
-			html.Name(params.Name),
-			html.Placeholder(params.Placeholder),
-			gomponents.If(
+			nodx.Id(id),
+			nodx.Type(params.Type.Value),
+			nodx.Name(params.Name),
+			nodx.Placeholder(params.Placeholder),
+			nodx.If(
 				params.Required,
-				html.Required(),
+				nodx.Required(""),
 			),
-			gomponents.If(
+			nodx.If(
 				params.AutoComplete != "",
-				html.AutoComplete(params.AutoComplete),
+				nodx.Autocomplete(params.AutoComplete),
 			),
-			gomponents.If(
+			nodx.If(
 				params.Pattern != "",
-				html.Pattern(params.Pattern),
+				nodx.Pattern(params.Pattern),
 			),
-			gomponents.Group(params.Children),
+			nodx.Group(params.Children...),
 		),
-		gomponents.If(
+		nodx.If(
 			params.HelpText != "",
-			html.Label(
-				html.Class("label"),
-				html.For(id),
+			nodx.LabelEl(
+				nodx.Class("label"),
+				nodx.For(id),
 				SpanText(params.HelpText),
 			),
 		),

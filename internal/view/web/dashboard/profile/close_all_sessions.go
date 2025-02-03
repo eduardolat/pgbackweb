@@ -1,52 +1,51 @@
 package profile
 
 import (
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
-func closeAllSessionsForm(sessions []dbgen.Session) gomponents.Node {
+func closeAllSessionsForm(sessions []dbgen.Session) nodx.Node {
 	return component.CardBox(component.CardBoxParams{
-		Children: []gomponents.Node{
+		Children: []nodx.Node{
 			component.H2Text("Close all sessions"),
 			component.PText("This will log you out from all devices including this one."),
-			html.Button(
+			nodx.Button(
 				htmx.HxPost("/auth/logout-all"),
 				htmx.HxDisabledELT("this"),
 				htmx.HxConfirm("Are you sure you want to close all your sessions?"),
-				html.Class("mt-2 btn btn-error"),
+				nodx.Class("mt-2 btn btn-error"),
 				component.SpanText("Close all sessions"),
 				lucide.LogOut(),
 			),
 
-			html.Div(html.Class("divider")),
+			nodx.Div(nodx.Class("divider")),
 
 			component.H2Text("Active sessions"),
 			component.PText("All sessions are open for a maximum of 12 hours."),
-			html.Div(
-				html.Class("overflow-x-auto"),
-				html.Table(
-					html.Class("table"),
-					html.THead(
-						html.Tr(
-							html.Th(component.SpanText("Login time")),
-							html.Th(component.SpanText("IP address")),
-							html.Th(component.SpanText("User agent")),
+			nodx.Div(
+				nodx.Class("overflow-x-auto"),
+				nodx.Table(
+					nodx.Class("table"),
+					nodx.Thead(
+						nodx.Tr(
+							nodx.Th(component.SpanText("Login time")),
+							nodx.Th(component.SpanText("IP address")),
+							nodx.Th(component.SpanText("User agent")),
 						),
 					),
-					html.TBody(
-						component.GMap(sessions, func(session dbgen.Session) gomponents.Node {
-							return html.Tr(
-								html.Td(component.SpanText(
+					nodx.Tbody(
+						nodx.Map(sessions, func(session dbgen.Session) nodx.Node {
+							return nodx.Tr(
+								nodx.Td(component.SpanText(
 									session.CreatedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 								)),
-								html.Td(component.SpanText(session.Ip)),
-								html.Td(component.SpanText(session.UserAgent)),
+								nodx.Td(component.SpanText(session.Ip)),
+								nodx.Td(component.SpanText(session.UserAgent)),
 							)
 						}),
 					),

@@ -1,0 +1,3 @@
+svg[data-nodxgo="lucide"]:not([class*="size-"]) {
+  @apply size-4;
+}

@@ -3,49 +3,47 @@ package layout
 import (
 	"fmt"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/components"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
-func dashboardAside() gomponents.Node {
-	return html.Aside(
-		html.ID("dashboard-aside"),
-		components.Classes{
+func dashboardAside() nodx.Node {
+	return nodx.Aside(
+		nodx.Id("dashboard-aside"),
+		nodx.ClassMap{
 			"flex-none h-[100dvh] bg-base-300 shadow-sm p-4": true,
 			"overflow-y-auto overflow-x-hidden":              true,
 		},
 
-		html.A(
-			html.Class("block flex flex-col justify-center items-center"),
-			html.Href("https://github.com/eduardolat/pgbackweb"),
-			html.Target("_blank"),
-			html.Img(
-				html.Src("/images/logo.png"),
-				html.Alt("PG Back Web"),
-				html.Class("w-[50px] h-auto"),
+		nodx.A(
+			nodx.Class("block flex flex-col justify-center items-center"),
+			nodx.Href("https://github.com/eduardolat/pgbackweb"),
+			nodx.Target("_blank"),
+			nodx.Img(
+				nodx.Src("/images/logo.png"),
+				nodx.Alt("PG Back Web"),
+				nodx.Class("w-[50px] h-auto"),
 			),
-			html.Span(
-				html.Class("text-xs text-nowrap text-center font-bold mt-1"),
-				html.Span(
-					html.Class("block"),
-					gomponents.Text("PG Back"),
+			nodx.SpanEl(
+				nodx.Class("text-xs text-nowrap text-center font-bold mt-1"),
+				nodx.SpanEl(
+					nodx.Class("block"),
+					nodx.Text("PG Back"),
 				),
-				html.Span(
-					html.Class("block"),
-					gomponents.Text("Web"),
+				nodx.SpanEl(
+					nodx.Class("block"),
+					nodx.Text("Web"),
 				),
 			),
 		),
 
-		html.Div(
+		nodx.Div(
 			htmx.HxBoost("true"),
 			htmx.HxTarget("#dashboard-main"),
 			htmx.HxSwap("transition:true show:unset"),
-			html.Class("mt-6 space-y-4"),
+			nodx.Class("mt-6 space-y-4"),
 
 			dashboardAsideItem(
 				lucide.LayoutDashboard,
@@ -114,21 +112,21 @@ func dashboardAside() gomponents.Node {
 }
 
 func dashboardAsideItem(
-	icon func(children ...gomponents.Node) gomponents.Node,
+	icon func(children ...nodx.Node) nodx.Node,
 	text, link string, strict bool,
-) gomponents.Node {
-	return html.A(
+) nodx.Node {
+	return nodx.A(
 		alpine.XData(fmt.Sprintf("alpineDashboardAsideItem('%s', %t)", link, strict)),
-		html.Class("block flex flex-col items-center justify-center group"),
-		html.Href(link),
-		html.Button(
+		nodx.Class("block flex flex-col items-center justify-center group"),
+		nodx.Href(link),
+		nodx.Button(
 			alpine.XBind("class", `{'btn-active': is_active}`),
-			html.Class("btn btn-ghost btn-neutral btn-square group-hover:btn-active"),
-			icon(html.Class("size-6")),
+			nodx.Class("btn btn-ghost btn-neutral btn-square group-hover:btn-active"),
+			icon(nodx.Class("size-6")),
 		),
-		html.Span(
-			html.Class("text-xs"),
-			gomponents.Text(text),
+		nodx.SpanEl(
+			nodx.Class("text-xs"),
+			nodx.Text(text),
 		),
 	)
 }

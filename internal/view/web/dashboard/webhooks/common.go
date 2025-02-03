@@ -9,8 +9,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/util/maputil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
 func createAndUpdateWebhookForm(
@@ -18,55 +17,55 @@ func createAndUpdateWebhookForm(
 	destinations []dbgen.DestinationsServiceGetAllDestinationsRow,
 	backups []dbgen.Backup,
 	webhook ...dbgen.Webhook,
-) gomponents.Node {
+) nodx.Node {
 	shouldPrefill, pickedWebhook := false, dbgen.Webhook{}
 	if len(webhook) > 0 {
 		shouldPrefill = true
 		pickedWebhook = webhook[0]
 	}
 
-	eventTypeOptions := gomponents.Group([]gomponents.Node{
-		html.Option(
-			gomponents.Text("Select an event type"),
-			html.Disabled(),
-			gomponents.If(
+	eventTypeOptions := nodx.Group(
+		nodx.Option(
+			nodx.Text("Select an event type"),
+			nodx.Disabled(""),
+			nodx.If(
 				!shouldPrefill,
-				html.Selected(),
+				nodx.Selected(""),
 			),
 		),
 
-		component.GMap(
+		nodx.Map(
 			maputil.GetSortedStringKeys(webhooks.FullEventTypes),
-			func(key string) gomponents.Node {
+			func(key string) nodx.Node {
 				val := webhooks.FullEventTypes[key]
-				return html.Option(
-					html.Value(key),
-					gomponents.Text(val),
-					gomponents.If(
+				return nodx.Option(
+					nodx.Value(key),
+					nodx.Text(val),
+					nodx.If(
 						shouldPrefill && key == pickedWebhook.EventType,
-						html.Selected(),
+						nodx.Selected(""),
 					),
 				)
 			},
 		),
-	})
+	)
 
 	databaseSelect := component.SelectControl(component.SelectControlParams{
 		Name:     "target_ids",
 		Label:    "Database targets",
 		Required: true,
-		Children: []gomponents.Node{
+		Children: []nodx.Node{
 			alpine.XModel("targetIds"),
-			html.Multiple(),
-			component.GMap(
+			nodx.Multiple(""),
+			nodx.Map(
 				databases,
-				func(db dbgen.DatabasesServiceGetAllDatabasesRow) gomponents.Node {
-					return html.Option(
-						html.Value(db.ID.String()),
-						gomponents.Text(db.Name),
-						gomponents.If(
+				func(db dbgen.DatabasesServiceGetAllDatabasesRow) nodx.Node {
+					return nodx.Option(
+						nodx.Value(db.ID.String()),
+						nodx.Text(db.Name),
+						nodx.If(
 							shouldPrefill && slices.Contains(pickedWebhook.TargetIds, db.ID),
-							html.Selected(),
+							nodx.Selected(""),
 						),
 					)
 				},
@@ -78,18 +77,18 @@ func createAndUpdateWebhookForm(
 		Name:     "target_ids",
 		Label:    "Destination targets",
 		Required: true,
-		Children: []gomponents.Node{
+		Children: []nodx.Node{
 			alpine.XModel("targetIds"),
-			html.Multiple(),
-			component.GMap(
+			nodx.Multiple(""),
+			nodx.Map(
 				destinations,
-				func(dest dbgen.DestinationsServiceGetAllDestinationsRow) gomponents.Node {
-					return html.Option(
-						html.Value(dest.ID.String()),
-						gomponents.Text(dest.Name),
-						gomponents.If(
+				func(dest dbgen.DestinationsServiceGetAllDestinationsRow) nodx.Node {
+					return nodx.Option(
+						nodx.Value(dest.ID.String()),
+						nodx.Text(dest.Name),
+						nodx.If(
 							shouldPrefill && slices.Contains(pickedWebhook.TargetIds, dest.ID),
-							html.Selected(),
+							nodx.Selected(""),
 						),
 					)
 				},
@@ -101,18 +100,18 @@ func createAndUpdateWebhookForm(
 		Name:     "target_ids",
 		Label:    "Backup targets",
 		Required: true,
-		Children: []gomponents.Node{
+		Children: []nodx.Node{
 			alpine.XModel("targetIds"),
-			html.Multiple(),
-			component.GMap(
+			nodx.Multiple(""),
+			nodx.Map(
 				backups,
-				func(backup dbgen.Backup) gomponents.Node {
-					return html.Option(
-						html.Value(backup.ID.String()),
-						gomponents.Text(backup.Name),
-						gomponents.If(
+				func(backup dbgen.Backup) nodx.Node {
+					return nodx.Option(
+						nodx.Value(backup.ID.String()),
+						nodx.Text(backup.Name),
+						nodx.If(
 							shouldPrefill && slices.Contains(pickedWebhook.TargetIds, backup.ID),
-							html.Selected(),
+							nodx.Selected(""),
 						),
 					)
 				},
@@ -120,7 +119,7 @@ func createAndUpdateWebhookForm(
 		},
 	})
 
-	eventTypeSelects := map[string]gomponents.Node{
+	eventTypeSelects := map[string]nodx.Node{
 		webhooks.EventTypeDatabaseHealthy.Value.Key:      databaseSelect,
 		webhooks.EventTypeDatabaseUnhealthy.Value.Key:    databaseSelect,
 		webhooks.EventTypeDestinationHealthy.Value.Key:   destinationSelect,
@@ -129,7 +128,7 @@ func createAndUpdateWebhookForm(
 		webhooks.EventTypeExecutionFailed.Value.Key:      backupSelect,
 	}
 
-	targetIdsSelect := []gomponents.Node{}
+	targetIdsSelect := []nodx.Node{}
 	for eventType, selectNode := range eventTypeSelects {
 		targetIdsSelect = append(targetIdsSelect, alpine.Template(
 			alpine.XIf(fmt.Sprintf("isEventType('%s')", eventType)),
@@ -144,8 +143,8 @@ func createAndUpdateWebhookForm(
 		}
 	}
 
-	return html.Div(
-		html.Class("space-y-2"),
+	return nodx.Div(
+		nodx.Class("space-y-2"),
 
 		alpine.XData(`{
 			eventType: "`+pickedWebhook.EventType+`",
@@ -193,8 +192,8 @@ func createAndUpdateWebhookForm(
 			Placeholder: "My webhook",
 			Required:    true,
 			Type:        component.InputTypeText,
-			Children: []gomponents.Node{
-				gomponents.If(shouldPrefill, html.Value(pickedWebhook.Name)),
+			Children: []nodx.Node{
+				nodx.If(shouldPrefill, nodx.Value(pickedWebhook.Name)),
 			},
 		}),
 
@@ -202,14 +201,14 @@ func createAndUpdateWebhookForm(
 			Name:     "event_type",
 			Label:    "Event type",
 			Required: true,
-			HelpButtonChildren: []gomponents.Node{
+			HelpButtonChildren: []nodx.Node{
 				component.H3Text("Event types"),
 				component.PText(`
 					These are the event types that can trigger a webhook.
 				`),
 
-				html.Div(
-					html.Class("space-y-2"),
+				nodx.Div(
+					nodx.Class("space-y-2"),
 
 					component.CardBoxSimple(
 						component.H4Text("Database healthy"),
@@ -259,27 +258,27 @@ func createAndUpdateWebhookForm(
 					),
 				),
 			},
-			Children: []gomponents.Node{
+			Children: []nodx.Node{
 				alpine.XModel("eventType"),
 				eventTypeOptions,
 			},
 		}),
 
-		html.Div(targetIdsSelect...),
+		nodx.Div(targetIdsSelect...),
 
 		component.SelectControl(component.SelectControlParams{
 			Name:     "is_active",
 			Label:    "Activate webhook",
 			Required: true,
-			Children: []gomponents.Node{
-				html.Option(
-					html.Value("true"), gomponents.Text("Yes"),
-					gomponents.If(!shouldPrefill, html.Selected()),
-					gomponents.If(shouldPrefill && pickedWebhook.IsActive, html.Selected()),
+			Children: []nodx.Node{
+				nodx.Option(
+					nodx.Value("true"), nodx.Text("Yes"),
+					nodx.If(!shouldPrefill, nodx.Selected("")),
+					nodx.If(shouldPrefill && pickedWebhook.IsActive, nodx.Selected("")),
 				),
-				html.Option(
-					html.Value("false"), gomponents.Text("No"),
-					gomponents.If(shouldPrefill && !pickedWebhook.IsActive, html.Selected()),
+				nodx.Option(
+					nodx.Value("false"), nodx.Text("No"),
+					nodx.If(shouldPrefill && !pickedWebhook.IsActive, nodx.Selected("")),
 				),
 			},
 		}),
@@ -290,8 +289,8 @@ func createAndUpdateWebhookForm(
 			Placeholder: "https://example.com/webhook",
 			Required:    true,
 			Type:        component.InputTypeUrl,
-			Children: []gomponents.Node{
-				gomponents.If(shouldPrefill, html.Value(pickedWebhook.Url)),
+			Children: []nodx.Node{
+				nodx.If(shouldPrefill, nodx.Value(pickedWebhook.Url)),
 			},
 		}),
 
@@ -299,22 +298,22 @@ func createAndUpdateWebhookForm(
 			Name:     "method",
 			Label:    "Method",
 			Required: true,
-			Children: []gomponents.Node{
-				html.Option(
-					html.Value("POST"),
-					gomponents.Text("POST"),
-					gomponents.If(!shouldPrefill, html.Selected()),
-					gomponents.If(
+			Children: []nodx.Node{
+				nodx.Option(
+					nodx.Value("POST"),
+					nodx.Text("POST"),
+					nodx.If(!shouldPrefill, nodx.Selected("")),
+					nodx.If(
 						shouldPrefill && pickedWebhook.Method == "POST",
-						html.Selected(),
+						nodx.Selected(""),
 					),
 				),
-				html.Option(
-					html.Value("GET"),
-					gomponents.Text("GET"),
-					gomponents.If(
+				nodx.Option(
+					nodx.Value("GET"),
+					nodx.Text("GET"),
+					nodx.If(
 						shouldPrefill && pickedWebhook.Method == "GET",
-						html.Selected(),
+						nodx.Selected(""),
 					),
 				),
 			},
@@ -325,12 +324,12 @@ func createAndUpdateWebhookForm(
 			Label:       "Headers",
 			Placeholder: `{ "Authorization": "Bearer my-token" }`,
 			HelpText:    `By default it will send a { "Content-Type": "application/json" } header.`,
-			Children: []gomponents.Node{
+			Children: []nodx.Node{
 				alpine.XRef("headersTextarea"),
 				alpine.XOn("click.outside", "formatHeadersTextarea()"),
 				alpine.XOn("input", "autoGrowHeadersTextarea()"),
-				gomponents.If(
-					shouldPrefill, gomponents.Text(pickedWebhook.Headers.String),
+				nodx.If(
+					shouldPrefill, nodx.Text(pickedWebhook.Headers.String),
 				),
 			},
 		}),
@@ -340,12 +339,12 @@ func createAndUpdateWebhookForm(
 			Label:       "Body",
 			Placeholder: `{ "key": "value" }`,
 			HelpText:    `By default it will send an empty json object {}.`,
-			Children: []gomponents.Node{
+			Children: []nodx.Node{
 				alpine.XRef("bodyTextarea"),
 				alpine.XOn("click.outside", "formatBodyTextarea()"),
 				alpine.XOn("input", "autoGrowBodyTextarea()"),
-				gomponents.If(
-					shouldPrefill, gomponents.Text(pickedWebhook.Body.String),
+				nodx.If(
+					shouldPrefill, nodx.Text(pickedWebhook.Body.String),
 				),
 			},
 		}),

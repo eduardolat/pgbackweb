@@ -4,8 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
 // PrettyFileSize pretty prints a file size (in bytes) to a human-readable format.
@@ -14,10 +13,10 @@ import (
 // e.g. 1024 -> 1 KB
 func PrettyFileSize(
 	size sql.NullInt64,
-) gomponents.Node {
-	return gomponents.If(
+) nodx.Node {
+	return nodx.If(
 		size.Valid,
-		html.Span(
+		nodx.SpanEl(
 			SpanText(strutil.FormatFileSize(size.Int64)),
 		),
 	)

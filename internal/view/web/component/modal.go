@@ -3,12 +3,10 @@ package component
 import (
 	"fmt"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/google/uuid"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/components"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 // ModalParams are the props for the Modal component.
@@ -16,7 +14,7 @@ type ModalParams struct {
 	// ID is the ID of the modal dialog. If empty, a random ID will be generated.
 	ID string
 	// Content is the content of the modal dialog.
-	Content []gomponents.Node
+	Content []nodx.Node
 	// Size is the size of the modal dialog.
 	// Can be "sm", "md", and "lg".
 	// The default is "md".
@@ -26,7 +24,7 @@ type ModalParams struct {
 	Title string
 	// TitleNode is the title of the modal dialog.
 	// If you need only a string, use Title instead.
-	TitleNode gomponents.Node
+	TitleNode nodx.Node
 	// HTMXIndicator is an optional ID of an HTMX indicator that
 	// should be inserted in the modal header.
 	HTMXIndicator string
@@ -34,10 +32,10 @@ type ModalParams struct {
 
 // ModalResult is the result of creating a modal dialog.
 type ModalResult struct {
-	// HTML is the modal dialog HTML.
-	HTML gomponents.Node
+	// HTML is the modal dialog nodx.
+	HTML nodx.Node
 	// OpenerAttr is the attribute to add to the element that opens the modal dialog.
-	OpenerAttr gomponents.Node
+	OpenerAttr nodx.Node
 }
 
 // Modal renders a modal dialog.
@@ -49,11 +47,11 @@ func Modal(params ModalParams) ModalResult {
 
 	openEventName := fmt.Sprintf("%s_open", id)
 	closeEventName := fmt.Sprintf("%s_close", id)
-	openerAttr := gomponents.Attr(
+	openerAttr := nodx.Attr(
 		"onClick",
 		"event.preventDefault(); window.dispatchEvent(new Event('"+openEventName+"'));",
 	)
-	closerAttr := gomponents.Attr(
+	closerAttr := nodx.Attr(
 		"onClick",
 		"event.preventDefault(); window.dispatchEvent(new Event('"+closeEventName+"'));",
 	)
@@ -68,23 +66,23 @@ func Modal(params ModalParams) ModalResult {
 
 	hasHTMXIndicator := params.HTMXIndicator != ""
 
-	content := html.Div(
+	content := nodx.Div(
 		alpine.XData(`{}`),
 		alpine.XOn(fmt.Sprintf("%s.window", openEventName), openCode),
 		alpine.XOn(fmt.Sprintf("%s.window", closeEventName), closeCode),
 		alpine.XOn("keyup.escape.window", closeCode),
 
-		html.ID(id),
-		components.Classes{
+		nodx.Id(id),
+		nodx.ClassMap{
 			"hidden":                          true,
 			"!p-0 !m-0 w-[100dvw] h-[100dvh]": true,
 			"fixed left-0 top-0 z-[1000]":     true,
 		},
 
 		// Backdrop
-		html.Div(
+		nodx.Div(
 			closerAttr,
-			components.Classes{
+			nodx.ClassMap{
 				"bg-black opacity-25": true,
 				"!w-full !h-full":     true,
 				"z-[1001]":            true,
@@ -92,8 +90,8 @@ func Modal(params ModalParams) ModalResult {
 		),
 
 		// Dialog
-		html.Div(
-			components.Classes{
+		nodx.Div(
+			nodx.ClassMap{
 				"absolute z-[1002] top-[50%] left-[50%]":      true,
 				"translate-y-[-50%] translate-x-[-50%]":       true,
 				"max-w-[calc(100dvw-30px)] max-h-[85dvh]":     true,
@@ -105,46 +103,46 @@ func Modal(params ModalParams) ModalResult {
 				"w-[800px]": size == SizeLg,
 			},
 
-			html.Div(
-				components.Classes{
+			nodx.Div(
+				nodx.ClassMap{
 					"w-full sticky top-0 right-0 z-[1003] bg-base-100": true,
 					"flex items-center justify-between":                true,
 					"border-b border-base-300 px-4 py-3":               true,
 				},
 
-				html.Div(
-					gomponents.If(
+				nodx.Div(
+					nodx.If(
 						params.TitleNode != nil,
 						params.TitleNode,
 					),
 
-					gomponents.If(
+					nodx.If(
 						params.Title != "",
-						html.Span(
-							html.Class("text-xl font-bold desk:text-2xl"),
-							gomponents.Text(params.Title),
+						nodx.SpanEl(
+							nodx.Class("text-xl font-bold desk:text-2xl"),
+							nodx.Text(params.Title),
 						),
 					),
 
-					gomponents.If(
+					nodx.If(
 						hasHTMXIndicator,
-						html.Div(
-							html.Class("inline-flex h-full items-center pl-2"),
+						nodx.Div(
+							nodx.Class("inline-flex h-full items-center pl-2"),
 							HxLoadingSm(params.HTMXIndicator),
 						),
 					),
 				),
 
-				html.Button(
-					html.Class("btn btn-circle btn-ghost btn-sm"),
-					lucide.X(html.Class("size-6")),
+				nodx.Button(
+					nodx.Class("btn btn-circle btn-ghost btn-sm"),
+					lucide.X(nodx.Class("size-6")),
 					closerAttr,
 				),
 			),
 
-			html.Div(
-				html.Class("p-4"),
-				gomponents.Group(params.Content),
+			nodx.Div(
+				nodx.Class("p-4"),
+				nodx.Group(params.Content...),
 			),
 		),
 	)
@@ -152,7 +150,7 @@ func Modal(params ModalParams) ModalResult {
 	content = alpine.Template(
 		alpine.XData(""),
 		alpine.XTeleport("body"),
-		html.Div(content),
+		nodx.Div(content),
 	)
 
 	return ModalResult{

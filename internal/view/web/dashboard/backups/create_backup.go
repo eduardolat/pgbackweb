@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"time"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/staticdata"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
@@ -14,8 +13,8 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func (h *handlers) createBackupHandler(c echo.Context) error {
@@ -86,7 +85,7 @@ func (h *handlers) createBackupFormHandler(c echo.Context) error {
 		return htmx.RespondToastError(c, err.Error())
 	}
 
-	return echoutil.RenderGomponent(
+	return echoutil.RenderNodx(
 		c, http.StatusOK, createBackupForm(databases, destinations),
 	)
 }
@@ -94,20 +93,20 @@ func (h *handlers) createBackupFormHandler(c echo.Context) error {
 func createBackupForm(
 	databases []dbgen.DatabasesServiceGetAllDatabasesRow,
 	destinations []dbgen.DestinationsServiceGetAllDestinationsRow,
-) gomponents.Node {
-	yesNoOptions := func() gomponents.Node {
-		return gomponents.Group([]gomponents.Node{
-			html.Option(html.Value("true"), gomponents.Text("Yes")),
-			html.Option(html.Value("false"), gomponents.Text("No"), html.Selected()),
-		})
+) nodx.Node {
+	yesNoOptions := func() nodx.Node {
+		return nodx.Group(
+			nodx.Option(nodx.Value("true"), nodx.Text("Yes")),
+			nodx.Option(nodx.Value("false"), nodx.Text("No"), nodx.Selected("")),
+		)
 	}
 
 	serverTZ := time.Now().Location().String()
 
-	return html.Form(
+	return nodx.FormEl(
 		htmx.HxPost("/dashboard/backups"),
 		htmx.HxDisabledELT("find button"),
-		html.Class("space-y-2 text-base"),
+		nodx.Class("space-y-2 text-base"),
 
 		alpine.XData(`{
 			is_local: "false",
@@ -126,11 +125,11 @@ func createBackupForm(
 			Label:       "Database",
 			Required:    true,
 			Placeholder: "Select a database",
-			Children: []gomponents.Node{
-				component.GMap(
+			Children: []nodx.Node{
+				nodx.Map(
 					databases,
-					func(db dbgen.DatabasesServiceGetAllDatabasesRow) gomponents.Node {
-						return html.Option(html.Value(db.ID.String()), gomponents.Text(db.Name))
+					func(db dbgen.DatabasesServiceGetAllDatabasesRow) nodx.Node {
+						return nodx.Option(nodx.Value(db.ID.String()), nodx.Text(db.Name))
 					},
 				),
 			},
@@ -140,10 +139,10 @@ func createBackupForm(
 			Name:     "is_local",
 			Label:    "Local backup",
 			Required: true,
-			Children: []gomponents.Node{
+			Children: []nodx.Node{
 				alpine.XModel("is_local"),
-				html.Option(html.Value("true"), gomponents.Text("Yes")),
-				html.Option(html.Value("false"), gomponents.Text("No"), html.Selected()),
+				nodx.Option(nodx.Value("true"), nodx.Text("Yes")),
+				nodx.Option(nodx.Value("false"), nodx.Text("No"), nodx.Selected("")),
 			},
 			HelpButtonChildren: localBackupsHelp(),
 		}),
@@ -155,11 +154,11 @@ func createBackupForm(
 				Label:       "Destination",
 				Required:    true,
 				Placeholder: "Select a destination",
-				Children: []gomponents.Node{
-					component.GMap(
+				Children: []nodx.Node{
+					nodx.Map(
 						destinations,
-						func(dest dbgen.DestinationsServiceGetAllDestinationsRow) gomponents.Node {
-							return html.Option(html.Value(dest.ID.String()), gomponents.Text(dest.Name))
+						func(dest dbgen.DestinationsServiceGetAllDestinationsRow) nodx.Node {
+							return nodx.Option(nodx.Value(dest.ID.String()), nodx.Text(dest.Name))
 						},
 					),
 				},
@@ -182,16 +181,16 @@ func createBackupForm(
 			Label:       "Time zone",
 			Required:    true,
 			Placeholder: "Select a time zone",
-			Children: []gomponents.Node{
-				component.GMap(
+			Children: []nodx.Node{
+				nodx.Map(
 					staticdata.Timezones,
-					func(tz staticdata.Timezone) gomponents.Node {
-						var selected gomponents.Node
+					func(tz staticdata.Timezone) nodx.Node {
+						var selected nodx.Node
 						if tz.TzCode == serverTZ {
-							selected = html.Selected()
+							selected = nodx.Selected("")
 						}
 
-						return html.Option(html.Value(tz.TzCode), gomponents.Text(tz.Label), selected)
+						return nodx.Option(nodx.Value(tz.TzCode), nodx.Text(tz.Label), selected)
 					},
 				),
 			},
@@ -217,9 +216,9 @@ func createBackupForm(
 			Type:               component.InputTypeNumber,
 			Pattern:            "[0-9]+",
 			HelpButtonChildren: retentionDaysHelp(),
-			Children: []gomponents.Node{
-				html.Min("0"),
-				html.Max("36500"),
+			Children: []nodx.Node{
+				nodx.Min("0"),
+				nodx.Max("36500"),
 			},
 		}),
 
@@ -227,16 +226,16 @@ func createBackupForm(
 			Name:     "is_active",
 			Label:    "Activate backup",
 			Required: true,
-			Children: []gomponents.Node{
-				html.Option(html.Value("true"), gomponents.Text("Yes")),
-				html.Option(html.Value("false"), gomponents.Text("No")),
+			Children: []nodx.Node{
+				nodx.Option(nodx.Value("true"), nodx.Text("Yes")),
+				nodx.Option(nodx.Value("false"), nodx.Text("No")),
 			},
 		}),
 
-		html.Div(
-			html.Class("pt-4"),
-			html.Div(
-				html.Class("flex justify-start items-center space-x-1"),
+		nodx.Div(
+			nodx.Class("pt-4"),
+			nodx.Div(
+				nodx.Class("flex justify-start items-center space-x-1"),
 				component.H2Text("Options"),
 				component.HelpButtonModal(component.HelpButtonModalParams{
 					ModalTitle: "Backup options",
@@ -244,14 +243,14 @@ func createBackupForm(
 				}),
 			),
 
-			html.Div(
-				html.Class("mt-2 grid grid-cols-2 gap-2"),
+			nodx.Div(
+				nodx.Class("mt-2 grid grid-cols-2 gap-2"),
 
 				component.SelectControl(component.SelectControlParams{
 					Name:     "opt_data_only",
 					Label:    "--data-only",
 					Required: true,
-					Children: []gomponents.Node{
+					Children: []nodx.Node{
 						yesNoOptions(),
 					},
 				}),
@@ -260,7 +259,7 @@ func createBackupForm(
 					Name:     "opt_schema_only",
 					Label:    "--schema-only",
 					Required: true,
-					Children: []gomponents.Node{
+					Children: []nodx.Node{
 						yesNoOptions(),
 					},
 				}),
@@ -269,7 +268,7 @@ func createBackupForm(
 					Name:     "opt_clean",
 					Label:    "--clean",
 					Required: true,
-					Children: []gomponents.Node{
+					Children: []nodx.Node{
 						yesNoOptions(),
 					},
 				}),
@@ -278,7 +277,7 @@ func createBackupForm(
 					Name:     "opt_if_exists",
 					Label:    "--if-exists",
 					Required: true,
-					Children: []gomponents.Node{
+					Children: []nodx.Node{
 						yesNoOptions(),
 					},
 				}),
@@ -287,7 +286,7 @@ func createBackupForm(
 					Name:     "opt_create",
 					Label:    "--create",
 					Required: true,
-					Children: []gomponents.Node{
+					Children: []nodx.Node{
 						yesNoOptions(),
 					},
 				}),
@@ -296,19 +295,19 @@ func createBackupForm(
 					Name:     "opt_no_comments",
 					Label:    "--no-comments",
 					Required: true,
-					Children: []gomponents.Node{
+					Children: []nodx.Node{
 						yesNoOptions(),
 					},
 				}),
 			),
 		),
 
-		html.Div(
-			html.Class("flex justify-end items-center space-x-2 pt-2"),
+		nodx.Div(
+			nodx.Class("flex justify-end items-center space-x-2 pt-2"),
 			component.HxLoadingMd(),
-			html.Button(
-				html.Class("btn btn-primary"),
-				html.Type("submit"),
+			nodx.Button(
+				nodx.Class("btn btn-primary"),
+				nodx.Type("submit"),
 				component.SpanText("Save"),
 				lucide.Save(),
 			),
@@ -316,30 +315,30 @@ func createBackupForm(
 	)
 }
 
-func createBackupButton() gomponents.Node {
+func createBackupButton() nodx.Node {
 	mo := component.Modal(component.ModalParams{
 		Size:  component.SizeLg,
 		Title: "Create backup",
-		Content: []gomponents.Node{
-			html.Div(
+		Content: []nodx.Node{
+			nodx.Div(
 				htmx.HxGet("/dashboard/backups/create-form"),
 				htmx.HxSwap("outerHTML"),
 				htmx.HxTrigger("intersect once"),
-				html.Class("p-10 flex justify-center"),
+				nodx.Class("p-10 flex justify-center"),
 				component.HxLoadingMd(),
 			),
 		},
 	})
 
-	button := html.Button(
+	button := nodx.Button(
 		mo.OpenerAttr,
-		html.Class("btn btn-primary"),
+		nodx.Class("btn btn-primary"),
 		component.SpanText("Create backup"),
 		lucide.Plus(),
 	)
 
-	return html.Div(
-		html.Class("inline-block"),
+	return nodx.Div(
+		nodx.Class("inline-block"),
 		mo.HTML,
 		button,
 	)

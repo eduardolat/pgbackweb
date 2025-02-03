@@ -3,15 +3,14 @@ package profile
 import (
 	"database/sql"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/reqctx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func (h *handlers) updateUserHandler(c echo.Context) error {
@@ -44,13 +43,13 @@ func (h *handlers) updateUserHandler(c echo.Context) error {
 	return htmx.RespondToastSuccess(c, "Profile updated")
 }
 
-func updateUserForm(user dbgen.User) gomponents.Node {
+func updateUserForm(user dbgen.User) nodx.Node {
 	return component.CardBox(component.CardBoxParams{
-		Children: []gomponents.Node{
-			html.Form(
+		Children: []nodx.Node{
+			nodx.FormEl(
 				htmx.HxPost("/dashboard/profile"),
 				htmx.HxDisabledELT("find button"),
-				html.Class("space-y-2"),
+				nodx.Class("space-y-2"),
 
 				component.H2Text("Update profile"),
 
@@ -61,8 +60,8 @@ func updateUserForm(user dbgen.User) gomponents.Node {
 					Required:     true,
 					Type:         component.InputTypeText,
 					AutoComplete: "name",
-					Children: []gomponents.Node{
-						html.Value(user.Name),
+					Children: []nodx.Node{
+						nodx.Value(user.Name),
 					},
 				}),
 
@@ -73,8 +72,8 @@ func updateUserForm(user dbgen.User) gomponents.Node {
 					Required:     true,
 					AutoComplete: "email",
 					Type:         component.InputTypeEmail,
-					Children: []gomponents.Node{
-						html.Value(user.Email),
+					Children: []nodx.Node{
+						nodx.Value(user.Email),
 					},
 				}),
 
@@ -95,12 +94,12 @@ func updateUserForm(user dbgen.User) gomponents.Node {
 					Type:         component.InputTypePassword,
 				}),
 
-				html.Div(
-					html.Class("flex justify-end items-center space-x-2 pt-2"),
+				nodx.Div(
+					nodx.Class("flex justify-end items-center space-x-2 pt-2"),
 					component.HxLoadingMd(),
-					html.Button(
-						html.Class("btn btn-primary"),
-						html.Type("submit"),
+					nodx.Button(
+						nodx.Class("btn btn-primary"),
+						nodx.Type("submit"),
 						component.SpanText("Save changes"),
 						lucide.Save(),
 					),

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
@@ -14,8 +13,8 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func (h *handlers) restoreExecutionHandler(c echo.Context) error {
@@ -97,7 +96,7 @@ func (h *handlers) restoreExecutionFormHandler(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
-	return echoutil.RenderGomponent(c, http.StatusOK, restoreExecutionForm(
+	return echoutil.RenderNodx(c, http.StatusOK, restoreExecutionForm(
 		execution, databases,
 	))
 }
@@ -105,38 +104,38 @@ func (h *handlers) restoreExecutionFormHandler(c echo.Context) error {
 func restoreExecutionForm(
 	execution dbgen.ExecutionsServiceGetExecutionRow,
 	databases []dbgen.DatabasesServiceGetAllDatabasesRow,
-) gomponents.Node {
-	return html.Form(
+) nodx.Node {
+	return nodx.FormEl(
 		htmx.HxPost("/dashboard/executions/"+execution.ID.String()+"/restore"),
 		htmx.HxConfirm("Are you sure you want to restore this backup?"),
 		htmx.HxDisabledELT("find button"),
 
 		alpine.XData(`{ backup_to: "database" }`),
 
-		html.Input(
-			html.Type("hidden"),
-			html.Name("execution_id"),
-			html.Value(execution.ID.String()),
+		nodx.Input(
+			nodx.Type("hidden"),
+			nodx.Name("execution_id"),
+			nodx.Value(execution.ID.String()),
 		),
 
-		html.Div(
-			html.Class("space-y-2 text-base"),
+		nodx.Div(
+			nodx.Class("space-y-2 text-base"),
 
 			component.SelectControl(component.SelectControlParams{
 				Name:     "backup_to",
 				Label:    "Backup to",
 				Required: true,
 				HelpText: "You can restore the backup to an existing database or any other database using a connection string",
-				Children: []gomponents.Node{
+				Children: []nodx.Node{
 					alpine.XModel("backup_to"),
-					html.Option(
-						html.Value("database"),
-						gomponents.Text("Existing database"),
-						html.Selected(),
+					nodx.Option(
+						nodx.Value("database"),
+						nodx.Text("Existing database"),
+						nodx.Selected(""),
 					),
-					html.Option(
-						html.Value("conn_string"),
-						gomponents.Text("Other database"),
+					nodx.Option(
+						nodx.Value("conn_string"),
+						nodx.Text("Other database"),
 					),
 				},
 			}),
@@ -148,16 +147,16 @@ func restoreExecutionForm(
 					Label:       "Database",
 					Placeholder: "Select a database",
 					Required:    true,
-					Children: []gomponents.Node{
-						component.GMap(
+					Children: []nodx.Node{
+						nodx.Map(
 							databases,
-							func(db dbgen.DatabasesServiceGetAllDatabasesRow) gomponents.Node {
-								return html.Option(
-									html.Value(db.ID.String()),
-									gomponents.Text(db.Name),
-									gomponents.If(
+							func(db dbgen.DatabasesServiceGetAllDatabasesRow) nodx.Node {
+								return nodx.Option(
+									nodx.Value(db.ID.String()),
+									nodx.Text(db.Name),
+									nodx.If(
 										db.ID == execution.DatabaseID,
-										html.Selected(),
+										nodx.Selected(""),
 									),
 								)
 							},
@@ -177,14 +176,14 @@ func restoreExecutionForm(
 				}),
 			),
 
-			html.Div(
-				html.Class("pt-2"),
-				html.Div(
-					html.Role("alert"),
-					html.Class("alert alert-warning"),
+			nodx.Div(
+				nodx.Class("pt-2"),
+				nodx.Div(
+					nodx.Role("alert"),
+					nodx.Class("alert alert-warning"),
 					lucide.TriangleAlert(),
-					html.Div(
-						html.P(
+					nodx.Div(
+						nodx.P(
 							component.BText(fmt.Sprintf(
 								"This restoration uses psql v%s", execution.DatabasePgVersion,
 							)),
@@ -198,12 +197,12 @@ func restoreExecutionForm(
 				),
 			),
 
-			html.Div(
-				html.Class("flex justify-end items-center space-x-2 pt-2"),
+			nodx.Div(
+				nodx.Class("flex justify-end items-center space-x-2 pt-2"),
 				component.HxLoadingMd(),
-				html.Button(
-					html.Class("btn btn-primary"),
-					html.Type("submit"),
+				nodx.Button(
+					nodx.Class("btn btn-primary"),
+					nodx.Type("submit"),
 					component.SpanText("Start restoration"),
 					lucide.Zap(),
 				),
@@ -212,7 +211,7 @@ func restoreExecutionForm(
 	)
 }
 
-func restoreExecutionButton(execution dbgen.ExecutionsServicePaginateExecutionsRow) gomponents.Node {
+func restoreExecutionButton(execution dbgen.ExecutionsServicePaginateExecutionsRow) nodx.Node {
 	if execution.Status != "success" || !execution.Path.Valid {
 		return nil
 	}
@@ -220,18 +219,18 @@ func restoreExecutionButton(execution dbgen.ExecutionsServicePaginateExecutionsR
 	mo := component.Modal(component.ModalParams{
 		Size:  component.SizeMd,
 		Title: "Restore backup execution",
-		Content: []gomponents.Node{
-			html.Div(
+		Content: []nodx.Node{
+			nodx.Div(
 				htmx.HxGet("/dashboard/executions/"+execution.ID.String()+"/restore-form"),
 				htmx.HxSwap("outerHTML"),
 				htmx.HxTrigger("intersect once"),
-				html.Class("p-10 flex justify-center"),
+				nodx.Class("p-10 flex justify-center"),
 				component.HxLoadingMd(),
 			),
 		},
 	})
 
-	return html.Div(
+	return nodx.Div(
 		mo.HTML,
 		component.OptionsDropdownButton(
 			mo.OpenerAttr,
