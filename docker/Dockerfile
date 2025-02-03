@@ -82,6 +82,10 @@ RUN set -e && \
     # Make binaries executable
     chmod +x /usr/local/dl-bin/*
 
+# Default git config
+# https://github.com/golangci/golangci-lint/issues/4033
+RUN git config --global --add safe.directory '*'
+
 # Go to the app dir, delete the temporary dir and create backups dir
 WORKDIR /app
 RUN rm -rf /app/temp && \
