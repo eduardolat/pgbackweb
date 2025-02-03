@@ -49,7 +49,6 @@ jobs:
           platform: ${{ matrix.vars.platform }}
           runCmd: >
             npm install && \
-            go mod download && \
             task fixperms && \
             task check-deps && \
             task lint-only && \
