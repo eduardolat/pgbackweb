@@ -1,18 +1,15 @@
 name: pgbackweb-dev
 
 services:
-  app:
-    container_name: pbw_app
+  devcontainer:
+    container_name: pbw_devcontainer
     build:
       context: ../
       dockerfile: ./docker/Dockerfile.dev
     ports:
       - "8085:8085"
     volumes:
-      - ../:/app
-      - pbw_vol_app_ssh:/root/.ssh
-      - pbw_vol_app_gh:/root/.config/gh
-      - pbw_vol_app_go_mod_cache:/root/go/pkg/mod
+      - ../..:/workspaces:cached
     networks:
       - pbw_network
     depends_on:
@@ -53,7 +50,7 @@ services:
       - "9090:9090"
     environment:
       MINIO_ROOT_USER: "root"
-      MINIO_ROOT_PASSWORD: "password"
+      MINIO_ROOT_PASSWORD: "root"
     volumes:
       - pbw_vol_minio:/data
     command: minio server /data/minio --console-address ":9090"
@@ -61,9 +58,6 @@ services:
       - pbw_network
 
 volumes:
-  pbw_vol_app_ssh:
-  pbw_vol_app_gh:
-  pbw_vol_app_go_mod_cache:
   pbw_vol_postgres:
   pbw_vol_minio:
 

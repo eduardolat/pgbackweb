@@ -1,6 +1,3 @@
-# Declare the target platform to support multi-arch builds
-ARG TARGETPLATFORM
-
 # To make sure we have the node, and golang binaries
 FROM node:20.17.0-bookworm AS node
 FROM golang:1.23.1-bookworm AS golang
@@ -8,14 +5,20 @@ FROM golang:1.23.1-bookworm AS golang
 # Set the base image
 FROM debian:12.7
 
-# Re-declare ARG after FROM to make it available in this build stage
+# Declare ARG to make it available in the RUN commands
 ARG TARGETPLATFORM
 RUN echo "Building for ${TARGETPLATFORM}"
+RUN if [ "${TARGETPLATFORM}" != "linux/amd64" ] && [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
+        echo "Unsupported architecture: ${TARGETPLATFORM}" && \
+        exit 1; \
+    fi
 
 # Set the general environment variables, and move to temp dir
 ENV DEBIAN_FRONTEND="noninteractive"
+ENV PATH="$PATH:/usr/local/go/bin"
+ENV PATH="$PATH:/usr/local/go-bin"
+ENV PATH="$PATH:/usr/local/dl-bin"
 ENV GOBIN="/usr/local/go-bin"
-ENV PATH="$PATH:/usr/local/go-bin:/usr/local/dl-bin:/usr/local/go/bin"
 RUN mkdir -p /app/temp /usr/local/go-bin /usr/local/dl-bin
 WORKDIR /app/temp
 
@@ -78,6 +81,10 @@ RUN set -e && \
     fi && \
     # Make binaries executable
     chmod +x /usr/local/dl-bin/*
+
+# Default git config
+# https://github.com/golangci/golangci-lint/issues/4033
+RUN git config --global --add safe.directory '*'
 
 # Go to the app dir, delete the temporary dir and create backups dir
 WORKDIR /app
