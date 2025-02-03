@@ -18,7 +18,7 @@ jobs:
           {os: ubuntu-24.04, platform: linux/amd64},
           {os: ubuntu-24.04-arm, platform: linux/arm64}
         ]
-    
+
     name: Lint, test, and build the code
     runs-on: ${{ matrix.vars.os }}
     timeout-minutes: 20
@@ -40,8 +40,9 @@ jobs:
       - name: Run lint, test, and build
         uses: devcontainers/ci@v0.3
         with:
-          platform: ${{ matrix.vars.platform }}
           push: never
+          configFile: .devcontainer/devcontainer-ci.json
+          platform: ${{ matrix.vars.platform }}
           runCmd: >
             npm install && \
             go mod download && \

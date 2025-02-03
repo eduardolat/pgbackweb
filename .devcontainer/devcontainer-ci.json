@@ -1,0 +1,10 @@
+// For the moment --platform is not supported in devcontainers/ci when
+// using docker compose, so in this devcontainer config file we are
+// using the Dockerfile directly to run actions in CI.
+//
+// https://github.com/devcontainers/cli/issues/404
+{
+  "build": {
+    "dockerfile": "../docker/Dockerfile.dev"
+  }
+}
