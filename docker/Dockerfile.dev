@@ -15,8 +15,10 @@ RUN if [ "${TARGETPLATFORM}" != "linux/amd64" ] && [ "${TARGETPLATFORM}" != "lin
 
 # Set the general environment variables, and move to temp dir
 ENV DEBIAN_FRONTEND="noninteractive"
+ENV PATH="$PATH:/usr/local/go/bin"
+ENV PATH="$PATH:/usr/local/go-bin"
+ENV PATH="$PATH:/usr/local/dl-bin"
 ENV GOBIN="/usr/local/go-bin"
-ENV PATH="$PATH:/usr/local/go-bin:/usr/local/dl-bin:/usr/local/go/bin"
 RUN mkdir -p /app/temp /usr/local/go-bin /usr/local/dl-bin
 WORKDIR /app/temp
 
