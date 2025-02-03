@@ -5,16 +5,6 @@ dotenv: [".env"]
 interval: 500ms
 
 tasks:
-  on:
-    desc: Start development environment, should be run from the host machine
-    cmds:
-      - docker compose -f ./docker/compose.dev.yaml up -d --build
-      - docker compose -f ./docker/compose.dev.yaml exec app /bin/bash
-
-  off:
-    desc: Stop development environment, should be run from the host machine
-    cmd: docker compose -f ./docker/compose.dev.yaml down
-
   dev:
     desc: Build and serve the project with hot reloading
     watch: true
