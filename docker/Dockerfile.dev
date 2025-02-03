@@ -1,6 +1,3 @@
-# Declare the target platform to support multi-arch builds
-ARG TARGETPLATFORM
-
 # To make sure we have the node, and golang binaries
 FROM node:20.17.0-bookworm AS node
 FROM golang:1.23.1-bookworm AS golang
@@ -8,9 +5,13 @@ FROM golang:1.23.1-bookworm AS golang
 # Set the base image
 FROM debian:12.7
 
-# Re-declare ARG after FROM to make it available in this build stage
+# Declare ARG to make it available in the RUN commands
 ARG TARGETPLATFORM
 RUN echo "Building for ${TARGETPLATFORM}"
+RUN if [ "${TARGETPLATFORM}" != "linux/amd64" ] && [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
+        echo "Unsupported architecture: ${TARGETPLATFORM}" && \
+        exit 1; \
+    fi
 
 # Set the general environment variables, and move to temp dir
 ENV DEBIAN_FRONTEND="noninteractive"
