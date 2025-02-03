@@ -35,13 +35,15 @@ jobs:
       - name: Build the Docker image
         run: >
           docker buildx build
+          --load
           --platform ${{ matrix.vars.platform }}
           --tag pgbackweb:latest
           --file docker/Dockerfile.dev .
 
       - name: Run lint, test, and build
         run: >
-          docker run --rm -v $PWD:/app -w /app pgbackweb:latest /bin/bash -c "
+          docker run --rm -v $PWD:/app pgbackweb:latest /bin/bash -c "
+            cd /app &&
             npm install &&
             go mod download &&
             task fixperms &&
