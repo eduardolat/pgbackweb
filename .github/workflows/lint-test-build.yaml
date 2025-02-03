@@ -33,7 +33,11 @@ jobs:
           use: true
 
       - name: Build the Docker image
-        run: docker buildx build --platform ${{ matrix.vars.platform }} -t pgbackweb:latest .  
+        run: >
+          docker buildx build
+          --platform ${{ matrix.vars.platform }}
+          --tag pgbackweb:latest
+          --file docker/Dockerfile.dev .
 
       - name: Run lint, test, and build
         run: >
