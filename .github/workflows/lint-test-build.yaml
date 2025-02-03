@@ -46,7 +46,6 @@ jobs:
         uses: devcontainers/ci@v0.3
         with:
           push: never
-          configFile: .devcontainer/devcontainer-ci.json
           platform: ${{ matrix.vars.platform }}
           runCmd: >
             npm install && \
