@@ -49,8 +49,8 @@ github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWE
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/nodxdev/nodxgo v0.2.2 h1:Yz7qCBkYbNOQV9nMSAwQANJHkU+N1V7Yve3vktWstq4=
 github.com/nodxdev/nodxgo v0.2.2/go.mod h1:6RhpuOptMO8HT7ZGIzyAF+iH8ozJfRaneJZ1ehBp2YQ=
-github.com/nodxdev/nodxgo-lucide v0.1.0 h1:C+ftEo944pzC2lHcwuzr1o1PghZVxy3s0CF+6WEM8xE=
-github.com/nodxdev/nodxgo-lucide v0.1.0/go.mod h1:nw7hR6bEb9FtXzd+vnk0wkJZTl/YfM87faSx5pMWDBY=
+github.com/nodxdev/nodxgo-lucide v0.1.1 h1:ibWU9DcTeNSeY6ZVlMPp1zsrLdamkI6zF6tN1FtWcSA=
+github.com/nodxdev/nodxgo-lucide v0.1.1/go.mod h1:a1xCfbfuwbkaHhWmknnuvACZ2Gguq0FIFqaAo8nip2k=
 github.com/orsinium-labs/enum v1.4.0 h1:3NInlfV76kuAg0kq2FFUondmg3WO7gMEgrPPrlzLDUM=
 github.com/orsinium-labs/enum v1.4.0/go.mod h1:Qj5IK2pnElZtkZbGDxZMjpt7SUsn4tqE5vRelmWaBbc=
 github.com/pkg/diff v0.0.0-20210226163009-20ebb0f2a09e/go.mod h1:pJLUxLENpZxwdsKMEsNbx1VGcRFpLqf3715MtcvvzbA=
