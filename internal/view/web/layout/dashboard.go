@@ -4,7 +4,6 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/reqctx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	nodx "github.com/nodxdev/nodxgo"
-	htmx "github.com/nodxdev/nodxgo-htmx"
 )
 
 type DashboardParams struct {
@@ -24,7 +23,6 @@ func Dashboard(reqCtx reqctx.Ctx, params DashboardParams) nodx.Node {
 	}
 
 	body := nodx.Group(
-		htmx.HxIndicator("#header-indicator"),
 		nodx.ClassMap{
 			"w-screen h-screen bg-base-200":      true,
 			"flex justify-start overflow-hidden": true,

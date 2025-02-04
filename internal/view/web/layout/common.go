@@ -32,6 +32,9 @@ func commonHead() nodx.Node {
 		nodx.Meta(nodx.Charset("utf-8")),
 		nodx.Meta(nodx.Name("viewport"), nodx.Content("width=device-width, initial-scale=1")),
 
+		// https://htmx.org/quirks/
+		nodx.Meta(nodx.Name("htmx-config"), nodx.Content(`{"disableInheritance":true, "responseHandling": [{"code":"...", "swap": true}]}`)),
+
 		nodx.Link(nodx.Rel("shortcut icon"), href("/favicon.ico")),
 		nodx.Link(nodx.Rel("stylesheet"), href("/build/style.min.css")),
 		nodx.Script(src("/build/app.min.js")),

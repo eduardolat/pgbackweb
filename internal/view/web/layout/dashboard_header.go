@@ -23,7 +23,6 @@ func dashboardHeader() nodx.Node {
 			}),
 			component.StarOnGithub(component.SizeMd),
 			dashboardHeaderUpdates(),
-			component.HxLoadingMd("header-indicator"),
 		),
 		nodx.Div(
 			nodx.Class("flex justify-end items-center space-x-2"),

@@ -40,9 +40,6 @@ func dashboardAside() nodx.Node {
 		),
 
 		nodx.Div(
-			htmx.HxBoost("true"),
-			htmx.HxTarget("#dashboard-main"),
-			htmx.HxSwap("transition:true show:unset"),
 			nodx.Class("mt-6 space-y-4"),
 
 			dashboardAsideItem(
@@ -118,7 +115,12 @@ func dashboardAsideItem(
 	return nodx.A(
 		alpine.XData(fmt.Sprintf("alpineDashboardAsideItem('%s', %t)", link, strict)),
 		nodx.Class("block flex flex-col items-center justify-center group"),
+
 		nodx.Href(link),
+		htmx.HxBoost("true"),
+		htmx.HxTarget("#dashboard-main"),
+		htmx.HxSwap("transition:true show:unset"),
+
 		nodx.Button(
 			alpine.XBind("class", `{'btn-active': is_active}`),
 			nodx.Class("btn btn-ghost btn-neutral btn-square group-hover:btn-active"),
