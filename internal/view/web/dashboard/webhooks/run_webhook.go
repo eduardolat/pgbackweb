@@ -5,7 +5,7 @@ import (
 
 	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
+	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
@@ -16,7 +16,7 @@ import (
 func (h *handlers) runWebhookHandler(c echo.Context) error {
 	webhookID, err := uuid.Parse(c.Param("webhookID"))
 	if err != nil {
-		return htmxserver.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	go func() {
@@ -38,7 +38,7 @@ func (h *handlers) runWebhookHandler(c echo.Context) error {
 		}
 	}()
 
-	return htmxserver.RespondToastSuccess(c, "Running webhook, check the webhook executions for more details")
+	return respondhtmx.ToastSuccess(c, "Running webhook, check the webhook executions for more details")
 }
 
 func runWebhookButton(webhookID uuid.UUID) nodx.Node {

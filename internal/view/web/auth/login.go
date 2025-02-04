@@ -7,8 +7,8 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
+	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
 	htmx "github.com/nodxdev/nodxgo-htmx"
@@ -88,10 +88,10 @@ func (h *handlers) loginHandler(c echo.Context) error {
 		Password string `form:"password" validate:"required,max=50"`
 	}
 	if err := c.Bind(&formData); err != nil {
-		return htmxserver.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmxserver.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	session, err := h.servs.AuthService.Login(
@@ -104,9 +104,9 @@ func (h *handlers) loginHandler(c echo.Context) error {
 			"ua":    c.Request().UserAgent(),
 			"err":   err,
 		})
-		return htmxserver.RespondToastError(c, "Login failed")
+		return respondhtmx.ToastError(c, "Login failed")
 	}
 
 	h.servs.AuthService.SetSessionCookie(c, session.DecryptedToken)
-	return htmxserver.RespondRedirect(c, "/dashboard")
+	return respondhtmx.Redirect(c, "/dashboard")
 }

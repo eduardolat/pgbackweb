@@ -2,7 +2,7 @@ package backups
 
 import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
+	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
@@ -15,14 +15,14 @@ func (h *handlers) deleteBackupHandler(c echo.Context) error {
 
 	backupID, err := uuid.Parse(c.Param("backupID"))
 	if err != nil {
-		return htmxserver.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	if err = h.servs.BackupsService.DeleteBackup(ctx, backupID); err != nil {
-		return htmxserver.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
-	return htmxserver.RespondRefresh(c)
+	return respondhtmx.Refresh(c)
 }
 
 func deleteBackupButton(backupID uuid.UUID) nodx.Node {

@@ -11,7 +11,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
+	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
 	htmx "github.com/nodxdev/nodxgo-htmx"
@@ -25,10 +25,10 @@ func (h *handlers) listDestinationsHandler(c echo.Context) error {
 		Page int `query:"page" validate:"required,min=1"`
 	}
 	if err := c.Bind(&formData); err != nil {
-		return htmxserver.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmxserver.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	pagination, destinations, err := h.servs.DestinationsService.PaginateDestinations(
@@ -38,7 +38,7 @@ func (h *handlers) listDestinationsHandler(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return htmxserver.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	return echoutil.RenderNodx(

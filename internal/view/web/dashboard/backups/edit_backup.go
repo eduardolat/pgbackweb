@@ -8,7 +8,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/staticdata"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
+	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
@@ -21,7 +21,7 @@ func (h *handlers) editBackupHandler(c echo.Context) error {
 
 	backupID, err := uuid.Parse(c.Param("backupID"))
 	if err != nil {
-		return htmxserver.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	var formData struct {
@@ -39,10 +39,10 @@ func (h *handlers) editBackupHandler(c echo.Context) error {
 		OptNoComments  string `form:"opt_no_comments" validate:"required,oneof=true false"`
 	}
 	if err := c.Bind(&formData); err != nil {
-		return htmxserver.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmxserver.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	_, err = h.servs.BackupsService.UpdateBackup(
@@ -63,10 +63,10 @@ func (h *handlers) editBackupHandler(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return htmxserver.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
-	return htmxserver.RespondAlertWithRefresh(c, "Backup updated")
+	return respondhtmx.AlertWithRefresh(c, "Backup updated")
 }
 
 func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) nodx.Node {

@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
+	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
@@ -15,14 +15,14 @@ import (
 func (h *handlers) manualRunHandler(c echo.Context) error {
 	backupID, err := uuid.Parse(c.Param("backupID"))
 	if err != nil {
-		return htmxserver.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	go func() {
 		_ = h.servs.ExecutionsService.RunExecution(context.Background(), backupID)
 	}()
 
-	return htmxserver.RespondToastSuccess(c, "Backup started, check the backup executions for more details")
+	return respondhtmx.ToastSuccess(c, "Backup started, check the backup executions for more details")
 }
 
 func manualRunbutton(backupID uuid.UUID) nodx.Node {
