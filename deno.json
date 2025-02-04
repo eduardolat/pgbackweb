@@ -1,0 +1,18 @@
+{
+  "fmt": {
+    "exclude": [
+      "./internal/view/static/libs/**/*"
+    ]
+  },
+  "lint": {
+    "exclude": [
+      "./internal/view/static/libs/**/*"
+    ],
+    "rules": {
+      "exclude": [
+        "no-window",
+        "no-window-prefix"
+      ]
+    }
+  }
+}

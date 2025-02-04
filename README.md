@@ -30,7 +30,8 @@
 
 ## Why PG Back Web?
 
-PG Back Web isn't just another backup tool. It's your trusted ally in ensuring the security and availability of your PostgreSQL data:
+PG Back Web isn't just another backup tool. It's your trusted ally in ensuring
+the security and availability of your PostgreSQL data:
 
 - 🎯 **Designed for everyone**: From individual developers to teams.
 - ⏱️ **Save time**: Automate your backups and forget about manual tasks.
@@ -38,23 +39,33 @@ PG Back Web isn't just another backup tool. It's your trusted ally in ensuring t
 
 ## Features
 
-- 📦 **Intuitive web interface**: Manage your backups with ease, no database expertise required.
-- 📅 **Scheduled backups**: Set it and forget it. PG Back Web takes care of the rest.
-- 📈 **Backup monitoring**: Visualize the status of your backups with execution logs.
-- 📤 **Instant download & restore**: Restore and download your backups when you need them, directly from the web interface.
+- 📦 **Intuitive web interface**: Manage your backups with ease, no database
+  expertise required.
+- 📅 **Scheduled backups**: Set it and forget it. PG Back Web takes care of the
+  rest.
+- 📈 **Backup monitoring**: Visualize the status of your backups with execution
+  logs.
+- 📤 **Instant download & restore**: Restore and download your backups when you
+  need them, directly from the web interface.
 - 🖥 **Multi-version support**: Compatible with PostgreSQL 13, 14, 15, and 16.
-- 📁 **Local & S3 storage**: Store backups locally or add as many S3 buckets as you want for greater flexibility.
-- ❤️‍🩹 **Health checks**: Automatically check the health of your databases and destinations.
-- 🔔 **Webhooks**: Get notified when a backup finishes, failed, health check fails, or other events.
+- 📁 **Local & S3 storage**: Store backups locally or add as many S3 buckets as
+  you want for greater flexibility.
+- ❤️‍🩹 **Health checks**: Automatically check the health of your databases and
+  destinations.
+- 🔔 **Webhooks**: Get notified when a backup finishes, failed, health check
+  fails, or other events.
 - 🔒 **Security first**: PGP encryption to protect your sensitive information.
-- 🛡️ **Open-source trust**: Open-source code under MIT license, backed by the robust pg_dump tool.
+- 🛡️ **Open-source trust**: Open-source code under MIT license, backed by the
+  robust pg_dump tool.
 - 🌚 **Dark mode**: Because we all love dark mode.
 
 ## Installation
 
-PG Back Web is available as a Docker image. You just need to set 3 environment variables and you're good to go!
+PG Back Web is available as a Docker image. You just need to set 3 environment
+variables and you're good to go!
 
-Here's an example of how you can run PG Back Web with Docker Compose, feel free to adapt it to your needs:
+Here's an example of how you can run PG Back Web with Docker Compose, feel free
+to adapt it to your needs:
 
 ```yaml
 services:
@@ -89,17 +100,23 @@ services:
       retries: 5
 ```
 
-You can watch [this youtube video](https://www.youtube.com/watch?v=vf7SLrSO8sw) to see how easy it is to set up PG Back Web.
+You can watch [this youtube video](https://www.youtube.com/watch?v=vf7SLrSO8sw)
+to see how easy it is to set up PG Back Web.
 
 ## Configuration
 
 You only need to configure the following environment variables:
 
-- `PBW_ENCRYPTION_KEY`: Your encryption key. Generate a strong one and store it in a safe place, as PG Back Web uses it to encrypt sensitive data.
+- `PBW_ENCRYPTION_KEY`: Your encryption key. Generate a strong one and store it
+  in a safe place, as PG Back Web uses it to encrypt sensitive data.
 
-- `PBW_POSTGRES_CONN_STRING`: The connection string for the PostgreSQL database that will store PG Back Web data.
+- `PBW_POSTGRES_CONN_STRING`: The connection string for the PostgreSQL database
+  that will store PG Back Web data.
 
-- `TZ`: Your [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)  (optional). Default is `UTC`. This impacts logging, backup filenames and default timezone in the web interface.
+- `TZ`: Your
+  [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)
+  (optional). Default is `UTC`. This impacts logging, backup filenames and
+  default timezone in the web interface.
 
 ## Screenshot
 
@@ -107,17 +124,20 @@ You only need to configure the following environment variables:
 
 ## Reset password
 
-You can reset your PG Back Web password by running the following command in the server where PG Back Web is running:
+You can reset your PG Back Web password by running the following command in the
+server where PG Back Web is running:
 
 ```bash
 docker exec -it <container_name_or_id> sh -c change-password
 ```
 
-You should replace `<container_name_or_id>` with the name or ID of the PG Back Web container, then just follow the instructions.
+You should replace `<container_name_or_id>` with the name or ID of the PG Back
+Web container, then just follow the instructions.
 
 ## Next steps
 
-In this link you can see a list of features that have been confirmed for future updates:
+In this link you can see a list of features that have been confirmed for future
+updates:
 
 <a href="https://github.com/eduardolat/pgbackweb/issues?q=is%3Aissue+is%3Aopen+label%3A%22confirmed+next+step%22">
   Next steps ⏭️
@@ -125,12 +145,16 @@ In this link you can see a list of features that have been confirmed for future 
 
 ## Join the Community
 
-Got ideas to improve PG Back Web? Contribute to the project! Every suggestion and pull request is welcome.
+Got ideas to improve PG Back Web? Contribute to the project! Every suggestion
+and pull request is welcome.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
+for details.
 
 ---
 
-💖 **Love PG Back Web?** Give us a ⭐ on GitHub and share the project with your colleagues. Together, we can make PostgreSQL backups more accessible to everyone!
+💖 **Love PG Back Web?** Give us a ⭐ on GitHub and share the project with your
+colleagues. Together, we can make PostgreSQL backups more accessible to
+everyone!

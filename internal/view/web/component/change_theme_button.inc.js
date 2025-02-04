@@ -1,19 +1,19 @@
 window.alpineChangeThemeButton = function () {
   return {
-    theme: '',
+    theme: "",
 
-    loadTheme () {
-      const theme = window.getTheme()
-      this.theme = theme || 'system'
+    loadTheme() {
+      const theme = window.getTheme();
+      this.theme = theme || "system";
     },
 
-    setTheme (theme) {
-      window.setTheme(theme)
-      this.theme = theme || 'system'
+    setTheme(theme) {
+      window.setTheme(theme);
+      this.theme = theme || "system";
     },
 
-    init () {
-      this.loadTheme()
-    }
-  }
-}
+    init() {
+      this.loadTheme();
+    },
+  };
+};
