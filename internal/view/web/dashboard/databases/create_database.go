@@ -6,9 +6,10 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmxs"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
+	htmx "github.com/nodxdev/nodxgo-htmx"
 	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
@@ -23,10 +24,10 @@ func (h *handlers) createDatabaseHandler(c echo.Context) error {
 
 	var formData createDatabaseDTO
 	if err := c.Bind(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return htmxs.RespondToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return htmxs.RespondToastError(c, err.Error())
 	}
 
 	_, err := h.servs.DatabasesService.CreateDatabase(
@@ -37,10 +38,10 @@ func (h *handlers) createDatabaseHandler(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return htmxs.RespondToastError(c, err.Error())
 	}
 
-	return htmx.RespondRedirect(c, "/dashboard/databases")
+	return htmxs.RespondRedirect(c, "/dashboard/databases")
 }
 
 func createDatabaseButton() nodx.Node {

@@ -1,4 +1,4 @@
-package htmx
+package htmxs
 
 import (
 	"github.com/labstack/echo/v4"
