@@ -50,7 +50,7 @@ services:
       - "9090:9090"
     environment:
       MINIO_ROOT_USER: "root"
-      MINIO_ROOT_PASSWORD: "root"
+      MINIO_ROOT_PASSWORD: "password"
     volumes:
       - pbw_vol_minio:/data
     command: minio server /data/minio --console-address ":9090"
