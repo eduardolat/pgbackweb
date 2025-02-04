@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/labstack/echo/v4"
+	htmx "github.com/nodxdev/nodxgo-htmx"
 )
 
 // setCustomTrigger will set a custom trigger.
@@ -15,19 +16,19 @@ func setCustomTrigger(c echo.Context, key string, value string) {
 	value = strings.ReplaceAll(value, `"`, `\"`)
 	value = url.PathEscape(value)
 	s := fmt.Sprintf(`{"%s": "%s"}`, key, value)
-	ServerSetTrigger(c, s)
+	htmx.ServerSetTrigger(c.Response().Header(), s)
 }
 
 // RespondAlert shows an alert.
 func RespondAlert(c echo.Context, message string) error {
-	ServerSetReswap(c, "none")
+	htmx.ServerSetReswap(c.Response().Header(), "none")
 	setCustomTrigger(c, "ctm_alert", message)
 	return c.NoContent(http.StatusOK)
 }
 
 // RespondAlertWithRefresh shows an alert and refreshes the page using HTMX.
 func RespondAlertWithRefresh(c echo.Context, message string) error {
-	ServerSetReswap(c, "none")
+	htmx.ServerSetReswap(c.Response().Header(), "none")
 	setCustomTrigger(c, "ctm_alert_with_refresh", message)
 	return c.NoContent(http.StatusOK)
 }
@@ -36,7 +37,7 @@ func RespondAlertWithRefresh(c echo.Context, message string) error {
 func RespondAlertWithRedirect(c echo.Context, message, url string) error {
 	msg := fmt.Sprintf("%s-::-::-%s", message, url)
 
-	ServerSetReswap(c, "none")
+	htmx.ServerSetReswap(c.Response().Header(), "none")
 	setCustomTrigger(c, "ctm_alert_with_redirect", msg)
 	return c.NoContent(http.StatusOK)
 }
@@ -44,7 +45,7 @@ func RespondAlertWithRedirect(c echo.Context, message, url string) error {
 // RespondToastSuccess reswaps the HTMX to none and shows an success message
 // inside a toast.
 func RespondToastSuccess(c echo.Context, message string) error {
-	ServerSetReswap(c, "none")
+	htmx.ServerSetReswap(c.Response().Header(), "none")
 	setCustomTrigger(c, "ctm_toast_success", message)
 	return c.NoContent(http.StatusOK)
 }
@@ -52,7 +53,7 @@ func RespondToastSuccess(c echo.Context, message string) error {
 // RespondToastError reswaps the HTMX to none and shows an error message inside
 // a toast.
 func RespondToastError(c echo.Context, message string) error {
-	ServerSetReswap(c, "none")
+	htmx.ServerSetReswap(c.Response().Header(), "none")
 	setCustomTrigger(c, "ctm_toast_error", message)
 	return c.NoContent(http.StatusOK)
 }
@@ -60,7 +61,7 @@ func RespondToastError(c echo.Context, message string) error {
 // RespondToastSuccessInfinite reswaps the HTMX to none and shows an success
 // message inside an infinite toast.
 func RespondToastSuccessInfinite(c echo.Context, message string) error {
-	ServerSetReswap(c, "none")
+	htmx.ServerSetReswap(c.Response().Header(), "none")
 	setCustomTrigger(c, "ctm_toast_success_infinite", message)
 	return c.NoContent(http.StatusOK)
 }
@@ -68,21 +69,21 @@ func RespondToastSuccessInfinite(c echo.Context, message string) error {
 // RespondToastErrorInfinite reswaps the HTMX to none and shows an error message
 // inside an infinite toast.
 func RespondToastErrorInfinite(c echo.Context, message string) error {
-	ServerSetReswap(c, "none")
+	htmx.ServerSetReswap(c.Response().Header(), "none")
 	setCustomTrigger(c, "ctm_toast_error_infinite", message)
 	return c.NoContent(http.StatusOK)
 }
 
 // RespondRedirect redirects the user to the given URL using HTMX.
 func RespondRedirect(c echo.Context, url string) error {
-	ServerSetReswap(c, "none")
-	ServerSetRedirect(c, url)
+	htmx.ServerSetReswap(c.Response().Header(), "none")
+	htmx.ServerSetRedirect(c.Response().Header(), url)
 	return c.NoContent(http.StatusOK)
 }
 
 // RespondRefresh refreshes the page using HTMX.
 func RespondRefresh(c echo.Context) error {
-	ServerSetReswap(c, "none")
-	ServerSetRefresh(c)
+	htmx.ServerSetReswap(c.Response().Header(), "none")
+	htmx.ServerSetRefresh(c.Response().Header(), "true")
 	return c.NoContent(http.StatusOK)
 }
