@@ -7,7 +7,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/reqctx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmxs"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
 	htmx "github.com/nodxdev/nodxgo-htmx"
@@ -25,10 +25,10 @@ func (h *handlers) updateUserHandler(c echo.Context) error {
 		PasswordConfirmation string `form:"password_confirmation" validate:"omitempty,eqfield=Password"`
 	}
 	if err := c.Bind(&formData); err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	_, err := h.servs.UsersService.UpdateUser(ctx, dbgen.UsersServiceUpdateUserParams{
@@ -38,10 +38,10 @@ func (h *handlers) updateUserHandler(c echo.Context) error {
 		Password: sql.NullString{String: formData.Password, Valid: formData.Password != ""},
 	})
 	if err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
-	return htmxs.RespondToastSuccess(c, "Profile updated")
+	return htmxserver.RespondToastSuccess(c, "Profile updated")
 }
 
 func updateUserForm(user dbgen.User) nodx.Node {

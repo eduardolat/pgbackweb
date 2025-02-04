@@ -6,7 +6,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmxs"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
@@ -19,15 +19,15 @@ func (h *handlers) editDestinationHandler(c echo.Context) error {
 
 	destinationID, err := uuid.Parse(c.Param("destinationID"))
 	if err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	var formData createDestinationDTO
 	if err := c.Bind(&formData); err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	_, err = h.servs.DestinationsService.UpdateDestination(
@@ -42,10 +42,10 @@ func (h *handlers) editDestinationHandler(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
-	return htmxs.RespondAlertWithRefresh(c, "Destination updated")
+	return htmxserver.RespondAlertWithRefresh(c, "Destination updated")
 }
 
 func editDestinationButton(

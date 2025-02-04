@@ -4,7 +4,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmxs"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
 	htmx "github.com/nodxdev/nodxgo-htmx"
@@ -25,10 +25,10 @@ func (h *handlers) createDestinationHandler(c echo.Context) error {
 
 	var formData createDestinationDTO
 	if err := c.Bind(&formData); err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	_, err := h.servs.DestinationsService.CreateDestination(
@@ -42,10 +42,10 @@ func (h *handlers) createDestinationHandler(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
-	return htmxs.RespondRedirect(c, "/dashboard/destinations")
+	return htmxserver.RespondRedirect(c, "/dashboard/destinations")
 }
 
 func createDestinationButton() nodx.Node {

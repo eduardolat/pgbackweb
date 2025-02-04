@@ -8,7 +8,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmxs"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
@@ -32,10 +32,10 @@ func (h *handlers) createWebhookHandler(c echo.Context) error {
 
 	var formData createWebhookDTO
 	if err := c.Bind(&formData); err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	_, err := h.servs.WebhooksService.CreateWebhook(
@@ -51,10 +51,10 @@ func (h *handlers) createWebhookHandler(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
-	return htmxs.RespondRedirect(c, "/dashboard/webhooks")
+	return htmxserver.RespondRedirect(c, "/dashboard/webhooks")
 }
 
 func (h *handlers) createWebhookFormHandler(c echo.Context) error {
@@ -62,17 +62,17 @@ func (h *handlers) createWebhookFormHandler(c echo.Context) error {
 
 	databases, err := h.servs.DatabasesService.GetAllDatabases(ctx)
 	if err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	destinations, err := h.servs.DestinationsService.GetAllDestinations(ctx)
 	if err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	backups, err := h.servs.BackupsService.GetAllBackups(ctx)
 	if err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	return echoutil.RenderNodx(c, http.StatusOK, createWebhookForm(

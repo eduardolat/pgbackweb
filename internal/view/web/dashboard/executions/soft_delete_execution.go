@@ -2,7 +2,7 @@ package executions
 
 import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmxs"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
@@ -15,15 +15,15 @@ func (h *handlers) deleteExecutionHandler(c echo.Context) error {
 
 	executionID, err := uuid.Parse(c.Param("executionID"))
 	if err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	err = h.servs.ExecutionsService.SoftDeleteExecution(ctx, executionID)
 	if err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
-	return htmxs.RespondRefresh(c)
+	return htmxserver.RespondRefresh(c)
 }
 
 func deleteExecutionButton(executionID uuid.UUID) nodx.Node {

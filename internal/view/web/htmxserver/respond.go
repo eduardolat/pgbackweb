@@ -1,4 +1,4 @@
-package htmxs
+package htmxserver
 
 import (
 	"fmt"

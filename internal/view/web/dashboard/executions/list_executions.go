@@ -12,7 +12,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmxs"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
@@ -31,10 +31,10 @@ func (h *handlers) listExecutionsHandler(c echo.Context) error {
 
 	var queryData listExecsQueryData
 	if err := c.Bind(&queryData); err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 	if err := validate.Struct(&queryData); err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	pagination, executions, err := h.servs.ExecutionsService.PaginateExecutions(
@@ -53,7 +53,7 @@ func (h *handlers) listExecutionsHandler(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return htmxs.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	return echoutil.RenderNodx(
