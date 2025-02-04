@@ -3,20 +3,20 @@ package component
 import (
 	"bytes"
 
-	"github.com/maragudk/gomponents"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
 // RenderableGroup renders a group of nodes without a parent element.
 //
-// This is because gomponents.Group() cannot be directly rendered and
+// This is because nodx.Group() cannot be directly rendered and
 // needs to be wrapped in a parent element.
-func RenderableGroup(children []gomponents.Node) gomponents.Node {
+func RenderableGroup(children []nodx.Node) nodx.Node {
 	buf := bytes.Buffer{}
 	for _, child := range children {
 		err := child.Render(&buf)
 		if err != nil {
-			return gomponents.Raw("Error rendering group")
+			return nodx.Raw("Error rendering group")
 		}
 	}
-	return gomponents.Raw(buf.String())
+	return nodx.Raw(buf.String())
 }

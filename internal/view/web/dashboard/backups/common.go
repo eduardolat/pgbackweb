@@ -3,15 +3,13 @@ package backups
 import (
 	"time"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/components"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
-func localBackupsHelp() []gomponents.Node {
-	return []gomponents.Node{
+func localBackupsHelp() []nodx.Node {
+	return []nodx.Node{
 		component.H3Text("Local backups"),
 		component.PText(`
 			Local backups are stored in the server where PG Back Web is running.
@@ -19,8 +17,8 @@ func localBackupsHelp() []gomponents.Node {
 			volume to this directory to persist the backups in any way you want.
 		`),
 
-		html.Div(
-			html.Class("mt-2"),
+		nodx.Div(
+			nodx.Class("mt-2"),
 			component.H3Text("Remote backups"),
 			component.PText(`
 				Remote backups are stored in a destination. A destination is a remote
@@ -31,8 +29,8 @@ func localBackupsHelp() []gomponents.Node {
 	}
 }
 
-func cronExpressionHelp() []gomponents.Node {
-	return []gomponents.Node{
+func cronExpressionHelp() []nodx.Node {
+	return []nodx.Node{
 		component.PText(`
 			A cron expression is a string used to define a schedule for running tasks
 			in Unix-like operating systems. It consists of five fields representing
@@ -40,19 +38,19 @@ func cronExpressionHelp() []gomponents.Node {
 			Cron expressions enable precise scheduling of periodic tasks.
 		`),
 
-		html.Div(
-			html.Class("mt-4 flex justify-end items-center space-x-1"),
-			html.A(
-				html.Href("https://en.wikipedia.org/wiki/Cron"),
-				html.Target("_blank"),
-				html.Class("btn btn-ghost"),
+		nodx.Div(
+			nodx.Class("mt-4 flex justify-end items-center space-x-1"),
+			nodx.A(
+				nodx.Href("https://en.wikipedia.org/wiki/Cron"),
+				nodx.Target("_blank"),
+				nodx.Class("btn btn-ghost"),
 				component.SpanText("Learn more"),
 				lucide.ExternalLink(),
 			),
-			html.A(
-				html.Href("https://crontab.guru/examples.html"),
-				html.Target("_blank"),
-				html.Class("btn btn-ghost"),
+			nodx.A(
+				nodx.Href("https://crontab.guru/examples.html"),
+				nodx.Target("_blank"),
+				nodx.Class("btn btn-ghost"),
 				component.SpanText("Examples & common expressions"),
 				lucide.ExternalLink(),
 			),
@@ -60,14 +58,14 @@ func cronExpressionHelp() []gomponents.Node {
 	}
 }
 
-func timezoneFilenamesHelp() []gomponents.Node {
+func timezoneFilenamesHelp() []nodx.Node {
 	serverTimezone := time.Now().Location().String()
 
-	return []gomponents.Node{
+	return []nodx.Node{
 		component.PText(`
 			This is the time zone in which the cron expression will be evaluated.
 		`),
-		html.P(
+		nodx.P(
 			component.SpanText(`
 				Backup filenames will always use the server timezone (currently 
 			`),
@@ -75,12 +73,12 @@ func timezoneFilenamesHelp() []gomponents.Node {
 			component.SpanText(")."),
 		),
 
-		html.Div(
-			html.Class("mt-4 flex justify-end items-center"),
-			html.A(
-				html.Href("https://github.com/eduardolat/pgbackweb?tab=readme-ov-file#configuration"),
-				html.Target("_blank"),
-				html.Class("btn btn-ghost"),
+		nodx.Div(
+			nodx.Class("mt-4 flex justify-end items-center"),
+			nodx.A(
+				nodx.Href("https://github.com/eduardolat/pgbackweb?tab=readme-ov-file#configuration"),
+				nodx.Target("_blank"),
+				nodx.Class("btn btn-ghost"),
 				component.SpanText("Learn more in project README"),
 				lucide.ExternalLink(),
 			),
@@ -88,8 +86,8 @@ func timezoneFilenamesHelp() []gomponents.Node {
 	}
 }
 
-func destinationDirectoryHelp() []gomponents.Node {
-	return []gomponents.Node{
+func destinationDirectoryHelp() []nodx.Node {
+	return []nodx.Node{
 		component.PText(`
 			The destination directory is the directory where the backups will be
 			stored. This directory is relative to the base directory of the
@@ -97,15 +95,15 @@ func destinationDirectoryHelp() []gomponents.Node {
 			spaces, and should not end with a slash.
 		`),
 
-		html.Div(
-			html.Class("mt-2"),
+		nodx.Div(
+			nodx.Class("mt-2"),
 			component.H3Text("Local backups"),
 			component.PText(`
 				For local backups, the base directory is /backups. So, the backup files
 				will be stored in:
 			`),
-			html.Div(
-				components.Classes{
+			nodx.Div(
+				nodx.ClassMap{
 					"whitespace-nowrap p-1": true,
 					"overflow-x-scroll":     true,
 					"font-mono":             true,
@@ -116,15 +114,15 @@ func destinationDirectoryHelp() []gomponents.Node {
 			),
 		),
 
-		html.Div(
-			html.Class("mt-2"),
+		nodx.Div(
+			nodx.Class("mt-2"),
 			component.H3Text("Remote backups"),
 			component.PText(`
 				For remote backups, the base directory is the root of the bucket. So,
 				the backup files will be stored in:
 			`),
-			html.Div(
-				components.Classes{
+			nodx.Div(
+				nodx.ClassMap{
 					"whitespace-nowrap p-1": true,
 					"overflow-x-scroll":     true,
 					"font-mono":             true,
@@ -137,10 +135,10 @@ func destinationDirectoryHelp() []gomponents.Node {
 	}
 }
 
-func retentionDaysHelp() []gomponents.Node {
-	return []gomponents.Node{
-		html.Div(
-			html.Class("space-y-2"),
+func retentionDaysHelp() []nodx.Node {
+	return []nodx.Node{
+		nodx.Div(
+			nodx.Class("space-y-2"),
 
 			component.PText(`
 				Retention days specifies the number of days to keep backup files before
@@ -155,10 +153,10 @@ func retentionDaysHelp() []gomponents.Node {
 	}
 }
 
-func pgDumpOptionsHelp() []gomponents.Node {
-	return []gomponents.Node{
-		html.Div(
-			html.Class("space-y-2"),
+func pgDumpOptionsHelp() []nodx.Node {
+	return []nodx.Node{
+		nodx.Div(
+			nodx.Class("space-y-2"),
 
 			component.PText(`
 				This software uses the battle tested pg_dump utility to create backups. It
@@ -170,14 +168,14 @@ func pgDumpOptionsHelp() []gomponents.Node {
 				PG Back Web does not pass any options so the backups are full backups.
 			`),
 
-			html.Div(
-				html.Class("flex justify-end"),
-				html.A(
-					html.Class("btn btn-ghost"),
-					html.Href("https://www.postgresql.org/docs/current/app-pgdump.html"),
-					html.Target("_blank"),
+			nodx.Div(
+				nodx.Class("flex justify-end"),
+				nodx.A(
+					nodx.Class("btn btn-ghost"),
+					nodx.Href("https://www.postgresql.org/docs/current/app-pgdump.html"),
+					nodx.Target("_blank"),
 					component.SpanText("Learn more in pg_dump documentation"),
-					lucide.ExternalLink(html.Class("ml-1")),
+					lucide.ExternalLink(nodx.Class("ml-1")),
 				),
 			),
 		),

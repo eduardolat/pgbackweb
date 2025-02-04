@@ -1,33 +1,32 @@
 package component
 
 import (
-	lucide "github.com/eduardolat/gomponents-lucide"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 type HelpButtonModalParams struct {
 	ModalTitle string
 	ModalSize  size
-	Children   []gomponents.Node
+	Children   []nodx.Node
 }
 
-func HelpButtonModal(params HelpButtonModalParams) gomponents.Node {
+func HelpButtonModal(params HelpButtonModalParams) nodx.Node {
 	mo := Modal(ModalParams{
 		Size:    params.ModalSize,
 		Title:   params.ModalTitle,
 		Content: params.Children,
 	})
 
-	button := html.Button(
+	button := nodx.Button(
 		mo.OpenerAttr,
-		html.Class("btn btn-neutral btn-ghost btn-circle btn-sm"),
-		html.Type("button"),
+		nodx.Class("btn btn-neutral btn-ghost btn-circle btn-sm"),
+		nodx.Type("button"),
 		lucide.CircleHelp(),
 	)
 
-	return html.Div(
-		html.Class("inline-block"),
+	return nodx.Div(
+		nodx.Class("inline-block"),
 		mo.HTML,
 		button,
 	)

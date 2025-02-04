@@ -12,8 +12,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
 type execsQueryData struct {
@@ -33,33 +32,33 @@ func (h *handlers) indexPageHandler(c echo.Context) error {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	return echoutil.RenderGomponent(c, http.StatusOK, indexPage(reqCtx, queryData))
+	return echoutil.RenderNodx(c, http.StatusOK, indexPage(reqCtx, queryData))
 }
 
-func indexPage(reqCtx reqctx.Ctx, queryData execsQueryData) gomponents.Node {
-	content := []gomponents.Node{
+func indexPage(reqCtx reqctx.Ctx, queryData execsQueryData) nodx.Node {
+	content := []nodx.Node{
 		component.H1Text("Executions"),
 		component.CardBox(component.CardBoxParams{
 			Class: "mt-4",
-			Children: []gomponents.Node{
-				html.Div(
-					html.Class("overflow-x-auto"),
-					html.Table(
-						html.Class("table text-nowrap"),
-						html.THead(
-							html.Tr(
-								html.Th(html.Class("w-1")),
-								html.Th(component.SpanText("Status")),
-								html.Th(component.SpanText("Backup")),
-								html.Th(component.SpanText("Database")),
-								html.Th(component.SpanText("Destination")),
-								html.Th(component.SpanText("Started at")),
-								html.Th(component.SpanText("Finished at")),
-								html.Th(component.SpanText("Duration")),
-								html.Th(component.SpanText("File size")),
+			Children: []nodx.Node{
+				nodx.Div(
+					nodx.Class("overflow-x-auto"),
+					nodx.Table(
+						nodx.Class("table text-nowrap"),
+						nodx.Thead(
+							nodx.Tr(
+								nodx.Th(nodx.Class("w-1")),
+								nodx.Th(component.SpanText("Status")),
+								nodx.Th(component.SpanText("Backup")),
+								nodx.Th(component.SpanText("Database")),
+								nodx.Th(component.SpanText("Destination")),
+								nodx.Th(component.SpanText("Started at")),
+								nodx.Th(component.SpanText("Finished at")),
+								nodx.Th(component.SpanText("Duration")),
+								nodx.Th(component.SpanText("File size")),
 							),
 						),
-						html.TBody(
+						nodx.Tbody(
 							component.SkeletonTr(8),
 							htmx.HxGet(func() string {
 								url := "/dashboard/executions/list?page=1"

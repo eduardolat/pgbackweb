@@ -1,14 +1,13 @@
 package destinations
 
 import (
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 type createDestinationDTO struct {
@@ -48,24 +47,24 @@ func (h *handlers) createDestinationHandler(c echo.Context) error {
 	return htmx.RespondRedirect(c, "/dashboard/destinations")
 }
 
-func createDestinationButton() gomponents.Node {
-	htmxAttributes := func(url string) gomponents.Node {
-		return gomponents.Group([]gomponents.Node{
+func createDestinationButton() nodx.Node {
+	htmxAttributes := func(url string) nodx.Node {
+		return nodx.Group(
 			htmx.HxPost(url),
 			htmx.HxInclude("#create-destination-form"),
 			htmx.HxDisabledELT(".create-destination-btn"),
 			htmx.HxIndicator("#create-destination-loading"),
 			htmx.HxValidate("true"),
-		})
+		)
 	}
 
 	mo := component.Modal(component.ModalParams{
 		Size:  component.SizeMd,
 		Title: "Create destination",
-		Content: []gomponents.Node{
-			html.Form(
-				html.ID("create-destination-form"),
-				html.Class("space-y-2"),
+		Content: []nodx.Node{
+			nodx.FormEl(
+				nodx.Id("create-destination-form"),
+				nodx.Class("space-y-2"),
 
 				component.InputControl(component.InputControlParams{
 					Name:        "name",
@@ -119,24 +118,24 @@ func createDestinationButton() gomponents.Node {
 				}),
 			),
 
-			html.Div(
-				html.Class("flex justify-between items-center pt-4"),
-				html.Div(
-					html.Button(
+			nodx.Div(
+				nodx.Class("flex justify-between items-center pt-4"),
+				nodx.Div(
+					nodx.Button(
 						htmxAttributes("/dashboard/destinations/test"),
-						html.Class("create-destination-btn btn btn-neutral btn-outline"),
-						html.Type("button"),
+						nodx.Class("create-destination-btn btn btn-neutral btn-outline"),
+						nodx.Type("button"),
 						component.SpanText("Test connection"),
 						lucide.PlugZap(),
 					),
 				),
-				html.Div(
-					html.Class("flex justify-end items-center space-x-2"),
+				nodx.Div(
+					nodx.Class("flex justify-end items-center space-x-2"),
 					component.HxLoadingMd("create-destination-loading"),
-					html.Button(
+					nodx.Button(
 						htmxAttributes("/dashboard/destinations"),
-						html.Class("create-destination-btn btn btn-primary"),
-						html.Type("button"),
+						nodx.Class("create-destination-btn btn btn-primary"),
+						nodx.Type("button"),
 						component.SpanText("Save"),
 						lucide.Save(),
 					),
@@ -145,15 +144,15 @@ func createDestinationButton() gomponents.Node {
 		},
 	})
 
-	button := html.Button(
+	button := nodx.Button(
 		mo.OpenerAttr,
-		html.Class("btn btn-primary"),
+		nodx.Class("btn btn-primary"),
 		component.SpanText("Create destination"),
 		lucide.Plus(),
 	)
 
-	return html.Div(
-		html.Class("inline-block"),
+	return nodx.Div(
+		nodx.Class("inline-block"),
 		mo.HTML,
 		button,
 	)

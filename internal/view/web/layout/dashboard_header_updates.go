@@ -3,16 +3,15 @@ package layout
 import (
 	"fmt"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/config"
 	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
-func dashboardHeaderUpdates() gomponents.Node {
-	return html.A(
+func dashboardHeaderUpdates() nodx.Node {
+	return nodx.A(
 		alpine.XData("alpineDashboardHeaderUpdates()"),
 		alpine.XCloak(),
 		alpine.XShow(fmt.Sprintf(
@@ -20,12 +19,12 @@ func dashboardHeaderUpdates() gomponents.Node {
 			config.Version,
 		)),
 
-		html.Class("btn btn-warning"),
-		html.Href("https://github.com/eduardolat/pgbackweb/releases"),
-		html.Target("_blank"),
+		nodx.Class("btn btn-warning"),
+		nodx.Href("https://github.com/eduardolat/pgbackweb/releases"),
+		nodx.Target("_blank"),
 		lucide.ExternalLink(),
 		component.SpanText("Update available"),
-		html.Span(
+		nodx.SpanEl(
 			alpine.XText("'( ' + latestRelease + ' )'"),
 		),
 	)

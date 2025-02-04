@@ -15,8 +15,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
 type listExecsQueryData struct {
@@ -56,7 +55,7 @@ func (h *handlers) listExecutionsHandler(c echo.Context) error {
 		return htmx.RespondToastError(c, err.Error())
 	}
 
-	return echoutil.RenderGomponent(
+	return echoutil.RenderNodx(
 		c, http.StatusOK, listExecutions(queryData, pagination, executions),
 	)
 }
@@ -65,7 +64,7 @@ func listExecutions(
 	queryData listExecsQueryData,
 	pagination paginateutil.PaginateResponse,
 	executions []dbgen.ExecutionsServicePaginateExecutionsRow,
-) gomponents.Node {
+) nodx.Node {
 	if len(executions) < 1 {
 		return component.EmptyResultsTr(component.EmptyResultsParams{
 			Title:    "No executions found",
@@ -73,40 +72,40 @@ func listExecutions(
 		})
 	}
 
-	trs := []gomponents.Node{}
+	trs := []nodx.Node{}
 	for _, execution := range executions {
-		trs = append(trs, html.Tr(
-			html.Td(component.OptionsDropdown(
+		trs = append(trs, nodx.Tr(
+			nodx.Td(component.OptionsDropdown(
 				showExecutionButton(execution),
 				restoreExecutionButton(execution),
 			)),
-			html.Td(component.StatusBadge(execution.Status)),
-			html.Td(component.SpanText(execution.BackupName)),
-			html.Td(component.SpanText(execution.DatabaseName)),
-			html.Td(component.PrettyDestinationName(
+			nodx.Td(component.StatusBadge(execution.Status)),
+			nodx.Td(component.SpanText(execution.BackupName)),
+			nodx.Td(component.SpanText(execution.DatabaseName)),
+			nodx.Td(component.PrettyDestinationName(
 				execution.BackupIsLocal, execution.DestinationName,
 			)),
-			html.Td(component.SpanText(
+			nodx.Td(component.SpanText(
 				execution.StartedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 			)),
-			html.Td(
-				gomponents.If(
+			nodx.Td(
+				nodx.If(
 					execution.FinishedAt.Valid,
 					component.SpanText(
 						execution.FinishedAt.Time.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 					),
 				),
 			),
-			html.Td(
-				gomponents.If(
+			nodx.Td(
+				nodx.If(
 					execution.FinishedAt.Valid,
 					component.SpanText(
 						execution.FinishedAt.Time.Sub(execution.StartedAt).String(),
 					),
 				),
 			),
-			html.Td(
-				gomponents.If(
+			nodx.Td(
+				nodx.If(
 					execution.FileSize.Valid,
 					component.PrettyFileSize(execution.FileSize),
 				),
@@ -115,7 +114,7 @@ func listExecutions(
 	}
 
 	if pagination.HasNextPage {
-		trs = append(trs, html.Tr(
+		trs = append(trs, nodx.Tr(
 			htmx.HxGet(func() string {
 				url := "/dashboard/executions/list"
 				url = strutil.AddQueryParamToUrl(url, "page", fmt.Sprintf("%d", pagination.NextPage))

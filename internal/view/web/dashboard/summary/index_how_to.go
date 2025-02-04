@@ -1,52 +1,51 @@
 package summary
 
 import (
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
-func indexHowTo() gomponents.Node {
-	return html.Div(
+func indexHowTo() nodx.Node {
+	return nodx.Div(
 		alpine.XData("alpineSummaryHowToSlider()"),
 		alpine.XCloak(),
-		html.Class("mt-6 flex flex-col justify-center items-center mx-auto"),
+		nodx.Class("mt-6 flex flex-col justify-center items-center mx-auto"),
 
 		component.H2Text("How to use PG Back Web"),
 
 		component.CardBox(component.CardBoxParams{
 			Class: "mt-4 space-y-4 max-w-[600px]",
-			Children: []gomponents.Node{
-				html.Div(
-					html.Class("flex justify-center"),
-					html.Ul(
-						html.Class("steps"),
-						html.Li(
-							html.Class("step"),
+			Children: []nodx.Node{
+				nodx.Div(
+					nodx.Class("flex justify-center"),
+					nodx.Ul(
+						nodx.Class("steps"),
+						nodx.Li(
+							nodx.Class("step"),
 							alpine.XBind("class", "currentSlide >= 1 ? 'step-primary' : ''"),
-							gomponents.Text("Create database"),
+							nodx.Text("Create database"),
 						),
-						html.Li(
-							html.Class("step"),
+						nodx.Li(
+							nodx.Class("step"),
 							alpine.XBind("class", "currentSlide >= 2 ? 'step-primary' : ''"),
-							gomponents.Text("Create destination"),
+							nodx.Text("Create destination"),
 						),
-						html.Li(
-							html.Class("step"),
+						nodx.Li(
+							nodx.Class("step"),
 							alpine.XBind("class", "currentSlide >= 3 ? 'step-primary' : ''"),
-							gomponents.Text("Create backup"),
+							nodx.Text("Create backup"),
 						),
-						html.Li(
-							html.Class("step"),
+						nodx.Li(
+							nodx.Class("step"),
 							alpine.XBind("class", "currentSlide >= 4 ? 'step-primary' : ''"),
-							gomponents.Text("Wait for executions"),
+							nodx.Text("Wait for executions"),
 						),
 					),
 				),
 
-				html.Div(
+				nodx.Div(
 					alpine.XShow("currentSlide === 1"),
 					component.H3Text("Create database"),
 					component.PText(`
@@ -57,7 +56,7 @@ func indexHowTo() gomponents.Node {
 					`),
 				),
 
-				html.Div(
+				nodx.Div(
 					alpine.XShow("currentSlide === 2"),
 					component.H3Text("Create S3 destination (optional)"),
 					component.PText(`
@@ -70,7 +69,7 @@ func indexHowTo() gomponents.Node {
 					`),
 				),
 
-				html.Div(
+				nodx.Div(
 					alpine.XShow("currentSlide === 3"),
 					component.H3Text("Create backup"),
 					component.PText(`
@@ -82,7 +81,7 @@ func indexHowTo() gomponents.Node {
 					`),
 				),
 
-				html.Div(
+				nodx.Div(
 					alpine.XShow("currentSlide === 4"),
 					component.H3Text("Wait for executions"),
 					component.PText(`
@@ -96,19 +95,19 @@ func indexHowTo() gomponents.Node {
 					`),
 				),
 
-				html.Div(
-					html.Class("mt-4 flex justify-between"),
-					html.Button(
+				nodx.Div(
+					nodx.Class("mt-4 flex justify-between"),
+					nodx.Button(
 						alpine.XBind("disabled", "!hasPrevSlide"),
 						alpine.XOn("click", "prevSlide"),
-						html.Class("btn btn-neutral btn-ghost"),
+						nodx.Class("btn btn-neutral btn-ghost"),
 						lucide.ChevronLeft(),
 						component.SpanText("Previous"),
 					),
-					html.Button(
+					nodx.Button(
 						alpine.XBind("disabled", "!hasNextSlide"),
 						alpine.XOn("click", "nextSlide"),
-						html.Class("btn btn-neutral btn-ghost"),
+						nodx.Class("btn btn-neutral btn-ghost"),
 						component.SpanText("Next"),
 						lucide.ChevronRight(),
 					),

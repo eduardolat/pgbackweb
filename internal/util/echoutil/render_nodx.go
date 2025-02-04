@@ -12,9 +12,9 @@ type renderer interface {
 	Render(w io.Writer) error
 }
 
-// RenderGomponent renders a gomponents component to the response of
+// RenderNodx renders a NodX component to the response of
 // the echo context.
-func RenderGomponent(c echo.Context, code int, component renderer) error {
+func RenderNodx(c echo.Context, code int, component renderer) error {
 	if component == nil {
 		return c.NoContent(code)
 	}

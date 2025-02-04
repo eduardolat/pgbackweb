@@ -3,14 +3,13 @@ package component
 import (
 	"database/sql"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func PrettyDestinationName(
 	isLocal bool, destinationName sql.NullString,
-) gomponents.Node {
+) nodx.Node {
 	icon := lucide.Cloud
 	if !destinationName.Valid {
 		destinationName = sql.NullString{
@@ -27,8 +26,8 @@ func PrettyDestinationName(
 		}
 	}
 
-	return html.Span(
-		html.Class("inline flex justify-start items-center space-x-1 font-mono"),
+	return nodx.SpanEl(
+		nodx.Class("inline flex justify-start items-center space-x-1 font-mono"),
 		icon(),
 		SpanText(destinationName.String),
 	)

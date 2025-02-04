@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/service/databases"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
@@ -14,8 +13,8 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func (h *handlers) listDatabasesHandler(c echo.Context) error {
@@ -41,7 +40,7 @@ func (h *handlers) listDatabasesHandler(c echo.Context) error {
 		return htmx.RespondToastError(c, err.Error())
 	}
 
-	return echoutil.RenderGomponent(
+	return echoutil.RenderNodx(
 		c, http.StatusOK, listDatabases(pagination, databases),
 	)
 }
@@ -49,7 +48,7 @@ func (h *handlers) listDatabasesHandler(c echo.Context) error {
 func listDatabases(
 	pagination paginateutil.PaginateResponse,
 	databases []dbgen.DatabasesServicePaginateDatabasesRow,
-) gomponents.Node {
+) nodx.Node {
 	if len(databases) < 1 {
 		return component.EmptyResultsTr(component.EmptyResultsParams{
 			Title:    "No databases found",
@@ -57,17 +56,17 @@ func listDatabases(
 		})
 	}
 
-	trs := []gomponents.Node{}
+	trs := []nodx.Node{}
 	for _, database := range databases {
-		trs = append(trs, html.Tr(
-			html.Td(component.OptionsDropdown(
-				html.Div(
-					html.Class("flex flex-col space-y-1"),
+		trs = append(trs, nodx.Tr(
+			nodx.Td(component.OptionsDropdown(
+				nodx.Div(
+					nodx.Class("flex flex-col space-y-1"),
 					component.OptionsDropdownA(
-						html.Href(
+						nodx.Href(
 							fmt.Sprintf("/dashboard/executions?database=%s", database.ID),
 						),
-						html.Target("_blank"),
+						nodx.Target("_blank"),
 						lucide.List(),
 						component.SpanText("Show executions"),
 					),
@@ -81,29 +80,29 @@ func listDatabases(
 					deleteDatabaseButton(database.ID),
 				),
 			)),
-			html.Td(
-				html.Div(
-					html.Class("flex items-center space-x-2"),
+			nodx.Td(
+				nodx.Div(
+					nodx.Class("flex items-center space-x-2"),
 					component.HealthStatusPing(
 						database.TestOk, database.TestError, database.LastTestAt,
 					),
 					component.SpanText(database.Name),
 				),
 			),
-			html.Td(component.SpanText("PostgreSQL "+database.PgVersion)),
-			html.Td(
-				html.Class("space-x-1"),
+			nodx.Td(component.SpanText("PostgreSQL "+database.PgVersion)),
+			nodx.Td(
+				nodx.Class("space-x-1"),
 				component.CopyButtonSm(database.DecryptedConnectionString),
 				component.SpanText("****************"),
 			),
-			html.Td(component.SpanText(
+			nodx.Td(component.SpanText(
 				database.CreatedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 			)),
 		))
 	}
 
 	if pagination.HasNextPage {
-		trs = append(trs, html.Tr(
+		trs = append(trs, nodx.Tr(
 			htmx.HxGet(fmt.Sprintf(
 				"/dashboard/databases/list?page=%d", pagination.NextPage,
 			)),

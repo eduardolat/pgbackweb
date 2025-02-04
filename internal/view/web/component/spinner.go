@@ -3,14 +3,12 @@ package component
 import (
 	"fmt"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/components"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
-func spinner(size size) gomponents.Node {
-	return lucide.LoaderCircle(components.Classes{
+func spinner(size size) nodx.Node {
+	return lucide.LoaderCircle(nodx.ClassMap{
 		"animate-spin inline-block": true,
 		"size-5":                    size == SizeSm,
 		"size-8":                    size == SizeMd,
@@ -18,30 +16,30 @@ func spinner(size size) gomponents.Node {
 	})
 }
 
-func SpinnerSm() gomponents.Node {
+func SpinnerSm() nodx.Node {
 	return spinner(SizeSm)
 }
 
-func SpinnerMd() gomponents.Node {
+func SpinnerMd() nodx.Node {
 	return spinner(SizeMd)
 }
 
-func SpinnerLg() gomponents.Node {
+func SpinnerLg() nodx.Node {
 	return spinner(SizeLg)
 }
 
-func spinnerContainer(size size, height string) gomponents.Node {
-	return html.Div(
-		components.Classes{
+func spinnerContainer(size size, height string) nodx.Node {
+	return nodx.Div(
+		nodx.ClassMap{
 			"flex justify-center": true,
 			"items-center w-full": true,
 		},
-		html.Style(fmt.Sprintf("height: %s;", height)),
+		nodx.StyleAttr(fmt.Sprintf("height: %s;", height)),
 		spinner(size),
 	)
 }
 
-func SpinnerContainerSm(height ...string) gomponents.Node {
+func SpinnerContainerSm(height ...string) nodx.Node {
 	pickedHeight := "300px"
 	if len(height) > 0 {
 		pickedHeight = height[0]
@@ -49,7 +47,7 @@ func SpinnerContainerSm(height ...string) gomponents.Node {
 	return spinnerContainer(SizeSm, pickedHeight)
 }
 
-func SpinnerContainerMd(height ...string) gomponents.Node {
+func SpinnerContainerMd(height ...string) nodx.Node {
 	pickedHeight := "300px"
 	if len(height) > 0 {
 		pickedHeight = height[0]
@@ -57,7 +55,7 @@ func SpinnerContainerMd(height ...string) gomponents.Node {
 	return spinnerContainer(SizeMd, pickedHeight)
 }
 
-func SpinnerContainerLg(height ...string) gomponents.Node {
+func SpinnerContainerLg(height ...string) nodx.Node {
 	pickedHeight := "300px"
 	if len(height) > 0 {
 		pickedHeight = height[0]

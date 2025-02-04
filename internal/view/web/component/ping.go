@@ -4,12 +4,10 @@ import (
 	"database/sql"
 
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/components"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
-func Ping(color color) gomponents.Node {
+func Ping(color color) nodx.Node {
 	if color.Value == "" {
 		color = ColorNeutral
 	}
@@ -34,17 +32,17 @@ func Ping(color color) gomponents.Node {
 		bgClass = "bg-error"
 	}
 
-	return html.Span(
-		html.Class("relative flex h-3 w-3"),
-		html.Span(
-			components.Classes{
+	return nodx.SpanEl(
+		nodx.Class("relative flex h-3 w-3"),
+		nodx.SpanEl(
+			nodx.ClassMap{
 				"absolute inline-flex h-full w-full":   true,
 				"animate-ping rounded-full opacity-75": true,
 				bgClass:                                true,
 			},
 		),
-		html.Span(
-			components.Classes{
+		nodx.SpanEl(
+			nodx.ClassMap{
 				"relative inline-flex rounded-full h-3 w-3": true,
 				bgClass: true,
 			},
@@ -52,23 +50,23 @@ func Ping(color color) gomponents.Node {
 	)
 }
 
-func IsActivePing(isActive bool) gomponents.Node {
+func IsActivePing(isActive bool) nodx.Node {
 	pingColor := ColorSuccess
 	if !isActive {
 		pingColor = ColorError
 	}
 
-	return html.Div(
-		html.Class("tooltip tooltip-right"),
-		gomponents.If(isActive, html.Data("tip", "Active")),
-		gomponents.If(!isActive, html.Data("tip", "Inactive")),
+	return nodx.Div(
+		nodx.Class("tooltip tooltip-right"),
+		nodx.If(isActive, nodx.Data("tip", "Active")),
+		nodx.If(!isActive, nodx.Data("tip", "Inactive")),
 		Ping(pingColor),
 	)
 }
 
 func HealthStatusPing(
 	testOk sql.NullBool, testError sql.NullString, lastTestAt sql.NullTime,
-) gomponents.Node {
+) nodx.Node {
 	pingColor := ColorWarning
 	if testOk.Valid {
 		if testOk.Bool {
@@ -78,7 +76,7 @@ func HealthStatusPing(
 		}
 	}
 
-	var moOpenerAttr, moHTML gomponents.Node
+	var moOpenerAttr, moHTML nodx.Node
 
 	if testOk.Valid {
 		statusText := "Healthy"
@@ -89,37 +87,37 @@ func HealthStatusPing(
 		mo := Modal(ModalParams{
 			Size:  SizeSm,
 			Title: "Health check details",
-			Content: []gomponents.Node{
-				html.Div(
-					html.Class("overflow-x-auto"),
-					html.Table(
-						html.Class("table [&_th]:text-nowrap"),
-						html.Tr(
-							html.Th(SpanText("Status")),
-							html.Td(SpanText(statusText)),
+			Content: []nodx.Node{
+				nodx.Div(
+					nodx.Class("overflow-x-auto"),
+					nodx.Table(
+						nodx.Class("table [&_th]:text-nowrap"),
+						nodx.Tr(
+							nodx.Th(SpanText("Status")),
+							nodx.Td(SpanText(statusText)),
 						),
-						gomponents.If(
+						nodx.If(
 							testError.Valid && testError.String != "",
-							html.Tr(
-								html.Th(SpanText("Error")),
-								html.Td(
-									html.Class("break-all"),
+							nodx.Tr(
+								nodx.Th(SpanText("Error")),
+								nodx.Td(
+									nodx.Class("break-all"),
 									SpanText(testError.String),
 								),
 							),
 						),
-						gomponents.If(
+						nodx.If(
 							lastTestAt.Valid,
-							html.Tr(
-								html.Th(SpanText("Tested at")),
-								html.Td(SpanText(
+							nodx.Tr(
+								nodx.Th(SpanText("Tested at")),
+								nodx.Td(SpanText(
 									lastTestAt.Time.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 								)),
 							),
 						),
-						html.Tr(
-							html.Td(
-								html.ColSpan("2"),
+						nodx.Tr(
+							nodx.Td(
+								nodx.Colspan("2"),
 								PText(`
 									The health check runs automatically every 10 minutes, when
 									PG Back Web starts, and when you click the "Test connection"
@@ -146,13 +144,13 @@ func HealthStatusPing(
 		return "Waiting for next test"
 	}()
 
-	return html.Div(
-		html.Class("tooltip tooltip-right"),
-		html.Data("tip", tooltipText),
+	return nodx.Div(
+		nodx.Class("tooltip tooltip-right"),
+		nodx.Data("tip", tooltipText),
 		moHTML,
-		html.Span(
+		nodx.SpanEl(
 			moOpenerAttr,
-			html.Class("cursor-pointer"),
+			nodx.Class("cursor-pointer"),
 			Ping(pingColor),
 		),
 	)

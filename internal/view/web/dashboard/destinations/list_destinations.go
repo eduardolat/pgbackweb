@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/service/destinations"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
@@ -14,8 +13,8 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func (h *handlers) listDestinationsHandler(c echo.Context) error {
@@ -41,7 +40,7 @@ func (h *handlers) listDestinationsHandler(c echo.Context) error {
 		return htmx.RespondToastError(c, err.Error())
 	}
 
-	return echoutil.RenderGomponent(
+	return echoutil.RenderNodx(
 		c, http.StatusOK, listDestinations(pagination, destinations),
 	)
 }
@@ -49,7 +48,7 @@ func (h *handlers) listDestinationsHandler(c echo.Context) error {
 func listDestinations(
 	pagination paginateutil.PaginateResponse,
 	destinations []dbgen.DestinationsServicePaginateDestinationsRow,
-) gomponents.Node {
+) nodx.Node {
 	if len(destinations) < 1 {
 		return component.EmptyResultsTr(component.EmptyResultsParams{
 			Title:    "No destinations found",
@@ -57,15 +56,15 @@ func listDestinations(
 		})
 	}
 
-	trs := []gomponents.Node{}
+	trs := []nodx.Node{}
 	for _, destination := range destinations {
-		trs = append(trs, html.Tr(
-			html.Td(component.OptionsDropdown(
+		trs = append(trs, nodx.Tr(
+			nodx.Td(component.OptionsDropdown(
 				component.OptionsDropdownA(
-					html.Href(
+					nodx.Href(
 						fmt.Sprintf("/dashboard/executions?destination=%s", destination.ID),
 					),
-					html.Target("_blank"),
+					nodx.Target("_blank"),
 					lucide.List(),
 					component.SpanText("Show executions"),
 				),
@@ -78,58 +77,58 @@ func listDestinations(
 				),
 				deleteDestinationButton(destination.ID),
 			)),
-			html.Td(
-				html.Div(
-					html.Class("flex items-center space-x-2"),
+			nodx.Td(
+				nodx.Div(
+					nodx.Class("flex items-center space-x-2"),
 					component.HealthStatusPing(
 						destination.TestOk, destination.TestError, destination.LastTestAt,
 					),
 					component.SpanText(destination.Name),
 				),
 			),
-			html.Td(
-				html.Div(
-					html.Class("flex items-center space-x-1"),
+			nodx.Td(
+				nodx.Div(
+					nodx.Class("flex items-center space-x-1"),
 					component.CopyButtonSm(destination.BucketName),
 					component.SpanText(destination.BucketName),
 				),
 			),
-			html.Td(
-				html.Div(
-					html.Class("flex items-center space-x-1"),
+			nodx.Td(
+				nodx.Div(
+					nodx.Class("flex items-center space-x-1"),
 					component.CopyButtonSm(destination.Endpoint),
 					component.SpanText(destination.Endpoint),
 				),
 			),
-			html.Td(
-				html.Div(
-					html.Class("flex items-center space-x-1"),
+			nodx.Td(
+				nodx.Div(
+					nodx.Class("flex items-center space-x-1"),
 					component.CopyButtonSm(destination.Region),
 					component.SpanText(destination.Region),
 				),
 			),
-			html.Td(
-				html.Div(
-					html.Class("flex items-center space-x-1"),
+			nodx.Td(
+				nodx.Div(
+					nodx.Class("flex items-center space-x-1"),
 					component.CopyButtonSm(destination.DecryptedAccessKey),
 					component.SpanText("**********"),
 				),
 			),
-			html.Td(
-				html.Div(
-					html.Class("flex items-center space-x-1"),
+			nodx.Td(
+				nodx.Div(
+					nodx.Class("flex items-center space-x-1"),
 					component.CopyButtonSm(destination.DecryptedSecretKey),
 					component.SpanText("**********"),
 				),
 			),
-			html.Td(component.SpanText(
+			nodx.Td(component.SpanText(
 				destination.CreatedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 			)),
 		))
 	}
 
 	if pagination.HasNextPage {
-		trs = append(trs, html.Tr(
+		trs = append(trs, nodx.Tr(
 			htmx.HxGet(fmt.Sprintf(
 				"/dashboard/destinations/list?page=%d", pagination.NextPage,
 			)),

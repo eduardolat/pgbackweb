@@ -4,20 +4,19 @@ import (
 	"database/sql"
 
 	"github.com/eduardolat/pgbackweb/internal/integration/postgres"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
-func PGVersionSelectOptions(selectedVersion sql.NullString) gomponents.Node {
-	return GMap(
+func PGVersionSelectOptions(selectedVersion sql.NullString) nodx.Node {
+	return nodx.Map(
 		postgres.PGVersions,
-		func(pgVersion postgres.PGVersion) gomponents.Node {
-			return html.Option(
-				html.Value(pgVersion.Value.Version),
-				gomponents.Textf("PostgreSQL %s", pgVersion.Value.Version),
-				gomponents.If(
+		func(pgVersion postgres.PGVersion) nodx.Node {
+			return nodx.Option(
+				nodx.Value(pgVersion.Value.Version),
+				nodx.Textf("PostgreSQL %s", pgVersion.Value.Version),
+				nodx.If(
 					selectedVersion.Valid && selectedVersion.String == pgVersion.Value.Version,
-					html.Selected(),
+					nodx.Selected(""),
 				),
 			)
 		},

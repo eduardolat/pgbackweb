@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"time"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/service/webhooks"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
@@ -18,8 +17,8 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func (h *handlers) paginateWebhookExecutionsHandler(c echo.Context) error {
@@ -50,7 +49,7 @@ func (h *handlers) paginateWebhookExecutionsHandler(c echo.Context) error {
 		return htmx.RespondToastError(c, err.Error())
 	}
 
-	return echoutil.RenderGomponent(
+	return echoutil.RenderNodx(
 		c, http.StatusOK, webhookExecutionsList(webhookID, pagination, execs),
 	)
 }
@@ -59,7 +58,7 @@ func webhookExecutionsList(
 	webhookID uuid.UUID,
 	pagination paginateutil.PaginateResponse,
 	execs []dbgen.WebhookExecution,
-) gomponents.Node {
+) nodx.Node {
 	if len(execs) == 0 {
 		return component.EmptyResultsTr(component.EmptyResultsParams{
 			Title:    "No executions found",
@@ -67,26 +66,26 @@ func webhookExecutionsList(
 		})
 	}
 
-	trs := []gomponents.Node{}
+	trs := []nodx.Node{}
 	for _, exec := range execs {
 		durationMillis := exec.ResDuration.Int32
 		duration := time.Duration(durationMillis) * time.Millisecond
 
-		trs = append(trs, html.Tr(
-			html.Td(
+		trs = append(trs, nodx.Tr(
+			nodx.Td(
 				webhookExecutionDetailsButton(exec, duration),
 			),
-			html.Td(component.SpanText(fmt.Sprintf("%d", exec.ResStatus.Int16))),
-			html.Td(component.SpanText(exec.ReqMethod.String)),
-			html.Td(component.SpanText(duration.String())),
-			html.Td(component.SpanText(
+			nodx.Td(component.SpanText(fmt.Sprintf("%d", exec.ResStatus.Int16))),
+			nodx.Td(component.SpanText(exec.ReqMethod.String)),
+			nodx.Td(component.SpanText(duration.String())),
+			nodx.Td(component.SpanText(
 				exec.CreatedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 			)),
 		))
 	}
 
 	if pagination.HasNextPage {
-		trs = append(trs, html.Tr(
+		trs = append(trs, nodx.Tr(
 			htmx.HxGet(func() string {
 				url := "/dashboard/webhooks/" + webhookID.String() + "/executions"
 				url = strutil.AddQueryParamToUrl(url, "page", fmt.Sprintf("%d", pagination.NextPage))
@@ -104,12 +103,12 @@ func webhookExecutionsList(
 func webhookExecutionDetailsButton(
 	exec dbgen.WebhookExecution,
 	duration time.Duration,
-) gomponents.Node {
+) nodx.Node {
 	mo := component.Modal(component.ModalParams{
 		Title: "Webhook execution details",
-		Content: []gomponents.Node{
-			html.Div(
-				html.Class("space-y-4"),
+		Content: []nodx.Node{
+			nodx.Div(
+				nodx.Class("space-y-4"),
 
 				alpine.XData(`{
 					processTextareas() {
@@ -127,98 +126,98 @@ func webhookExecutionDetailsButton(
 				}`),
 				alpine.XOn("mouseenter.once", "processTextareas()"),
 
-				html.Table(
-					html.Class("table [&_th]:text-nowrap"),
-					html.Tr(
-						html.Td(
-							html.ColSpan("100%"),
+				nodx.Table(
+					nodx.Class("table [&_th]:text-nowrap"),
+					nodx.Tr(
+						nodx.Td(
+							nodx.Colspan("100%"),
 							component.H3Text("General"),
 						),
 					),
-					html.Tr(
-						html.Th(component.SpanText("ID")),
-						html.Td(component.SpanText(exec.ID.String())),
+					nodx.Tr(
+						nodx.Th(component.SpanText("ID")),
+						nodx.Td(component.SpanText(exec.ID.String())),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Date")),
-						html.Td(component.SpanText(
+					nodx.Tr(
+						nodx.Th(component.SpanText("Date")),
+						nodx.Td(component.SpanText(
 							exec.CreatedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 						)),
 					),
 				),
 
-				html.Table(
-					html.Class("table [&_th]:text-nowrap"),
-					html.Tr(
-						html.Td(
-							html.ColSpan("100%"),
+				nodx.Table(
+					nodx.Class("table [&_th]:text-nowrap"),
+					nodx.Tr(
+						nodx.Td(
+							nodx.Colspan("100%"),
 							component.H3Text("Request"),
 						),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Method")),
-						html.Td(component.SpanText(exec.ReqMethod.String)),
+					nodx.Tr(
+						nodx.Th(component.SpanText("Method")),
+						nodx.Td(component.SpanText(exec.ReqMethod.String)),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Headers")),
-						html.Td(
+					nodx.Tr(
+						nodx.Th(component.SpanText("Headers")),
+						nodx.Td(
 							component.TextareaControl(component.TextareaControlParams{
-								Children: []gomponents.Node{
+								Children: []nodx.Node{
 									alpine.XRef("reqHeadersTextarea"),
-									gomponents.Text(exec.ReqHeaders.String),
+									nodx.Text(exec.ReqHeaders.String),
 								},
 							}),
 						),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Body")),
-						html.Td(
+					nodx.Tr(
+						nodx.Th(component.SpanText("Body")),
+						nodx.Td(
 							component.TextareaControl(component.TextareaControlParams{
-								Children: []gomponents.Node{
+								Children: []nodx.Node{
 									alpine.XRef("reqBodyTextarea"),
-									gomponents.Text(exec.ReqBody.String),
+									nodx.Text(exec.ReqBody.String),
 								},
 							}),
 						),
 					),
 				),
 
-				html.Table(
-					html.Class("table [&_th]:text-nowrap"),
-					html.Tr(
-						html.Td(
-							html.ColSpan("100%"),
+				nodx.Table(
+					nodx.Class("table [&_th]:text-nowrap"),
+					nodx.Tr(
+						nodx.Td(
+							nodx.Colspan("100%"),
 							component.H3Text("Response"),
 						),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Status")),
-						html.Td(component.SpanText(
+					nodx.Tr(
+						nodx.Th(component.SpanText("Status")),
+						nodx.Td(component.SpanText(
 							fmt.Sprintf("%d", exec.ResStatus.Int16),
 						)),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Duration")),
-						html.Td(component.SpanText(duration.String())),
+					nodx.Tr(
+						nodx.Th(component.SpanText("Duration")),
+						nodx.Td(component.SpanText(duration.String())),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Headers")),
-						html.Td(
+					nodx.Tr(
+						nodx.Th(component.SpanText("Headers")),
+						nodx.Td(
 							component.TextareaControl(component.TextareaControlParams{
-								Children: []gomponents.Node{
+								Children: []nodx.Node{
 									alpine.XRef("resHeadersTextarea"),
-									gomponents.Text(exec.ResHeaders.String),
+									nodx.Text(exec.ResHeaders.String),
 								},
 							}),
 						),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Body")),
-						html.Td(
+					nodx.Tr(
+						nodx.Th(component.SpanText("Body")),
+						nodx.Td(
 							component.TextareaControl(component.TextareaControlParams{
-								Children: []gomponents.Node{
+								Children: []nodx.Node{
 									alpine.XRef("resBodyTextarea"),
-									gomponents.Text(exec.ResBody.String),
+									nodx.Text(exec.ResBody.String),
 								},
 							}),
 						),
@@ -228,35 +227,35 @@ func webhookExecutionDetailsButton(
 		},
 	})
 
-	return html.Div(
-		html.Class("inline-block tooltip tooltip-right"),
-		html.Data("tip", "More details"),
+	return nodx.Div(
+		nodx.Class("inline-block tooltip tooltip-right"),
+		nodx.Data("tip", "More details"),
 		mo.HTML,
-		html.Button(
-			html.Class("btn btn-error btn-square btn-sm btn-ghost"),
+		nodx.Button(
+			nodx.Class("btn btn-error btn-square btn-sm btn-ghost"),
 			lucide.Eye(),
 			mo.OpenerAttr,
 		),
 	)
 }
 
-func webhookExecutionsButton(webhookID uuid.UUID) gomponents.Node {
+func webhookExecutionsButton(webhookID uuid.UUID) nodx.Node {
 	mo := component.Modal(component.ModalParams{
 		Size:  component.SizeMd,
 		Title: "Webhook executions",
-		Content: []gomponents.Node{
-			html.Table(
-				html.Class("table"),
-				html.THead(
-					html.Tr(
-						html.Th(html.Class("w-1")),
-						html.Th(component.SpanText("Status")),
-						html.Th(component.SpanText("Method")),
-						html.Th(component.SpanText("Duration")),
-						html.Th(component.SpanText("Date")),
+		Content: []nodx.Node{
+			nodx.Table(
+				nodx.Class("table"),
+				nodx.Thead(
+					nodx.Tr(
+						nodx.Th(nodx.Class("w-1")),
+						nodx.Th(component.SpanText("Status")),
+						nodx.Th(component.SpanText("Method")),
+						nodx.Th(component.SpanText("Duration")),
+						nodx.Th(component.SpanText("Date")),
 					),
 				),
-				html.TBody(
+				nodx.Tbody(
 					htmx.HxGet(
 						"/dashboard/webhooks/"+webhookID.String()+"/executions?page=1",
 					),
@@ -264,14 +263,14 @@ func webhookExecutionsButton(webhookID uuid.UUID) gomponents.Node {
 					htmx.HxTrigger("intersect once"),
 				),
 			),
-			html.Div(
-				html.Class("flex justify-center pt-2"),
+			nodx.Div(
+				nodx.Class("flex justify-center pt-2"),
 				component.HxLoadingMd("webhook-executions-loading"),
 			),
 		},
 	})
 
-	return html.Div(
+	return nodx.Div(
 		mo.HTML,
 		component.OptionsDropdownButton(
 			mo.OpenerAttr,

@@ -11,8 +11,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
 func (h *handlers) indexPageHandler(c echo.Context) error {
@@ -40,7 +39,7 @@ func (h *handlers) indexPageHandler(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
-	return echoutil.RenderGomponent(
+	return echoutil.RenderNodx(
 		c, http.StatusOK,
 		indexPage(
 			reqCtx, databasesQty, destinationsQty, backupsQty, executionsQty,
@@ -56,7 +55,7 @@ func indexPage(
 	backupsQty dbgen.BackupsServiceGetBackupsQtyRow,
 	executionsQty dbgen.ExecutionsServiceGetExecutionsQtyRow,
 	restorationsQty dbgen.RestorationsServiceGetRestorationsQtyRow,
-) gomponents.Node {
+) nodx.Node {
 	type ChartData struct {
 		Label    string
 		Labels   []string
@@ -68,13 +67,13 @@ func indexPage(
 		title string,
 		count int64,
 		chartData ChartData,
-	) gomponents.Node {
-		chart := func() gomponents.Node {
-			notAvailable := html.Div(
-				html.Class("size-[218px] flex flex-col justify-center items-center"),
-				html.Span(
-					html.Class("text-sm text-base-content pb-[32px]"),
-					gomponents.Text("Chart waiting for data"),
+	) nodx.Node {
+		chart := func() nodx.Node {
+			notAvailable := nodx.Div(
+				nodx.Class("size-[218px] flex flex-col justify-center items-center"),
+				nodx.SpanEl(
+					nodx.Class("text-sm text-base-content pb-[32px]"),
+					nodx.Text("Chart waiting for data"),
 				),
 			)
 
@@ -110,10 +109,10 @@ func indexPage(
 				bgColors += fmt.Sprintf("'%s',", color)
 			}
 
-			return html.Div(
-				html.Class("mt-2"),
-				html.Div(html.Canvas(html.ID(chartID))),
-				html.Script(gomponents.Raw(`
+			return nodx.Div(
+				nodx.Class("mt-2"),
+				nodx.Div(nodx.Canvas(nodx.Id(chartID))),
+				nodx.Script(nodx.Raw(`
 					new Chart(document.getElementById('`+chartID+`'), {
 						type: 'doughnut',
 						data: {
@@ -140,7 +139,7 @@ func indexPage(
 
 		return component.CardBox(component.CardBoxParams{
 			Class: "flex-none text-center w-[250px]",
-			Children: []gomponents.Node{
+			Children: []nodx.Node{
 				component.H2Text(fmt.Sprintf("%d %s", count, title)),
 				chart(),
 			},
@@ -154,13 +153,13 @@ func indexPage(
 		blueColor   = "#00b6ff"
 	)
 
-	content := []gomponents.Node{
-		html.Div(
-			html.Class("flex justify-center"),
+	content := []nodx.Node{
+		nodx.Div(
+			nodx.Class("flex justify-center"),
 			component.H1Text("Summary"),
 		),
-		html.Div(
-			html.Class("mt-4 flex justify-center flex-wrap gap-4"),
+		nodx.Div(
+			nodx.Class("mt-4 flex justify-center flex-wrap gap-4"),
 
 			countCard("Databases", databasesQty.All, ChartData{
 				Label:    "Quantity",

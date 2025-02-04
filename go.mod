@@ -5,14 +5,14 @@ go 1.23.1
 require (
 	github.com/adhocore/gronx v1.8.1
 	github.com/aws/aws-sdk-go v1.54.20
-	github.com/eduardolat/gomponents-lucide v1.2.0
 	github.com/go-co-op/gocron/v2 v2.11.0
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/lib/pq v1.10.9
-	github.com/maragudk/gomponents v0.20.4
+	github.com/nodxdev/nodxgo v0.2.1
+	github.com/nodxdev/nodxgo-lucide v0.1.0
 	github.com/orsinium-labs/enum v1.4.0
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/crypto v0.25.0

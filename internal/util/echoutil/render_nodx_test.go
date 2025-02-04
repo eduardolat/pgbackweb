@@ -24,7 +24,7 @@ func (m *nokRenderer) Render(w io.Writer) error {
 	return errors.New("render nok")
 }
 
-func TestRenderGomponent(t *testing.T) {
+func TestRenderNodx(t *testing.T) {
 	// Setup renderer mocks
 	okRendererIns := new(okRenderer)
 	nokRendererIns := new(nokRenderer)
@@ -35,7 +35,7 @@ func TestRenderGomponent(t *testing.T) {
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
 
-		err := RenderGomponent(c, http.StatusOK, okRendererIns)
+		err := RenderNodx(c, http.StatusOK, okRendererIns)
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, c.Response().Status)
 		assert.Equal(t, "render ok", rec.Body.String())
@@ -47,20 +47,20 @@ func TestRenderGomponent(t *testing.T) {
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
 
-		err := RenderGomponent(c, http.StatusOK, nokRendererIns)
+		err := RenderNodx(c, http.StatusOK, nokRendererIns)
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 		assert.Equal(t, "render nok", rec.Body.String())
 	})
 }
 
-func TestRenderNilGomponent(t *testing.T) {
+func TestRenderNilNodx(t *testing.T) {
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 
-	err := RenderGomponent(c, http.StatusOK, nil)
+	err := RenderNodx(c, http.StatusOK, nil)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, rec.Code)
 	assert.Equal(t, "", rec.Body.String())

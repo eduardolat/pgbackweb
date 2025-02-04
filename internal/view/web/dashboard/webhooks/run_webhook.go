@@ -3,13 +3,13 @@ package webhooks
 import (
 	"context"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func (h *handlers) runWebhookHandler(c echo.Context) error {
@@ -40,7 +40,7 @@ func (h *handlers) runWebhookHandler(c echo.Context) error {
 	return htmx.RespondToastSuccess(c, "Running webhook, check the webhook executions for more details")
 }
 
-func runWebhookButton(webhookID uuid.UUID) gomponents.Node {
+func runWebhookButton(webhookID uuid.UUID) nodx.Node {
 	return component.OptionsDropdownButton(
 		htmx.HxPost("/dashboard/webhooks/"+webhookID.String()+"/run"),
 		htmx.HxDisabledELT("this"),

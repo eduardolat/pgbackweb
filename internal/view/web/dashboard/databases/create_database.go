@@ -3,14 +3,13 @@ package databases
 import (
 	"database/sql"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 type createDatabaseDTO struct {
@@ -44,24 +43,24 @@ func (h *handlers) createDatabaseHandler(c echo.Context) error {
 	return htmx.RespondRedirect(c, "/dashboard/databases")
 }
 
-func createDatabaseButton() gomponents.Node {
-	htmxAttributes := func(url string) gomponents.Node {
-		return gomponents.Group([]gomponents.Node{
+func createDatabaseButton() nodx.Node {
+	htmxAttributes := func(url string) nodx.Node {
+		return nodx.Group(
 			htmx.HxPost(url),
 			htmx.HxInclude("#create-database-form"),
 			htmx.HxDisabledELT(".create-database-btn"),
 			htmx.HxIndicator("#create-database-loading"),
 			htmx.HxValidate("true"),
-		})
+		)
 	}
 
 	mo := component.Modal(component.ModalParams{
 		Size:  component.SizeMd,
 		Title: "Create database",
-		Content: []gomponents.Node{
-			html.Form(
-				html.ID("create-database-form"),
-				html.Class("space-y-2"),
+		Content: []nodx.Node{
+			nodx.FormEl(
+				nodx.Id("create-database-form"),
+				nodx.Class("space-y-2"),
 
 				component.InputControl(component.InputControlParams{
 					Name:        "name",
@@ -78,7 +77,7 @@ func createDatabaseButton() gomponents.Node {
 					Placeholder: "Select a version",
 					Required:    true,
 					HelpText:    "The version of the database",
-					Children: []gomponents.Node{
+					Children: []nodx.Node{
 						component.PGVersionSelectOptions(sql.NullString{}),
 					},
 				}),
@@ -93,24 +92,24 @@ func createDatabaseButton() gomponents.Node {
 				}),
 			),
 
-			html.Div(
-				html.Class("flex justify-between items-center pt-4"),
-				html.Div(
-					html.Button(
+			nodx.Div(
+				nodx.Class("flex justify-between items-center pt-4"),
+				nodx.Div(
+					nodx.Button(
 						htmxAttributes("/dashboard/databases/test"),
-						html.Class("create-database-btn btn btn-neutral btn-outline"),
-						html.Type("button"),
+						nodx.Class("create-database-btn btn btn-neutral btn-outline"),
+						nodx.Type("button"),
 						component.SpanText("Test connection"),
 						lucide.DatabaseZap(),
 					),
 				),
-				html.Div(
-					html.Class("flex justify-end items-center space-x-2"),
+				nodx.Div(
+					nodx.Class("flex justify-end items-center space-x-2"),
 					component.HxLoadingMd("create-database-loading"),
-					html.Button(
+					nodx.Button(
 						htmxAttributes("/dashboard/databases"),
-						html.Class("create-database-btn btn btn-primary"),
-						html.Type("button"),
+						nodx.Class("create-database-btn btn btn-primary"),
+						nodx.Type("button"),
 						component.SpanText("Save"),
 						lucide.Save(),
 					),
@@ -119,15 +118,15 @@ func createDatabaseButton() gomponents.Node {
 		},
 	})
 
-	button := html.Button(
+	button := nodx.Button(
 		mo.OpenerAttr,
-		html.Class("btn btn-primary"),
+		nodx.Class("btn btn-primary"),
 		component.SpanText("Create database"),
 		lucide.Plus(),
 	)
 
-	return html.Div(
-		html.Class("inline-block"),
+	return nodx.Div(
+		nodx.Class("inline-block"),
 		mo.HTML,
 		button,
 	)

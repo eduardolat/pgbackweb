@@ -15,8 +15,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
 type listResQueryData struct {
@@ -52,7 +51,7 @@ func (h *handlers) listRestorationsHandler(c echo.Context) error {
 		return htmx.RespondToastError(c, err.Error())
 	}
 
-	return echoutil.RenderGomponent(
+	return echoutil.RenderNodx(
 		c, http.StatusOK, listRestorations(queryData, pagination, restorations),
 	)
 }
@@ -61,7 +60,7 @@ func listRestorations(
 	queryData listResQueryData,
 	pagination paginateutil.PaginateResponse,
 	restorations []dbgen.RestorationsServicePaginateRestorationsRow,
-) gomponents.Node {
+) nodx.Node {
 	if len(restorations) < 1 {
 		return component.EmptyResultsTr(component.EmptyResultsParams{
 			Title:    "No restorations found",
@@ -69,34 +68,34 @@ func listRestorations(
 		})
 	}
 
-	trs := []gomponents.Node{}
+	trs := []nodx.Node{}
 	for _, restoration := range restorations {
-		trs = append(trs, html.Tr(
-			html.Td(
+		trs = append(trs, nodx.Tr(
+			nodx.Td(
 				showRestorationButton(restoration),
 			),
-			html.Td(component.StatusBadge(restoration.Status)),
-			html.Td(component.SpanText(restoration.BackupName)),
-			html.Td(component.SpanText(func() string {
+			nodx.Td(component.StatusBadge(restoration.Status)),
+			nodx.Td(component.SpanText(restoration.BackupName)),
+			nodx.Td(component.SpanText(func() string {
 				if restoration.DatabaseName.Valid {
 					return restoration.DatabaseName.String
 				}
 				return "Other database"
 			}())),
-			html.Td(component.SpanText(restoration.ExecutionID.String())),
-			html.Td(component.SpanText(
+			nodx.Td(component.SpanText(restoration.ExecutionID.String())),
+			nodx.Td(component.SpanText(
 				restoration.StartedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 			)),
-			html.Td(
-				gomponents.If(
+			nodx.Td(
+				nodx.If(
 					restoration.FinishedAt.Valid,
 					component.SpanText(
 						restoration.FinishedAt.Time.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 					),
 				),
 			),
-			html.Td(
-				gomponents.If(
+			nodx.Td(
+				nodx.If(
 					restoration.FinishedAt.Valid,
 					component.SpanText(
 						restoration.FinishedAt.Time.Sub(restoration.StartedAt).String(),
@@ -107,7 +106,7 @@ func listRestorations(
 	}
 
 	if pagination.HasNextPage {
-		trs = append(trs, html.Tr(
+		trs = append(trs, nodx.Tr(
 			htmx.HxGet(func() string {
 				url := "/dashboard/restorations/list"
 				url = strutil.AddQueryParamToUrl(url, "page", fmt.Sprintf("%d", pagination.NextPage))
