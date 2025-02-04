@@ -9,11 +9,12 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
 	alpine "github.com/nodxdev/nodxgo-alpine"
+	htmx "github.com/nodxdev/nodxgo-htmx"
 	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
@@ -26,20 +27,20 @@ func (h *handlers) restoreExecutionHandler(c echo.Context) error {
 		ConnString  string    `form:"conn_string" validate:"omitempty"`
 	}
 	if err := c.Bind(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	if formData.DatabaseID == uuid.Nil && formData.ConnString == "" {
-		return htmx.RespondToastError(
+		return htmxserver.RespondToastError(
 			c, "Database or connection string is required",
 		)
 	}
 
 	if formData.DatabaseID != uuid.Nil && formData.ConnString != "" {
-		return htmx.RespondToastError(
+		return htmxserver.RespondToastError(
 			c, "Database and connection string cannot be both set",
 		)
 	}
@@ -56,7 +57,7 @@ func (h *handlers) restoreExecutionHandler(c echo.Context) error {
 			ctx, execution.DatabasePgVersion, formData.ConnString,
 		)
 		if err != nil {
-			return htmx.RespondToastError(c, err.Error())
+			return htmxserver.RespondToastError(c, err.Error())
 		}
 	}
 
@@ -73,7 +74,7 @@ func (h *handlers) restoreExecutionHandler(c echo.Context) error {
 		)
 	}()
 
-	return htmx.RespondToastSuccess(
+	return htmxserver.RespondToastSuccess(
 		c, "Process started, check the restorations page for more details",
 	)
 }

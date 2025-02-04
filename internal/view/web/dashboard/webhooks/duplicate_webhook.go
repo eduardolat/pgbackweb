@@ -2,10 +2,11 @@ package webhooks
 
 import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
+	htmx "github.com/nodxdev/nodxgo-htmx"
 	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
@@ -14,14 +15,14 @@ func (h *handlers) duplicateWebhookHandler(c echo.Context) error {
 
 	webhookID, err := uuid.Parse(c.Param("webhookID"))
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	if _, err = h.servs.WebhooksService.DuplicateWebhook(ctx, webhookID); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
-	return htmx.RespondRefresh(c)
+	return htmxserver.RespondRefresh(c)
 }
 
 func duplicateWebhookButton(webhookID uuid.UUID) nodx.Node {

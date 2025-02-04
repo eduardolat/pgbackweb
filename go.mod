@@ -13,6 +13,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/nodxdev/nodxgo v0.2.2
 	github.com/nodxdev/nodxgo-alpine v0.1.0
+	github.com/nodxdev/nodxgo-htmx v0.1.0
 	github.com/nodxdev/nodxgo-lucide v0.1.1
 	github.com/orsinium-labs/enum v1.4.0
 	github.com/stretchr/testify v1.9.0

@@ -4,8 +4,8 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	nodx "github.com/nodxdev/nodxgo"
+	htmx "github.com/nodxdev/nodxgo-htmx"
 	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 

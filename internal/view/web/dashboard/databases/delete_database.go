@@ -2,10 +2,11 @@ package databases
 
 import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
+	htmx "github.com/nodxdev/nodxgo-htmx"
 	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
@@ -14,14 +15,14 @@ func (h *handlers) deleteDatabaseHandler(c echo.Context) error {
 
 	databaseID, err := uuid.Parse(c.Param("databaseID"))
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	if err = h.servs.DatabasesService.DeleteDatabase(ctx, databaseID); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
-	return htmx.RespondRefresh(c)
+	return htmxserver.RespondRefresh(c)
 }
 
 func deleteDatabaseButton(databaseID uuid.UUID) nodx.Node {

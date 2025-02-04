@@ -2,10 +2,11 @@ package destinations
 
 import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
+	htmx "github.com/nodxdev/nodxgo-htmx"
 	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
@@ -14,15 +15,15 @@ func (h *handlers) deleteDestinationHandler(c echo.Context) error {
 
 	destinationID, err := uuid.Parse(c.Param("destinationID"))
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
 	err = h.servs.DestinationsService.DeleteDestination(ctx, destinationID)
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return htmxserver.RespondToastError(c, err.Error())
 	}
 
-	return htmx.RespondRefresh(c)
+	return htmxserver.RespondRefresh(c)
 }
 
 func deleteDestinationButton(destinationID uuid.UUID) nodx.Node {

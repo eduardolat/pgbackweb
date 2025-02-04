@@ -8,7 +8,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/service"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
+	"github.com/eduardolat/pgbackweb/internal/view/web/htmxserver"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
 )
@@ -19,11 +19,11 @@ func healthButtonHandler(servs *service.Service) echo.HandlerFunc {
 
 		databasesQty, err := servs.DatabasesService.GetDatabasesQty(ctx)
 		if err != nil {
-			return htmx.RespondToastError(c, err.Error())
+			return htmxserver.RespondToastError(c, err.Error())
 		}
 		destinationsQty, err := servs.DestinationsService.GetDestinationsQty(ctx)
 		if err != nil {
-			return htmx.RespondToastError(c, err.Error())
+			return htmxserver.RespondToastError(c, err.Error())
 		}
 
 		return echoutil.RenderNodx(c, http.StatusOK, healthButton(
