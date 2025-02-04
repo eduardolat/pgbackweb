@@ -3,9 +3,9 @@ package layout
 import (
 	"fmt"
 
-	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	nodx "github.com/nodxdev/nodxgo"
+	alpine "github.com/nodxdev/nodxgo-alpine"
 	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 

@@ -8,12 +8,12 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/staticdata"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
-	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	nodx "github.com/nodxdev/nodxgo"
+	alpine "github.com/nodxdev/nodxgo-alpine"
 	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 

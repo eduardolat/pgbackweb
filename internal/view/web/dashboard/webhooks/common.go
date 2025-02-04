@@ -7,9 +7,9 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/service/webhooks"
 	"github.com/eduardolat/pgbackweb/internal/util/maputil"
-	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	nodx "github.com/nodxdev/nodxgo"
+	alpine "github.com/nodxdev/nodxgo-alpine"
 )
 
 func createAndUpdateWebhookForm(

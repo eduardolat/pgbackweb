@@ -1,9 +1,9 @@
 package summary
 
 import (
-	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	nodx "github.com/nodxdev/nodxgo"
+	alpine "github.com/nodxdev/nodxgo-alpine"
 	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 

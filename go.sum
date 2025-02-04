@@ -49,6 +49,8 @@ github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWE
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/nodxdev/nodxgo v0.2.2 h1:Yz7qCBkYbNOQV9nMSAwQANJHkU+N1V7Yve3vktWstq4=
 github.com/nodxdev/nodxgo v0.2.2/go.mod h1:6RhpuOptMO8HT7ZGIzyAF+iH8ozJfRaneJZ1ehBp2YQ=
+github.com/nodxdev/nodxgo-alpine v0.1.0 h1:FsmXSrEPGGU/g6R4keW/U8hkwy00SCUdYzB460BCjl8=
+github.com/nodxdev/nodxgo-alpine v0.1.0/go.mod h1:0KN/OE+WFbJxA4IvcOCWeApmBGckAJ9x6V3t2dhecWc=
 github.com/nodxdev/nodxgo-lucide v0.1.1 h1:ibWU9DcTeNSeY6ZVlMPp1zsrLdamkI6zF6tN1FtWcSA=
 github.com/nodxdev/nodxgo-lucide v0.1.1/go.mod h1:a1xCfbfuwbkaHhWmknnuvACZ2Gguq0FIFqaAo8nip2k=
 github.com/orsinium-labs/enum v1.4.0 h1:3NInlfV76kuAg0kq2FFUondmg3WO7gMEgrPPrlzLDUM=
