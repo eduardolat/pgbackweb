@@ -1,5 +1,5 @@
-# To make sure we have the node, and golang binaries
-FROM node:20.17.0-bookworm AS node
+# To make sure we have the deno and golang binaries
+FROM denoland/deno:debian-2.1.9 AS deno
 FROM golang:1.23.1-bookworm AS golang
 
 # Set the base image
@@ -22,13 +22,10 @@ ENV GOBIN="/usr/local/go-bin"
 RUN mkdir -p /app/temp /usr/local/go-bin /usr/local/dl-bin
 WORKDIR /app/temp
 
-# Copy node binaries
-COPY --from=node /usr/local/bin/ /usr/local/bin/
-COPY --from=node /usr/local/include/ /usr/local/include/
-COPY --from=node /usr/local/lib/ /usr/local/lib/
-COPY --from=node /usr/local/share/ /usr/local/share/
+# Install deno from docker image
+COPY --from=deno /usr/bin/deno /usr/local/bin/deno
 
-# Copy the golang binaries
+# Install golang from docker image
 COPY --from=golang /usr/local/go /usr/local/go
 
 # Add PostgreSQL repository and install system dependencies
@@ -96,9 +93,10 @@ RUN rm -rf /app/temp && \
 # START HERE #
 ##############
 
-# Copy and install nodejs dependencies
-COPY package.json .
-RUN npm install
+# Copy and install deno dependencies
+COPY deno.json .
+COPY deno.lock .
+RUN deno install
 
 # Copy and install go dependencies
 COPY go.mod .

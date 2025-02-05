@@ -1,4 +1,17 @@
 {
+  "nodeModulesDir": "auto",
+  "tasks": {
+    "tailwindcss": "tailwindcss",
+    "standard": "standard",
+    "esbuild": "esbuild"
+  },
+  "imports": {
+    "tailwindcss": "npm:tailwindcss@3.4.6",
+    "daisyui": "npm:daisyui@4.12.10",
+    "esbuild": "npm:esbuild@0.23.1",
+    "fs-extra": "npm:fs-extra@11.2.0",
+    "glob": "npm:glob@11.0.0"
+  },
   "fmt": {
     "exclude": [
       "./internal/view/static/libs/**/*"
