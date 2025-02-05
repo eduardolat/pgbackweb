@@ -47,7 +47,8 @@ the security and availability of your PostgreSQL data:
   logs.
 - 📤 **Instant download & restore**: Restore and download your backups when you
   need them, directly from the web interface.
-- 🖥 **Multi-version support**: Compatible with PostgreSQL 13, 14, 15, 16, and 17.
+- 🖥 **Multi-version support**: Compatible with PostgreSQL 13, 14, 15, 16,
+  and 17.
 - 📁 **Local & S3 storage**: Store backups locally or add as many S3 buckets as
   you want for greater flexibility.
 - ❤️‍🩹 **Health checks**: Automatically check the health of your databases and
@@ -120,7 +121,7 @@ You only need to configure the following environment variables:
 
 ## Screenshot
 
-<img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/main/screenshot.png" />
+<img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/main/assets/screenshot.png" />
 
 ## Reset password
 
