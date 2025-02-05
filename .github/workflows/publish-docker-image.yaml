@@ -7,26 +7,34 @@ on:
         description: "Commit SHA or branch to build"
         required: true
         default: "main"
-      tags:
-        description: "Array of docker image tags to build and push separated by commas"
+      tag:
+        description: "Docker image tag to build and push"
         required: true
         default: "latest"
 
 jobs:
-  build-and-publish:
-    name: Build and Publish Docker Image
-    runs-on: ubuntu-latest
+  build-and-push-images:
+    strategy:
+      matrix:
+        vars: [
+          { os: ubuntu-24.04, platform: amd64 },
+          { os: ubuntu-24.04-arm, platform: arm64 },
+        ]
+
+    name: Build and push images
+    runs-on: ${{ matrix.vars.os }}
+    timeout-minutes: 20
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.commit }}
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
+      - name: Setup Docker buildx for multi-architecture builds
         uses: docker/setup-buildx-action@v3
+        with:
+          use: true
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -34,19 +42,40 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build and push the Docker image
+        run: >
+          docker buildx build
+          --push
+          --platform linux/${{ matrix.vars.platform }}
+          --tag eduardolat/pgbackweb:${{ github.event.inputs.tag }}-${{ matrix.vars.platform }}
+          --file docker/Dockerfile .
+
+  merge-and-push-manifest:
+    name: Merge manifest
+    needs: build-and-push-images
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.commit }}
+
+      - name: Setup Docker buildx for multi-architecture builds
+        uses: docker/setup-buildx-action@v3
+        with:
+          use: true
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+
+      - name: Merge and push manifest
         run: |
-          docker buildx create --use
+          docker manifest create eduardolat/pgbackweb:${{ github.event.inputs.tag }} \
+          eduardolat/pgbackweb:${{ github.event.inputs.tag }}-amd64 \
+          eduardolat/pgbackweb:${{ github.event.inputs.tag }}-arm64
 
-          IFS=',' read -r -a tags <<< "${{ github.event.inputs.tags }}"
-          tag_args=""
-          for tag in "${tags[@]}"; do
-            tag_args="$tag_args -t eduardolat/pgbackweb:$tag"
-          done
-
-          docker buildx build \
-            --platform linux/amd64,linux/arm64 \
-            --build-arg TARGETPLATFORM \
-            $tag_args \
-            -f ./docker/Dockerfile \
-            --push .
+          docker manifest push eduardolat/pgbackweb:${{ github.event.inputs.tag }}
