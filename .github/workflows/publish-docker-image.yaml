@@ -13,6 +13,12 @@ on:
         default: "latest"
 
 jobs:
+  # We use the "hard" way to build multi-arch images using docker manifest
+  # to avoid the need of using an emulator for ARM images.
+  #
+  # This way we can take advantage of the github actions ARM runners.
+  #
+  # https://www.docker.com/blog/multi-arch-build-and-images-the-simple-way/
   build-and-push-images:
     strategy:
       matrix:
@@ -31,24 +37,21 @@ jobs:
         with:
           ref: ${{ github.event.inputs.commit }}
 
-      - name: Setup Docker buildx for multi-architecture builds
-        uses: docker/setup-buildx-action@v3
-        with:
-          use: true
-
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
-      - name: Build and push the Docker image
+      - name: Build the Docker image
         run: >
-          docker buildx build
-          --push
-          --platform linux/${{ matrix.vars.platform }}
+          docker build
           --tag eduardolat/pgbackweb:${{ github.event.inputs.tag }}-${{ matrix.vars.platform }}
+          --build-arg TARGETPLATFORM=linux/${{ matrix.vars.platform }}
           --file docker/Dockerfile .
+
+      - name: Push the Docker image
+        run: docker push eduardolat/pgbackweb:${{ github.event.inputs.tag }}-${{ matrix.vars.platform }}
 
   merge-and-push-manifest:
     name: Merge manifest
@@ -60,11 +63,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.commit }}
-
-      - name: Setup Docker buildx for multi-architecture builds
-        uses: docker/setup-buildx-action@v3
-        with:
-          use: true
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
