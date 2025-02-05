@@ -44,7 +44,8 @@ window.alpineSupportProjectData = function () {
         }
       }
 
-      const url = "";
+      const url =
+        "https://raw.githubusercontent.com/eduardolat/pgbackweb/main/assets/support-project-v1.json";
       try {
         const response = await fetch(url);
         if (!response.ok) {
