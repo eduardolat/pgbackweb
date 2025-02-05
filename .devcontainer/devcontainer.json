@@ -7,7 +7,6 @@
       "extensions": [
         "golang.go",
         "bradlc.vscode-tailwindcss",
-        "standard.vscode-standard",
         "denoland.vscode-deno",
         "mhutchie.git-graph",
         "mutantdino.resourcemonitor",
@@ -32,14 +31,11 @@
         "[jsonc]": {
           "editor.defaultFormatter": "vscode.json-language-features"
         },
-        // JavaScript & Standard
-        "standard.enable": true,
-        "standard.autoFixOnSave": true,
         "[typescript]": {
           "editor.defaultFormatter": "denoland.vscode-deno"
         },
         "[javascript]": {
-          "editor.defaultFormatter": "standard.vscode-standard"
+          "editor.defaultFormatter": "denoland.vscode-deno"
         },
         "[css]": {
           "editor.defaultFormatter": "vscode.css-language-features"
@@ -60,9 +56,6 @@
         ],
         // Deno
         "deno.enable": true,
-        "deno.enablePaths": [
-          "./scripts"
-        ],
         /////
         // Tailwind CSS + NodX
         /////
