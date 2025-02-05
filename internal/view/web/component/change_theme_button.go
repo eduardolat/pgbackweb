@@ -29,20 +29,22 @@ func ChangeThemeButton(params ChangeThemeButtonParams) nodx.Node {
 			nodx.Tabindex("0"),
 			nodx.Role("button"),
 			nodx.ClassMap{
-				"btn btn-neutral space-x-1": true,
-				"btn-sm":                    params.Size == SizeSm,
-				"btn-lg":                    params.Size == SizeLg,
+				"btn btn-neutral": true,
+				"btn-sm":          params.Size == SizeSm,
+				"btn-lg":          params.Size == SizeLg,
 			},
 
 			nodx.Div(
-				nodx.Class("inline-block size-4"),
-				lucide.Laptop(alpine.XShow(`theme === "system"`)),
-				lucide.Sun(alpine.XShow(`theme === "light"`)),
-				lucide.Moon(alpine.XShow(`theme === "dark"`)),
+				nodx.Class("flex space-x-1"),
+				nodx.Div(
+					nodx.Class("inline-block size-4"),
+					lucide.Laptop(alpine.XShow(`theme === "system"`)),
+					lucide.Sun(alpine.XShow(`theme === "light"`)),
+					lucide.Moon(alpine.XShow(`theme === "dark"`)),
+				),
+				SpanText("Theme"),
+				lucide.ChevronDown(),
 			),
-
-			SpanText("Theme"),
-			lucide.ChevronDown(),
 		),
 		nodx.Ul(
 			nodx.Tabindex("0"),
@@ -55,7 +57,11 @@ func ChangeThemeButton(params ChangeThemeButtonParams) nodx.Node {
 			nodx.Li(
 				nodx.Button(
 					alpine.XOn("click", "setTheme('')"),
-					nodx.Class("btn btn-neutral btn-block"),
+					nodx.ClassMap{
+						"btn btn-neutral btn-block": true,
+						"btn-sm":                    params.Size == SizeSm,
+						"btn-lg":                    params.Size == SizeLg,
+					},
 					nodx.Type("button"),
 					lucide.Laptop(nodx.Class("mr-1")),
 					SpanText("System"),
@@ -64,7 +70,11 @@ func ChangeThemeButton(params ChangeThemeButtonParams) nodx.Node {
 			nodx.Li(
 				nodx.Button(
 					alpine.XOn("click", "setTheme('light')"),
-					nodx.Class("btn btn-neutral btn-block"),
+					nodx.ClassMap{
+						"btn btn-neutral btn-block": true,
+						"btn-sm":                    params.Size == SizeSm,
+						"btn-lg":                    params.Size == SizeLg,
+					},
 					nodx.Type("button"),
 					lucide.Sun(nodx.Class("mr-1")),
 					SpanText("Light"),
@@ -73,7 +83,11 @@ func ChangeThemeButton(params ChangeThemeButtonParams) nodx.Node {
 			nodx.Li(
 				nodx.Button(
 					alpine.XOn("click", "setTheme('dark')"),
-					nodx.Class("btn btn-neutral btn-block"),
+					nodx.ClassMap{
+						"btn btn-neutral btn-block": true,
+						"btn-sm":                    params.Size == SizeSm,
+						"btn-lg":                    params.Size == SizeLg,
+					},
 					nodx.Type("button"),
 					lucide.Moon(nodx.Class("mr-1")),
 					SpanText("Dark"),

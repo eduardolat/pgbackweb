@@ -10,18 +10,19 @@ import (
 func dashboardHeader() nodx.Node {
 	return nodx.Header(
 		nodx.ClassMap{
-			"w-[full] bg-base-200 p-4 shadow-sm": true,
-			"flex items-center justify-between":  true,
-			"sticky top-0 z-50":                  true,
+			"sticky top-0 z-50":                 true,
+			"space-x-4 p-4 min-w-max":           true,
+			"w-[full] bg-base-200 shadow-sm":    true,
+			"flex items-center justify-between": true,
 		},
 		nodx.Div(
 			nodx.Class("flex justify-start items-center space-x-2"),
 			component.ChangeThemeButton(component.ChangeThemeButtonParams{
-				Position:    component.DropdownPositionBottom,
-				AlignsToEnd: true,
-				Size:        component.SizeMd,
+				Position: component.DropdownPositionBottom,
+				Size:     component.SizeSm,
 			}),
-			component.StarOnGithub(component.SizeMd),
+			component.StarOnGithub(component.SizeSm),
+			component.SupportProjectButton(component.SizeSm),
 			dashboardHeaderUpdates(),
 		),
 		nodx.Div(
