@@ -15,8 +15,8 @@ on:
         required: true
         type: choice
         options:
-          - yes
-          - no
+          - "yes"
+          - "no"
 
 jobs:
   build-and-push-images:
