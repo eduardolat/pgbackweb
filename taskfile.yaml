@@ -103,14 +103,14 @@ tasks:
     desc: Format the go and js files
     cmds:
       - go fmt ./...
-      - npm run standard -- --fix
+      - deno fmt
 
   lint-only:
     desc: Lint the go and js files
     cmds:
       - task gen-db
       - golangci-lint run ./...
-      - npm run standard
+      - deno lint
 
   test-only:
     desc: Run the tests
