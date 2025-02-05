@@ -4,21 +4,21 @@ on:
   workflow_dispatch:
     inputs:
       commit:
-        description: "Commit SHA or branch to build"
+        description: Commit SHA or branch to build
         required: true
-        default: "main"
+        default: main
       tag:
-        description: "Docker image tag to build and push"
+        description: Docker image tag
         required: true
-        default: "latest"
+      latest:
+        description: Include the "latest" tag in the image
+        required: true
+        type: choice
+        options:
+          - yes
+          - no
 
 jobs:
-  # We use the "hard" way to build multi-arch images using docker manifest
-  # to avoid the need of using an emulator for ARM images.
-  #
-  # This way we can take advantage of the github actions ARM runners.
-  #
-  # https://www.docker.com/blog/multi-arch-build-and-images-the-simple-way/
   build-and-push-images:
     strategy:
       matrix:
@@ -77,3 +77,11 @@ jobs:
           eduardolat/pgbackweb:${{ github.event.inputs.tag }}-arm64
 
           docker manifest push eduardolat/pgbackweb:${{ github.event.inputs.tag }}
+
+          if [ "${{ github.event.inputs.latest }}" == "yes" ]; then
+            docker manifest create eduardolat/pgbackweb:latest \
+            eduardolat/pgbackweb:${{ github.event.inputs.tag }}-amd64 \
+            eduardolat/pgbackweb:${{ github.event.inputs.tag }}-arm64
+
+            docker manifest push eduardolat/pgbackweb:latest
+          fi
