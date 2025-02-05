@@ -18,7 +18,7 @@ func StarOnGithub(size size) nodx.Node {
 		nodx.Href("https://github.com/eduardolat/pgbackweb"),
 		nodx.Target("_blank"),
 		lucide.Github(),
-		SpanText("Star on Github"),
+		SpanText("Star"),
 		nodx.SpanEl(
 			alpine.XShow("stars"),
 			alpine.XText("'( ' + stars + ' )'"),
