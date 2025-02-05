@@ -4,14 +4,14 @@ on:
   workflow_dispatch:
     inputs:
       commit:
-        description: Commit SHA or branch to build
+        description: The specific commit SHA or branch name to build from (e.g., main or a feature branch)
         required: true
         default: main
       tag:
-        description: Docker image tag
+        description: The version tag for the Docker image (e.g., 1.0.0)
         required: true
       latest:
-        description: Include the "latest" tag in the image
+        description: Choose "yes" to also tag the image as "latest" in Docker Hub, otherwise select "no"
         required: true
         type: choice
         options:
