@@ -11,12 +11,12 @@ on:
         description: The version tag for the Docker image (e.g., 1.0.0)
         required: true
       latest:
-        description: Choose "yes" to also tag the image as "latest" in Docker Hub, otherwise select "no"
+        description: Choose "yes" to also tag the image as "latest" in Docker Hub
         required: true
         type: choice
         options:
-          - "yes"
           - "no"
+          - "yes"
 
 jobs:
   build-and-push-images:
