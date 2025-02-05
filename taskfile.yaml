@@ -71,7 +71,7 @@ tasks:
     desc: Generate sqlc files
     silent: true
     cmds:
-      - ./scripts/sqlc-prebuild.mjs
+      - deno run -A ./scripts/sqlc-prebuild.ts
       - sqlc generate
     sources:
       - ./internal/service/**/*.sql
@@ -88,12 +88,12 @@ tasks:
     silent: true
     cmds:
       - >
-          npm run tailwindcss --
+          deno task tailwindcss --
           --minify
-          --config ./tailwind.config.js
+          --config ./tailwind.config.ts
           --input ./internal/view/static/css/style.css
           --output ./internal/view/static/build/style.min.css
-      - ./scripts/build-js.mjs
+      - deno run -A ./scripts/build-js.ts
 
   tidy:
     desc: Tidy the go.mod file
