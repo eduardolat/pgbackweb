@@ -15,8 +15,7 @@ check_command() {
 
 # Check software from docker images
 check_command "go version" "Golang"
-check_command "node --version" "Node.js"
-check_command "npm --version" "npm"
+check_command "deno --version" "Deno"
 
 # Check software installed from apt install
 check_command "wget --version" "wget"

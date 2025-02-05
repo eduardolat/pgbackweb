@@ -44,7 +44,7 @@ jobs:
         run: >
           docker run --rm -v $PWD:/app pgbackweb:latest /bin/bash -c "
             cd /app &&
-            npm install &&
+            deno install &&
             go mod download &&
             task fixperms &&
             task check-deps &&
