@@ -65,7 +65,7 @@ func dashboardAside() nodx.Node {
 
 			dashboardAsideItem(
 				lucide.DatabaseBackup,
-				"Backups",
+				"Backup tasks",
 				"/dashboard/backups",
 				false,
 			),

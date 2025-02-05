@@ -48,19 +48,19 @@ func createDatabaseButton() nodx.Node {
 	htmxAttributes := func(url string) nodx.Node {
 		return nodx.Group(
 			htmx.HxPost(url),
-			htmx.HxInclude("#create-database-form"),
-			htmx.HxDisabledELT(".create-database-btn"),
-			htmx.HxIndicator("#create-database-loading"),
+			htmx.HxInclude("#add-database-form"),
+			htmx.HxDisabledELT(".add-database-btn"),
+			htmx.HxIndicator("#add-database-loading"),
 			htmx.HxValidate("true"),
 		)
 	}
 
 	mo := component.Modal(component.ModalParams{
 		Size:  component.SizeMd,
-		Title: "Create database",
+		Title: "Add database",
 		Content: []nodx.Node{
 			nodx.FormEl(
-				nodx.Id("create-database-form"),
+				nodx.Id("add-database-form"),
 				nodx.Class("space-y-2"),
 
 				component.InputControl(component.InputControlParams{
@@ -98,7 +98,7 @@ func createDatabaseButton() nodx.Node {
 				nodx.Div(
 					nodx.Button(
 						htmxAttributes("/dashboard/databases/test"),
-						nodx.Class("create-database-btn btn btn-neutral btn-outline"),
+						nodx.Class("add-database-btn btn btn-neutral btn-outline"),
 						nodx.Type("button"),
 						component.SpanText("Test connection"),
 						lucide.DatabaseZap(),
@@ -106,12 +106,12 @@ func createDatabaseButton() nodx.Node {
 				),
 				nodx.Div(
 					nodx.Class("flex justify-end items-center space-x-2"),
-					component.HxLoadingMd("create-database-loading"),
+					component.HxLoadingMd("add-database-loading"),
 					nodx.Button(
 						htmxAttributes("/dashboard/databases"),
-						nodx.Class("create-database-btn btn btn-primary"),
+						nodx.Class("add-database-btn btn btn-primary"),
 						nodx.Type("button"),
-						component.SpanText("Save"),
+						component.SpanText("Add database"),
 						lucide.Save(),
 					),
 				),
@@ -122,7 +122,7 @@ func createDatabaseButton() nodx.Node {
 	button := nodx.Button(
 		mo.OpenerAttr,
 		nodx.Class("btn btn-primary"),
-		component.SpanText("Create database"),
+		component.SpanText("Add database"),
 		lucide.Plus(),
 	)
 

@@ -52,19 +52,19 @@ func createDestinationButton() nodx.Node {
 	htmxAttributes := func(url string) nodx.Node {
 		return nodx.Group(
 			htmx.HxPost(url),
-			htmx.HxInclude("#create-destination-form"),
-			htmx.HxDisabledELT(".create-destination-btn"),
-			htmx.HxIndicator("#create-destination-loading"),
+			htmx.HxInclude("#add-destination-form"),
+			htmx.HxDisabledELT(".add-destination-btn"),
+			htmx.HxIndicator("#add-destination-loading"),
 			htmx.HxValidate("true"),
 		)
 	}
 
 	mo := component.Modal(component.ModalParams{
 		Size:  component.SizeMd,
-		Title: "Create destination",
+		Title: "Add destination",
 		Content: []nodx.Node{
 			nodx.FormEl(
-				nodx.Id("create-destination-form"),
+				nodx.Id("add-destination-form"),
 				nodx.Class("space-y-2"),
 
 				component.InputControl(component.InputControlParams{
@@ -124,7 +124,7 @@ func createDestinationButton() nodx.Node {
 				nodx.Div(
 					nodx.Button(
 						htmxAttributes("/dashboard/destinations/test"),
-						nodx.Class("create-destination-btn btn btn-neutral btn-outline"),
+						nodx.Class("add-destination-btn btn btn-neutral btn-outline"),
 						nodx.Type("button"),
 						component.SpanText("Test connection"),
 						lucide.PlugZap(),
@@ -132,12 +132,12 @@ func createDestinationButton() nodx.Node {
 				),
 				nodx.Div(
 					nodx.Class("flex justify-end items-center space-x-2"),
-					component.HxLoadingMd("create-destination-loading"),
+					component.HxLoadingMd("add-destination-loading"),
 					nodx.Button(
 						htmxAttributes("/dashboard/destinations"),
-						nodx.Class("create-destination-btn btn btn-primary"),
+						nodx.Class("add-destination-btn btn btn-primary"),
 						nodx.Type("button"),
-						component.SpanText("Save"),
+						component.SpanText("Add destination"),
 						lucide.Save(),
 					),
 				),
@@ -148,7 +148,7 @@ func createDestinationButton() nodx.Node {
 	button := nodx.Button(
 		mo.OpenerAttr,
 		nodx.Class("btn btn-primary"),
-		component.SpanText("Create destination"),
+		component.SpanText("Add destination"),
 		lucide.Plus(),
 	)
 

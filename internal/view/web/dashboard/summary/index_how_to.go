@@ -25,17 +25,17 @@ func indexHowTo() nodx.Node {
 						nodx.Li(
 							nodx.Class("step"),
 							alpine.XBind("class", "currentSlide >= 1 ? 'step-primary' : ''"),
-							nodx.Text("Create database"),
+							nodx.Text("Add database"),
 						),
 						nodx.Li(
 							nodx.Class("step"),
 							alpine.XBind("class", "currentSlide >= 2 ? 'step-primary' : ''"),
-							nodx.Text("Create destination"),
+							nodx.Text("Add destination"),
 						),
 						nodx.Li(
 							nodx.Class("step"),
 							alpine.XBind("class", "currentSlide >= 3 ? 'step-primary' : ''"),
-							nodx.Text("Create backup"),
+							nodx.Text("Create backup task"),
 						),
 						nodx.Li(
 							nodx.Class("step"),
@@ -47,22 +47,22 @@ func indexHowTo() nodx.Node {
 
 				nodx.Div(
 					alpine.XShow("currentSlide === 1"),
-					component.H3Text("Create database"),
+					component.H3Text("Add database"),
 					component.PText(`
-						To create a database, click on the "Databases" menu item on the
-						left sidebar. Then click on the "Create database" button. Fill
-						in the form and click on the "Save" button. You can create as
+						To add a database, click on the "Databases" menu item on the
+						left sidebar. Then click on the "Add database" button. Fill
+						in the form and click on the "Save" button. You can add as
 						many databases as you want to backup.
 					`),
 				),
 
 				nodx.Div(
 					alpine.XShow("currentSlide === 2"),
-					component.H3Text("Create S3 destination (optional)"),
+					component.H3Text("Add S3 destination (optional)"),
 					component.PText(`
-						To create a destination, click on the "Destinations" menu item on
-						the left sidebar. Then click on the "Create destination" button.
-						Fill in the form and click on the "Save" button. You can create
+						To add a destination, click on the "Destinations" menu item on
+						the left sidebar. Then click on the "Add destination" button.
+						Fill in the form and click on the "Save" button. You can add
 						as many destinations as you want to store the backups. If you
 						don't want to use S3 destinations and store the backups locally,
 						you can skip this step.
@@ -73,10 +73,10 @@ func indexHowTo() nodx.Node {
 					alpine.XShow("currentSlide === 3"),
 					component.H3Text("Create backup"),
 					component.PText(`
-						To create a backup you need to have at least one database and one
-						destination. Click on the "Backups" menu item on the left sidebar.
-						Then click on the "Create backup" button. Fill in the form and
-						click on the "Save" button. You can create as many backups as you
+						To create a backup task you need to have at least one database and one
+						destination. Click on the "Backup tasks" menu item on the left sidebar.
+						Then click on the "Create backup task" button. Fill in the form and
+						click on the "Save" button. You can create as many backup tasks as you
 						want including any combination of databases and destinations.
 					`),
 				),

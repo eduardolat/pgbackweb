@@ -28,8 +28,8 @@ func (h *handlers) duplicateBackupHandler(c echo.Context) error {
 func duplicateBackupButton(backupID uuid.UUID) nodx.Node {
 	return component.OptionsDropdownButton(
 		htmx.HxPost("/dashboard/backups/"+backupID.String()+"/duplicate"),
-		htmx.HxConfirm("Are you sure you want to duplicate this backup?"),
+		htmx.HxConfirm("Are you sure you want to duplicate this backup task?"),
 		lucide.CopyPlus(),
-		component.SpanText("Duplicate backup"),
+		component.SpanText("Duplicate backup task"),
 	)
 }

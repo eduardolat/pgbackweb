@@ -309,7 +309,7 @@ func createBackupForm(
 			nodx.Button(
 				nodx.Class("btn btn-primary"),
 				nodx.Type("submit"),
-				component.SpanText("Save"),
+				component.SpanText("Create backup task"),
 				lucide.Save(),
 			),
 		),
@@ -319,7 +319,7 @@ func createBackupForm(
 func createBackupButton() nodx.Node {
 	mo := component.Modal(component.ModalParams{
 		Size:  component.SizeLg,
-		Title: "Create backup",
+		Title: "Create backup task",
 		Content: []nodx.Node{
 			nodx.Div(
 				htmx.HxGet("/dashboard/backups/create-form"),
@@ -334,7 +334,7 @@ func createBackupButton() nodx.Node {
 	button := nodx.Button(
 		mo.OpenerAttr,
 		nodx.Class("btn btn-primary"),
-		component.SpanText("Create backup"),
+		component.SpanText("Create backup task"),
 		lucide.Plus(),
 	)
 

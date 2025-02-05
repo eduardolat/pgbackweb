@@ -28,8 +28,8 @@ func (h *handlers) deleteBackupHandler(c echo.Context) error {
 func deleteBackupButton(backupID uuid.UUID) nodx.Node {
 	return component.OptionsDropdownButton(
 		htmx.HxDelete("/dashboard/backups/"+backupID.String()),
-		htmx.HxConfirm("Are you sure you want to delete this backup?"),
+		htmx.HxConfirm("Are you sure you want to delete this backup task?"),
 		lucide.Trash(),
-		component.SpanText("Delete backup"),
+		component.SpanText("Delete backup task"),
 	)
 }

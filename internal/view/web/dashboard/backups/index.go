@@ -21,7 +21,7 @@ func indexPage(reqCtx reqctx.Ctx) nodx.Node {
 	content := []nodx.Node{
 		nodx.Div(
 			nodx.Class("flex justify-between items-start"),
-			component.H1Text("Backups"),
+			component.H1Text("Backup tasks"),
 			createBackupButton(),
 		),
 		component.CardBox(component.CardBoxParams{
@@ -60,7 +60,7 @@ func indexPage(reqCtx reqctx.Ctx) nodx.Node {
 	}
 
 	return layout.Dashboard(reqCtx, layout.DashboardParams{
-		Title: "Backups",
+		Title: "Backup tasks",
 		Body:  content,
 	})
 }

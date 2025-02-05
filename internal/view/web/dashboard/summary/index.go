@@ -173,7 +173,7 @@ func indexPage(
 				Data:     []int32{destinationsQty.Healthy, destinationsQty.Unhealthy},
 				BgColors: []string{greenColor, redColor},
 			}),
-			countCard("Backups", backupsQty.All, ChartData{
+			countCard("Backup tasks", backupsQty.All, ChartData{
 				Label:    "Quantity",
 				Labels:   []string{"Active", "Inactive"},
 				Data:     []int32{backupsQty.Active, backupsQty.Inactive},
