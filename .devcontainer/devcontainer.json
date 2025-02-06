@@ -26,10 +26,10 @@
         // Language specific settings
         /////
         "[json]": {
-          "editor.defaultFormatter": "vscode.json-language-features"
+          "editor.defaultFormatter": "denoland.vscode-deno"
         },
         "[jsonc]": {
-          "editor.defaultFormatter": "vscode.json-language-features"
+          "editor.defaultFormatter": "denoland.vscode-deno"
         },
         "[typescript]": {
           "editor.defaultFormatter": "denoland.vscode-deno"
@@ -38,13 +38,13 @@
           "editor.defaultFormatter": "denoland.vscode-deno"
         },
         "[css]": {
-          "editor.defaultFormatter": "vscode.css-language-features"
+          "editor.defaultFormatter": "denoland.vscode-deno"
         },
         "[html]": {
-          "editor.defaultFormatter": "vscode.html-language-features"
+          "editor.defaultFormatter": "denoland.vscode-deno"
         },
         "[markdown]": {
-          "editor.defaultFormatter": "vscode.markdown-language-features"
+          "editor.defaultFormatter": "denoland.vscode-deno"
         },
         // Go & Golangci-lint
         "[go]": {
