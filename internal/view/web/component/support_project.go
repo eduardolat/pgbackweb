@@ -7,7 +7,6 @@ import (
 )
 
 func SupportProjectModal() ModalResult {
-
 	thanksSection := nodx.Div(
 		nodx.Class("space-y-1"),
 		nodx.P(

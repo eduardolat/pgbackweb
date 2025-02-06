@@ -36,6 +36,18 @@ window.alpineSupportProjectData = function () {
       return this.data?.referralLinks ?? [];
     },
 
+    get bronzeSponsors() {
+      return this.data?.sponsors?.bronze ?? [];
+    },
+
+    get silverSponsors() {
+      return this.data?.sponsors?.silver ?? [];
+    },
+
+    get goldSponsors() {
+      return this.data?.sponsors?.gold ?? [];
+    },
+
     async init() {
       const data = await this.getData();
       if (data !== null) {
