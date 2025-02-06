@@ -155,11 +155,10 @@ func indexPage(
 
 	content := []nodx.Node{
 		nodx.Div(
-			nodx.Class("flex justify-center"),
 			component.H1Text("Summary"),
 		),
 		nodx.Div(
-			nodx.Class("mt-4 flex justify-center flex-wrap gap-4"),
+			nodx.Class("mt-4 flex justify-start flex-wrap gap-4"),
 
 			countCard("Databases", databasesQty.All, ChartData{
 				Label:    "Quantity",
@@ -200,6 +199,11 @@ func indexPage(
 		),
 
 		indexHowTo(),
+
+		nodx.Div(
+			nodx.Class("mt-6"),
+			component.SupportProjectSponsors(),
+		),
 	}
 
 	return layout.Dashboard(reqCtx, layout.DashboardParams{

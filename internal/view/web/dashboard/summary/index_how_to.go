@@ -11,7 +11,7 @@ func indexHowTo() nodx.Node {
 	return nodx.Div(
 		alpine.XData("alpineSummaryHowToSlider()"),
 		alpine.XCloak(),
-		nodx.Class("mt-6 flex flex-col justify-center items-center mx-auto"),
+		nodx.Class("mt-6"),
 
 		component.H2Text("How to use PG Back Web"),
 
