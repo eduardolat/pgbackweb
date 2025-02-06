@@ -4,14 +4,13 @@ import (
 	"net/http"
 	"path/filepath"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func (h *handlers) downloadExecutionHandler(c echo.Context) error {
@@ -38,93 +37,93 @@ func (h *handlers) downloadExecutionHandler(c echo.Context) error {
 
 func showExecutionButton(
 	execution dbgen.ExecutionsServicePaginateExecutionsRow,
-) gomponents.Node {
+) nodx.Node {
 	mo := component.Modal(component.ModalParams{
 		Title: "Execution details",
 		Size:  component.SizeMd,
-		Content: []gomponents.Node{
-			html.Div(
-				html.Class("overflow-x-auto"),
-				html.Table(
-					html.Class("table [&_th]:text-nowrap"),
-					html.Tr(
-						html.Th(component.SpanText("ID")),
-						html.Td(component.SpanText(execution.ID.String())),
+		Content: []nodx.Node{
+			nodx.Div(
+				nodx.Class("overflow-x-auto"),
+				nodx.Table(
+					nodx.Class("table [&_th]:text-nowrap"),
+					nodx.Tr(
+						nodx.Th(component.SpanText("ID")),
+						nodx.Td(component.SpanText(execution.ID.String())),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Status")),
-						html.Td(component.StatusBadge(execution.Status)),
+					nodx.Tr(
+						nodx.Th(component.SpanText("Status")),
+						nodx.Td(component.StatusBadge(execution.Status)),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Database")),
-						html.Td(component.SpanText(execution.DatabaseName)),
+					nodx.Tr(
+						nodx.Th(component.SpanText("Database")),
+						nodx.Td(component.SpanText(execution.DatabaseName)),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Destination")),
-						html.Td(component.PrettyDestinationName(
+					nodx.Tr(
+						nodx.Th(component.SpanText("Destination")),
+						nodx.Td(component.PrettyDestinationName(
 							execution.BackupIsLocal, execution.DestinationName,
 						)),
 					),
-					gomponents.If(
+					nodx.If(
 						execution.Message.Valid,
-						html.Tr(
-							html.Th(component.SpanText("Message")),
-							html.Td(
-								html.Class("break-all"),
+						nodx.Tr(
+							nodx.Th(component.SpanText("Message")),
+							nodx.Td(
+								nodx.Class("break-all"),
 								component.SpanText(execution.Message.String),
 							),
 						),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Started at")),
-						html.Td(component.SpanText(
+					nodx.Tr(
+						nodx.Th(component.SpanText("Started at")),
+						nodx.Td(component.SpanText(
 							execution.StartedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 						)),
 					),
-					gomponents.If(
+					nodx.If(
 						execution.FinishedAt.Valid,
-						html.Tr(
-							html.Th(component.SpanText("Finished at")),
-							html.Td(component.SpanText(
+						nodx.Tr(
+							nodx.Th(component.SpanText("Finished at")),
+							nodx.Td(component.SpanText(
 								execution.FinishedAt.Time.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 							)),
 						),
 					),
-					gomponents.If(
+					nodx.If(
 						execution.FinishedAt.Valid,
-						html.Tr(
-							html.Th(component.SpanText("Took")),
-							html.Td(component.SpanText(
+						nodx.Tr(
+							nodx.Th(component.SpanText("Took")),
+							nodx.Td(component.SpanText(
 								execution.FinishedAt.Time.Sub(execution.StartedAt).String(),
 							)),
 						),
 					),
-					gomponents.If(
+					nodx.If(
 						execution.DeletedAt.Valid,
-						html.Tr(
-							html.Th(component.SpanText("Deleted at")),
-							html.Td(component.SpanText(
+						nodx.Tr(
+							nodx.Th(component.SpanText("Deleted at")),
+							nodx.Td(component.SpanText(
 								execution.DeletedAt.Time.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 							)),
 						),
 					),
-					gomponents.If(
+					nodx.If(
 						execution.FileSize.Valid,
-						html.Tr(
-							html.Th(component.SpanText("File size")),
-							html.Td(component.PrettyFileSize(execution.FileSize)),
+						nodx.Tr(
+							nodx.Th(component.SpanText("File size")),
+							nodx.Td(component.PrettyFileSize(execution.FileSize)),
 						),
 					),
 				),
-				gomponents.If(
+				nodx.If(
 					execution.Status == "success",
-					html.Div(
-						html.Class("flex justify-end items-center space-x-2"),
+					nodx.Div(
+						nodx.Class("flex justify-end items-center space-x-2"),
 						deleteExecutionButton(execution.ID),
-						html.A(
-							html.Href("/dashboard/executions/"+execution.ID.String()+"/download"),
-							html.Target("_blank"),
-							html.Class("btn btn-primary"),
+						nodx.A(
+							nodx.Href("/dashboard/executions/"+execution.ID.String()+"/download"),
+							nodx.Target("_blank"),
+							nodx.Class("btn btn-primary"),
 							component.SpanText("Download"),
 							lucide.Download(),
 						),
@@ -134,7 +133,7 @@ func showExecutionButton(
 		},
 	})
 
-	return html.Div(
+	return nodx.Div(
 		mo.HTML,
 		component.OptionsDropdownButton(
 			mo.OpenerAttr,

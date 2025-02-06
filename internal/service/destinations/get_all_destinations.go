@@ -10,6 +10,6 @@ func (s *Service) GetAllDestinations(
 	ctx context.Context,
 ) ([]dbgen.DestinationsServiceGetAllDestinationsRow, error) {
 	return s.dbgen.DestinationsServiceGetAllDestinations(
-		ctx, *s.env.PBW_ENCRYPTION_KEY,
+		ctx, s.env.PBW_ENCRYPTION_KEY,
 	)
 }

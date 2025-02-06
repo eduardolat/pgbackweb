@@ -6,14 +6,14 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/view/reqctx"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/labstack/echo/v4"
+	htmx "github.com/nodxdev/nodxgo-htmx"
 )
 
 func (m *Middleware) InjectReqctx(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		reqCtx := reqctx.Ctx{
-			IsHTMXBoosted: htmx.ServerIsBoosted(c),
+			IsHTMXBoosted: htmx.ServerGetIsBoosted(c.Request().Header),
 		}
 
 		found, user, err := m.servs.AuthService.GetUserFromSessionCookie(c)

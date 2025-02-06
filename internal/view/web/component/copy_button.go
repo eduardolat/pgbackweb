@@ -4,15 +4,13 @@ import (
 	"fmt"
 	"strings"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/google/uuid"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/components"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 // CopyButtonSm is a small copy button.
-func CopyButtonSm(textToCopy string) gomponents.Node {
+func CopyButtonSm(textToCopy string) nodx.Node {
 	return copyButton(copyButtonProps{
 		TextToCopy: textToCopy,
 		Size:       SizeSm,
@@ -20,14 +18,14 @@ func CopyButtonSm(textToCopy string) gomponents.Node {
 }
 
 // CopyButtonMd is a medium copy button.
-func CopyButtonMd(textToCopy string) gomponents.Node {
+func CopyButtonMd(textToCopy string) nodx.Node {
 	return copyButton(copyButtonProps{
 		TextToCopy: textToCopy,
 	})
 }
 
 // CopyButtonLg is a large copy button.
-func CopyButtonLg(textToCopy string) gomponents.Node {
+func CopyButtonLg(textToCopy string) nodx.Node {
 	return copyButton(copyButtonProps{
 		TextToCopy: textToCopy,
 		Size:       SizeLg,
@@ -44,24 +42,24 @@ type copyButtonProps struct {
 }
 
 // copyButton is a button that copies text to the clipboard when clicked.
-func copyButton(props copyButtonProps) gomponents.Node {
+func copyButton(props copyButtonProps) nodx.Node {
 	id := uuid.NewString()
 	id = strings.ReplaceAll(id, "-", "")
 
 	sc := copyButtonScript(id, props.TextToCopy)
 
-	return html.Div(
-		html.Class("inline-block tooltip tooltip-right"),
-		html.Data("tip", "Copy to clipboard"),
+	return nodx.Div(
+		nodx.Class("inline-block tooltip tooltip-right"),
+		nodx.Data("tip", "Copy to clipboard"),
 		sc.script,
-		html.Button(
-			components.Classes{
+		nodx.Button(
+			nodx.ClassMap{
 				"btn btn-neutral btn-square btn-ghost": true,
 				"btn-sm":                               props.Size == SizeSm,
 				"btn-lg":                               props.Size == SizeLg,
 			},
-			html.ID(id),
-			html.Title("Copy to clipboard"),
+			nodx.Id(id),
+			nodx.TitleAttr("Copy to clipboard"),
 			sc.copyEvent,
 			lucide.Copy(),
 		),
@@ -74,8 +72,8 @@ func copyButtonScript(
 	id string,
 	textToCopy string,
 ) struct {
-	script    gomponents.Node
-	copyEvent gomponents.Node
+	script    nodx.Node
+	copyEvent nodx.Node
 } {
 	escapedTextToCopy := strings.ReplaceAll(textToCopy, "`", "\\`")
 
@@ -85,12 +83,12 @@ func copyButtonScript(
 		escapedTextToCopy,
 	)
 
-	script := gomponents.Raw(rawScript)
-	copyEvent := gomponents.Attr("onclick", fmt.Sprintf("copy%s()", id))
+	script := nodx.Raw(rawScript)
+	copyEvent := nodx.Attr("onclick", fmt.Sprintf("copy%s()", id))
 
 	return struct {
-		script    gomponents.Node
-		copyEvent gomponents.Node
+		script    nodx.Node
+		copyEvent nodx.Node
 	}{
 		script:    script,
 		copyEvent: copyEvent,

@@ -10,8 +10,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
 func (h *handlers) indexPageHandler(c echo.Context) error {
@@ -24,19 +23,19 @@ func (h *handlers) indexPageHandler(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "failed to get user sessions")
 	}
 
-	return echoutil.RenderGomponent(
+	return echoutil.RenderNodx(
 		c, http.StatusOK, indexPage(reqCtx, sessions),
 	)
 }
 
-func indexPage(reqCtx reqctx.Ctx, sessions []dbgen.Session) gomponents.Node {
-	content := []gomponents.Node{
+func indexPage(reqCtx reqctx.Ctx, sessions []dbgen.Session) nodx.Node {
+	content := []nodx.Node{
 		component.H1Text("Profile"),
 
-		html.Div(
-			html.Class("mt-4 grid grid-cols-2 gap-4"),
-			html.Div(updateUserForm(reqCtx.User)),
-			html.Div(closeAllSessionsForm(sessions)),
+		nodx.Div(
+			nodx.Class("mt-4 grid grid-cols-2 gap-4"),
+			nodx.Div(updateUserForm(reqCtx.User)),
+			nodx.Div(closeAllSessionsForm(sessions)),
 		),
 	}
 

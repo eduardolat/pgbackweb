@@ -8,14 +8,14 @@ import (
 )
 
 type Service struct {
-	env             *config.Env
+	env             config.Env
 	dbgen           *dbgen.Queries
 	ints            *integration.Integration
 	webhooksService *webhooks.Service
 }
 
 func New(
-	env *config.Env, dbgen *dbgen.Queries, ints *integration.Integration,
+	env config.Env, dbgen *dbgen.Queries, ints *integration.Integration,
 	webhooksService *webhooks.Service,
 ) *Service {
 	return &Service{

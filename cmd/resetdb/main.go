@@ -28,10 +28,14 @@ func main() {
 		log.Println("Please enter 'yes' or 'no'")
 	}
 
-	env := config.GetEnv()
+	env, err := config.GetEnv()
+	if err != nil {
+		panic(err)
+	}
+
 	db := connectDB(env)
 
-	_, err := db.Exec("DROP SCHEMA public CASCADE; CREATE SCHEMA public;")
+	_, err = db.Exec("DROP SCHEMA public CASCADE; CREATE SCHEMA public;")
 	if err != nil {
 		panic(fmt.Errorf("❌ Could not reset DB: %w", err))
 	}
@@ -39,8 +43,8 @@ func main() {
 	log.Println("✅ Database reset")
 }
 
-func connectDB(env *config.Env) *sql.DB {
-	db, err := sql.Open("postgres", *env.PBW_POSTGRES_CONN_STRING)
+func connectDB(env config.Env) *sql.DB {
+	db, err := sql.Open("postgres", env.PBW_POSTGRES_CONN_STRING)
 	if err != nil {
 		panic(fmt.Errorf("❌ Could not connect to DB: %w", err))
 	}

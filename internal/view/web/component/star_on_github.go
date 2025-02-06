@@ -1,27 +1,25 @@
 package component
 
 import (
-	lucide "github.com/eduardolat/gomponents-lucide"
-	"github.com/eduardolat/pgbackweb/internal/view/web/alpine"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/components"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	alpine "github.com/nodxdev/nodxgo-alpine"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
-func StarOnGithub(size size) gomponents.Node {
-	return html.A(
-		alpine.XData("githubRepoInfo"),
+func StarOnGithub(size size) nodx.Node {
+	return nodx.A(
+		alpine.XData("alpineStarOnGithub()"),
 		alpine.XCloak(),
-		components.Classes{
+		nodx.ClassMap{
 			"btn btn-neutral": true,
 			"btn-sm":          size == SizeSm,
 			"btn-lg":          size == SizeLg,
 		},
-		html.Href("https://github.com/eduardolat/pgbackweb"),
-		html.Target("_blank"),
+		nodx.Href("https://github.com/eduardolat/pgbackweb"),
+		nodx.Target("_blank"),
 		lucide.Github(),
-		SpanText("Star on Github"),
-		html.Span(
+		SpanText("Star"),
+		nodx.SpanEl(
 			alpine.XShow("stars"),
 			alpine.XText("'( ' + stars + ' )'"),
 		),

@@ -1,38 +1,37 @@
 package component
 
 import (
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
 // HxLoadingSm returns a small loading indicator.
-func HxLoadingSm(id ...string) gomponents.Node {
+func HxLoadingSm(id ...string) nodx.Node {
 	return hxLoading(SizeSm, id...)
 }
 
 // HxLoadingMd returns a loading indicator.
-func HxLoadingMd(id ...string) gomponents.Node {
+func HxLoadingMd(id ...string) nodx.Node {
 	return hxLoading(SizeMd, id...)
 }
 
 // HxLoadingLg returns a large loading indicator.
-func HxLoadingLg(id ...string) gomponents.Node {
+func HxLoadingLg(id ...string) nodx.Node {
 	return hxLoading(SizeLg, id...)
 }
 
-func hxLoading(size size, id ...string) gomponents.Node {
+func hxLoading(size size, id ...string) nodx.Node {
 	pickedID := ""
 	if len(id) > 0 {
 		pickedID = id[0]
 	}
 
-	return html.Div(
-		gomponents.If(
+	return nodx.Div(
+		nodx.If(
 			pickedID != "",
-			html.ID(pickedID),
+			nodx.Id(pickedID),
 		),
-		html.Class("htmx-indicator inline-block"),
-		func() gomponents.Node {
+		nodx.Class("htmx-indicator inline-block"),
+		func() nodx.Node {
 			switch size {
 			case SizeSm:
 				return SpinnerSm()

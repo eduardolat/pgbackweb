@@ -14,7 +14,7 @@ func (s *Service) GetUserByToken(
 	user, err := s.dbgen.AuthServiceGetUserByToken(
 		ctx, dbgen.AuthServiceGetUserByTokenParams{
 			Token:         token,
-			EncryptionKey: *s.env.PBW_ENCRYPTION_KEY,
+			EncryptionKey: s.env.PBW_ENCRYPTION_KEY,
 		},
 	)
 	if err != nil && errors.Is(err, sql.ErrNoRows) {

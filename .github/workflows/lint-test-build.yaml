@@ -1,47 +1,54 @@
-name: Lint, test & build
-
+name: Lint, test, and build
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+      - develop
   pull_request:
     branches:
       - main
+      - develop
 
 jobs:
-  build-test-lint:
-    name: Build, test & lint
-    runs-on: ubuntu-latest
+  lint-test-build:
     strategy:
       matrix:
-        platform: [linux/amd64, linux/arm64]
+        vars: [
+          { os: ubuntu-24.04, platform: linux/amd64 },
+          { os: ubuntu-24.04-arm, platform: linux/arm64 },
+        ]
+
+    name: Lint, test, and build the code
+    runs-on: ${{ matrix.vars.os }}
+    timeout-minutes: 20
+
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
+      - name: Setup Docker buildx for multi-architecture builds
         uses: docker/setup-buildx-action@v3
+        with:
+          use: true
 
-      - name: Build Docker image
-        run: |
-          docker buildx create --use
-          docker buildx build \
-            --platform ${{ matrix.platform }} \
-            -t pbw-test-${{ matrix.platform }}:latest \
-            -f ./docker/Dockerfile.cicd \
-            --load .
+      - name: Build the Docker image
+        run: >
+          docker buildx build
+          --load
+          --platform ${{ matrix.vars.platform }}
+          --tag pgbackweb:latest
+          --file docker/Dockerfile.dev .
 
-      - name: Run dependencies check
-        run: docker run --rm --platform ${{ matrix.platform }} pbw-test-${{ matrix.platform }}:latest task check-deps
-
-      - name: Run linter
-        run: docker run --rm --platform ${{ matrix.platform }} pbw-test-${{ matrix.platform }}:latest task lint-only
-
-      - name: Run tests
-        run: docker run --rm --platform ${{ matrix.platform }} pbw-test-${{ matrix.platform }}:latest task test-only
-
-      - name: Build project
-        run: docker run --rm --platform ${{ matrix.platform }} pbw-test-${{ matrix.platform }}:latest task build
+      - name: Run lint, test, and build
+        run: >
+          docker run --rm -v $PWD:/app pgbackweb:latest /bin/bash -c "
+            cd /app &&
+            deno install &&
+            go mod download &&
+            task fixperms &&
+            task check-deps &&
+            task lint-only &&
+            task test-only &&
+            task build
+          "

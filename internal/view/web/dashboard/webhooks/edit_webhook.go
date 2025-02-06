@@ -4,16 +4,16 @@ import (
 	"database/sql"
 	"net/http"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
+	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	htmx "github.com/nodxdev/nodxgo-htmx"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 type editWebhookDTO struct {
@@ -31,15 +31,15 @@ func (h *handlers) editWebhookHandler(c echo.Context) error {
 	ctx := c.Request().Context()
 	webhookID, err := uuid.Parse(c.Param("webhookID"))
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	var formData editWebhookDTO
 	if err := c.Bind(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	_, err = h.servs.WebhooksService.UpdateWebhook(
@@ -56,40 +56,40 @@ func (h *handlers) editWebhookHandler(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
-	return htmx.RespondAlertWithRefresh(c, "Webhook updated")
+	return respondhtmx.AlertWithRefresh(c, "Webhook updated")
 }
 
 func (h *handlers) editWebhookFormHandler(c echo.Context) error {
 	ctx := c.Request().Context()
 	webhookID, err := uuid.Parse(c.Param("webhookID"))
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	webhook, err := h.servs.WebhooksService.GetWebhook(ctx, webhookID)
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	databases, err := h.servs.DatabasesService.GetAllDatabases(ctx)
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	destinations, err := h.servs.DestinationsService.GetAllDestinations(ctx)
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	backups, err := h.servs.BackupsService.GetAllBackups(ctx)
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
-	return echoutil.RenderGomponent(c, http.StatusOK, editWebhookForm(
+	return echoutil.RenderNodx(c, http.StatusOK, editWebhookForm(
 		webhook, databases, destinations, backups,
 	))
 }
@@ -99,20 +99,20 @@ func editWebhookForm(
 	databases []dbgen.DatabasesServiceGetAllDatabasesRow,
 	destinations []dbgen.DestinationsServiceGetAllDestinationsRow,
 	backups []dbgen.Backup,
-) gomponents.Node {
-	return html.Form(
+) nodx.Node {
+	return nodx.FormEl(
 		htmx.HxPost("/dashboard/webhooks/"+webhook.ID.String()+"/edit"),
 		htmx.HxDisabledELT("find button[type='submit']"),
-		html.Class("space-y-2"),
+		nodx.Class("space-y-2"),
 
 		createAndUpdateWebhookForm(databases, destinations, backups, webhook),
 
-		html.Div(
-			html.Class("flex justify-end items-center space-x-2 pt-2"),
+		nodx.Div(
+			nodx.Class("flex justify-end items-center space-x-2 pt-2"),
 			component.HxLoadingMd(),
-			html.Button(
-				html.Class("btn btn-primary"),
-				html.Type("submit"),
+			nodx.Button(
+				nodx.Class("btn btn-primary"),
+				nodx.Type("submit"),
 				component.SpanText("Save"),
 				lucide.Save(),
 			),
@@ -120,22 +120,22 @@ func editWebhookForm(
 	)
 }
 
-func editWebhookButton(webhookID uuid.UUID) gomponents.Node {
+func editWebhookButton(webhookID uuid.UUID) nodx.Node {
 	mo := component.Modal(component.ModalParams{
 		Size:  component.SizeLg,
 		Title: "Edit webhook",
-		Content: []gomponents.Node{
-			html.Div(
+		Content: []nodx.Node{
+			nodx.Div(
 				htmx.HxGet("/dashboard/webhooks/"+webhookID.String()+"/edit"),
 				htmx.HxSwap("outerHTML"),
 				htmx.HxTrigger("intersect once"),
-				html.Class("p-10 flex justify-center"),
+				nodx.Class("p-10 flex justify-center"),
 				component.HxLoadingMd(),
 			),
 		},
 	})
 
-	return html.Div(
+	return nodx.Div(
 		mo.HTML,
 		component.OptionsDropdownButton(
 			mo.OpenerAttr,

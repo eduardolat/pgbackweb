@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/service/backups"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
@@ -12,10 +11,11 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
+	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	htmx "github.com/nodxdev/nodxgo-htmx"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func (h *handlers) listBackupsHandler(c echo.Context) error {
@@ -25,10 +25,10 @@ func (h *handlers) listBackupsHandler(c echo.Context) error {
 		Page int `query:"page" validate:"required,min=1"`
 	}
 	if err := c.Bind(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	pagination, backups, err := h.servs.BackupsService.PaginateBackups(
@@ -38,10 +38,10 @@ func (h *handlers) listBackupsHandler(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
-	return echoutil.RenderGomponent(
+	return echoutil.RenderNodx(
 		c, http.StatusOK, listBackups(pagination, backups),
 	)
 }
@@ -49,7 +49,7 @@ func (h *handlers) listBackupsHandler(c echo.Context) error {
 func listBackups(
 	pagination paginateutil.PaginateResponse,
 	backups []dbgen.BackupsServicePaginateBackupsRow,
-) gomponents.Node {
+) nodx.Node {
 	if len(backups) < 1 {
 		return component.EmptyResultsTr(component.EmptyResultsParams{
 			Title:    "No backups found",
@@ -57,23 +57,23 @@ func listBackups(
 		})
 	}
 
-	yesNoSpan := func(b bool) gomponents.Node {
+	yesNoSpan := func(b bool) nodx.Node {
 		if b {
 			return component.SpanText("Yes")
 		}
 		return component.SpanText("No")
 	}
 
-	trs := []gomponents.Node{}
+	trs := []nodx.Node{}
 	for _, backup := range backups {
-		trs = append(trs, html.Tr(
-			html.Td(component.OptionsDropdown(
+		trs = append(trs, nodx.Tr(
+			nodx.Td(component.OptionsDropdown(
 				component.OptionsDropdownA(
-					html.Class("btn btn-sm btn-ghost btn-square"),
-					html.Href(
+					nodx.Class("btn btn-sm btn-ghost btn-square"),
+					nodx.Href(
 						fmt.Sprintf("/dashboard/executions?backup=%s", backup.ID),
 					),
-					html.Target("_blank"),
+					nodx.Target("_blank"),
 					lucide.List(),
 					component.SpanText("Show executions"),
 				),
@@ -82,49 +82,49 @@ func listBackups(
 				duplicateBackupButton(backup.ID),
 				deleteBackupButton(backup.ID),
 			)),
-			html.Td(
-				html.Div(
-					html.Class("flex items-center space-x-2"),
+			nodx.Td(
+				nodx.Div(
+					nodx.Class("flex items-center space-x-2"),
 					component.IsActivePing(backup.IsActive),
 					component.SpanText(backup.Name),
 				),
 			),
-			html.Td(component.SpanText(backup.DatabaseName)),
-			html.Td(component.PrettyDestinationName(
+			nodx.Td(component.SpanText(backup.DatabaseName)),
+			nodx.Td(component.PrettyDestinationName(
 				backup.IsLocal, backup.DestinationName,
 			)),
-			html.Td(
-				html.Class("font-mono"),
-				html.Div(
-					html.Class("flex flex-col items-start text-xs"),
+			nodx.Td(
+				nodx.Class("font-mono"),
+				nodx.Div(
+					nodx.Class("flex flex-col items-start text-xs"),
 					component.SpanText(backup.CronExpression),
 					component.SpanText(backup.TimeZone),
 				),
 			),
-			html.Td(
-				gomponents.If(
+			nodx.Td(
+				nodx.If(
 					backup.RetentionDays == 0,
 					lucide.Infinity(),
 				),
-				gomponents.If(
+				nodx.If(
 					backup.RetentionDays > 0,
 					component.SpanText(fmt.Sprintf("%d days", backup.RetentionDays)),
 				),
 			),
-			html.Td(yesNoSpan(backup.OptDataOnly)),
-			html.Td(yesNoSpan(backup.OptSchemaOnly)),
-			html.Td(yesNoSpan(backup.OptClean)),
-			html.Td(yesNoSpan(backup.OptIfExists)),
-			html.Td(yesNoSpan(backup.OptCreate)),
-			html.Td(yesNoSpan(backup.OptNoComments)),
-			html.Td(component.SpanText(
+			nodx.Td(yesNoSpan(backup.OptDataOnly)),
+			nodx.Td(yesNoSpan(backup.OptSchemaOnly)),
+			nodx.Td(yesNoSpan(backup.OptClean)),
+			nodx.Td(yesNoSpan(backup.OptIfExists)),
+			nodx.Td(yesNoSpan(backup.OptCreate)),
+			nodx.Td(yesNoSpan(backup.OptNoComments)),
+			nodx.Td(component.SpanText(
 				backup.CreatedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 			)),
 		))
 	}
 
 	if pagination.HasNextPage {
-		trs = append(trs, html.Tr(
+		trs = append(trs, nodx.Tr(
 			htmx.HxGet(fmt.Sprintf(
 				"/dashboard/backups/list?page=%d", pagination.NextPage,
 			)),

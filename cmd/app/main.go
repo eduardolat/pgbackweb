@@ -13,7 +13,10 @@ import (
 )
 
 func main() {
-	env := config.GetEnv()
+	env, err := config.GetEnv()
+	if err != nil {
+		logger.FatalError("error getting environment variables", logger.KV{"error": err})
+	}
 
 	cr, err := cron.New()
 	if err != nil {
@@ -43,8 +46,12 @@ func main() {
 	app.HidePort = true
 	view.MountRouter(app, servs)
 
-	logger.Info("server started at http://localhost:8085")
-	if err := app.Start(":8085"); err != nil {
+	address := env.PBW_LISTEN_HOST + ":" + env.PBW_LISTEN_PORT
+	logger.Info("server started at http://localhost:"+env.PBW_LISTEN_PORT, logger.KV{
+		"listenHost": env.PBW_LISTEN_HOST,
+		"listenPort": env.PBW_LISTEN_PORT,
+	})
+	if err := app.Start(address); err != nil {
 		logger.FatalError("error starting server", logger.KV{"error": err})
 	}
 }

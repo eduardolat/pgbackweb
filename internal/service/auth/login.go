@@ -27,7 +27,7 @@ func (s *Service) Login(
 			Ip:            ip,
 			UserAgent:     userAgent,
 			Token:         uuid.NewString(),
-			EncryptionKey: *s.env.PBW_ENCRYPTION_KEY,
+			EncryptionKey: s.env.PBW_ENCRYPTION_KEY,
 		},
 	)
 	if err != nil {

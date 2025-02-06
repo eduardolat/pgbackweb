@@ -32,7 +32,7 @@ func (s *Service) PaginateDatabases(
 
 	databases, err := s.dbgen.DatabasesServicePaginateDatabases(
 		ctx, dbgen.DatabasesServicePaginateDatabasesParams{
-			EncryptionKey: *s.env.PBW_ENCRYPTION_KEY,
+			EncryptionKey: s.env.PBW_ENCRYPTION_KEY,
 			Limit:         int32(params.Limit),
 			Offset:        int32(offset),
 		},

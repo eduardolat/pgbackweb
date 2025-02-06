@@ -15,7 +15,7 @@ func (s *Service) SoftDeleteExecution(
 	execution, err := s.dbgen.ExecutionsServiceGetExecutionForSoftDelete(
 		ctx, dbgen.ExecutionsServiceGetExecutionForSoftDeleteParams{
 			ExecutionID:   executionID,
-			EncryptionKey: *s.env.PBW_ENCRYPTION_KEY,
+			EncryptionKey: s.env.PBW_ENCRYPTION_KEY,
 		},
 	)
 	if err != nil && errors.Is(err, sql.ErrNoRows) {

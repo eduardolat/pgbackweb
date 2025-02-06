@@ -21,7 +21,7 @@ func (s *Service) GetExecutionDownloadLinkOrPath(
 	data, err := s.dbgen.ExecutionsServiceGetDownloadLinkOrPathData(
 		ctx, dbgen.ExecutionsServiceGetDownloadLinkOrPathDataParams{
 			ExecutionID:   executionID,
-			DecryptionKey: *s.env.PBW_ENCRYPTION_KEY,
+			DecryptionKey: s.env.PBW_ENCRYPTION_KEY,
 		},
 	)
 	if err != nil {

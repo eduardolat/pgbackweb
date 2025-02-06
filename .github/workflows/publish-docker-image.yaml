@@ -4,29 +4,38 @@ on:
   workflow_dispatch:
     inputs:
       commit:
-        description: "Commit SHA or branch to build"
+        description: The specific commit SHA or branch name to build from (e.g., main or a feature branch)
         required: true
-        default: "main"
-      tags:
-        description: "Array of docker image tags to build and push separated by commas"
+        default: main
+      tag:
+        description: The version tag for the Docker image (e.g., 1.0.0)
         required: true
-        default: "latest"
+      latest:
+        description: Choose "yes" to also tag the image as "latest" in Docker Hub
+        required: true
+        type: choice
+        options:
+          - "no"
+          - "yes"
 
 jobs:
-  build-and-publish:
-    name: Build and Publish Docker Image
-    runs-on: ubuntu-latest
+  build-and-push-images:
+    strategy:
+      matrix:
+        vars: [
+          { os: ubuntu-24.04, platform: amd64 },
+          { os: ubuntu-24.04-arm, platform: arm64 },
+        ]
+
+    name: Build and push images
+    runs-on: ${{ matrix.vars.os }}
+    timeout-minutes: 20
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.commit }}
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -34,18 +43,45 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build the Docker image
+        run: >
+          docker build
+          --tag eduardolat/pgbackweb:${{ github.event.inputs.tag }}-${{ matrix.vars.platform }}
+          --build-arg TARGETPLATFORM=linux/${{ matrix.vars.platform }}
+          --file docker/Dockerfile .
+
+      - name: Push the Docker image
+        run: docker push eduardolat/pgbackweb:${{ github.event.inputs.tag }}-${{ matrix.vars.platform }}
+
+  merge-and-push-manifest:
+    name: Merge manifest
+    needs: build-and-push-images
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.commit }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+
+      - name: Merge and push manifest
         run: |
-          docker buildx create --use
+          docker manifest create eduardolat/pgbackweb:${{ github.event.inputs.tag }} \
+          eduardolat/pgbackweb:${{ github.event.inputs.tag }}-amd64 \
+          eduardolat/pgbackweb:${{ github.event.inputs.tag }}-arm64
 
-          IFS=',' read -r -a tags <<< "${{ github.event.inputs.tags }}"
-          tag_args=""
-          for tag in "${tags[@]}"; do
-            tag_args="$tag_args -t eduardolat/pgbackweb:$tag"
-          done
+          docker manifest push eduardolat/pgbackweb:${{ github.event.inputs.tag }}
 
-          docker buildx build \
-            --platform linux/amd64,linux/arm64 \
-            $tag_args \
-            -f ./docker/Dockerfile \
-            --push .
+          if [ "${{ github.event.inputs.latest }}" == "yes" ]; then
+            docker manifest create eduardolat/pgbackweb:latest \
+            eduardolat/pgbackweb:${{ github.event.inputs.tag }}-amd64 \
+            eduardolat/pgbackweb:${{ github.event.inputs.tag }}-arm64
+
+            docker manifest push eduardolat/pgbackweb:latest
+          fi

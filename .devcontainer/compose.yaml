@@ -1,0 +1,66 @@
+name: pgbackweb-dev
+
+services:
+  devcontainer:
+    container_name: pbw_devcontainer
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile.dev
+    ports:
+      - "8085:8085"
+    volumes:
+      - ../..:/workspaces:cached
+    networks:
+      - pbw_network
+    depends_on:
+      - postgres
+      - adminer
+      - minio
+
+  postgres:
+    container_name: pbw_postgres
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: pgbackweb
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pbw_vol_postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - pbw_network
+
+  adminer:
+    container_name: pbw_adminer
+    image: adminer:4.8.1
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: pbw_postgres
+      ADMINER_DESIGN: "lucas-sandery"
+    networks:
+      - pbw_network
+
+  minio:
+    container_name: pbw_minio
+    image: minio/minio:RELEASE.2024-02-12T21-02-27Z
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+    environment:
+      MINIO_ROOT_USER: "root"
+      MINIO_ROOT_PASSWORD: "password"
+    volumes:
+      - pbw_vol_minio:/data
+    command: minio server /data/minio --console-address ":9090"
+    networks:
+      - pbw_network
+
+volumes:
+  pbw_vol_postgres:
+  pbw_vol_minio:
+
+networks:
+  pbw_network:
+    driver: bridge

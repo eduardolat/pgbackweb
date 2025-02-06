@@ -17,7 +17,7 @@ func (s *Service) UpdateDestination(
 		return dbgen.Destination{}, err
 	}
 
-	params.EncryptionKey = *s.env.PBW_ENCRYPTION_KEY
+	params.EncryptionKey = s.env.PBW_ENCRYPTION_KEY
 	dest, err := s.dbgen.DestinationsServiceUpdateDestination(ctx, params)
 
 	_ = s.TestDestinationAndStoreResult(ctx, dest.ID)

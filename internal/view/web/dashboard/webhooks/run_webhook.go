@@ -3,19 +3,20 @@ package webhooks
 import (
 	"context"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
+	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
+	nodx "github.com/nodxdev/nodxgo"
+	htmx "github.com/nodxdev/nodxgo-htmx"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func (h *handlers) runWebhookHandler(c echo.Context) error {
 	webhookID, err := uuid.Parse(c.Param("webhookID"))
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	go func() {
@@ -37,10 +38,10 @@ func (h *handlers) runWebhookHandler(c echo.Context) error {
 		}
 	}()
 
-	return htmx.RespondToastSuccess(c, "Running webhook, check the webhook executions for more details")
+	return respondhtmx.ToastSuccess(c, "Running webhook, check the webhook executions for more details")
 }
 
-func runWebhookButton(webhookID uuid.UUID) gomponents.Node {
+func runWebhookButton(webhookID uuid.UUID) nodx.Node {
 	return component.OptionsDropdownButton(
 		htmx.HxPost("/dashboard/webhooks/"+webhookID.String()+"/run"),
 		htmx.HxDisabledELT("this"),

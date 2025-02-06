@@ -3,16 +3,16 @@ package auth
 import (
 	"net/http"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
+	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	htmx "github.com/nodxdev/nodxgo-htmx"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func (h *handlers) loginPageHandler(c echo.Context) error {
@@ -31,17 +31,17 @@ func (h *handlers) loginPageHandler(c echo.Context) error {
 		return c.Redirect(http.StatusFound, "/auth/create-first-user")
 	}
 
-	return echoutil.RenderGomponent(c, http.StatusOK, loginPage())
+	return echoutil.RenderNodx(c, http.StatusOK, loginPage())
 }
 
-func loginPage() gomponents.Node {
-	content := []gomponents.Node{
+func loginPage() nodx.Node {
+	content := []nodx.Node{
 		component.H1Text("Login"),
 
-		html.Form(
+		nodx.FormEl(
 			htmx.HxPost("/auth/login"),
 			htmx.HxDisabledELT("find button"),
-			html.Class("mt-4 space-y-2"),
+			nodx.Class("mt-4 space-y-2"),
 
 			component.InputControl(component.InputControlParams{
 				Name:         "email",
@@ -61,12 +61,12 @@ func loginPage() gomponents.Node {
 				AutoComplete: "current-password",
 			}),
 
-			html.Div(
-				html.Class("pt-2 flex justify-end items-center space-x-2"),
+			nodx.Div(
+				nodx.Class("pt-2 flex justify-end items-center space-x-2"),
 				component.HxLoadingMd(),
-				html.Button(
-					html.Class("btn btn-primary"),
-					html.Type("submit"),
+				nodx.Button(
+					nodx.Class("btn btn-primary"),
+					nodx.Type("submit"),
 					component.SpanText("Login"),
 					lucide.LogIn(),
 				),
@@ -88,10 +88,10 @@ func (h *handlers) loginHandler(c echo.Context) error {
 		Password string `form:"password" validate:"required,max=50"`
 	}
 	if err := c.Bind(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	session, err := h.servs.AuthService.Login(
@@ -104,9 +104,9 @@ func (h *handlers) loginHandler(c echo.Context) error {
 			"ua":    c.Request().UserAgent(),
 			"err":   err,
 		})
-		return htmx.RespondToastError(c, "Login failed")
+		return respondhtmx.ToastError(c, "Login failed")
 	}
 
 	h.servs.AuthService.SetSessionCookie(c, session.DecryptedToken)
-	return htmx.RespondRedirect(c, "/dashboard")
+	return respondhtmx.Redirect(c, "/dashboard")
 }

@@ -1,23 +1,22 @@
 package component
 
 import (
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
-func SkeletonTr(rows int) gomponents.Node {
-	rs := make([]gomponents.Node, rows)
+func SkeletonTr(rows int) nodx.Node {
+	rs := make([]nodx.Node, rows)
 	for i := range rs {
-		rs[i] = html.Tr(
-			html.Td(
-				html.ColSpan("100%"),
-				html.Div(
-					html.Class("animate-pulse h-4 w-full bg-base-300 rounded-badge"),
+		rs[i] = nodx.Tr(
+			nodx.Td(
+				nodx.Colspan("100%"),
+				nodx.Div(
+					nodx.Class("animate-pulse h-4 w-full bg-base-300 rounded-badge"),
 				),
 			),
 		)
 	}
 
-	return gomponents.Group(rs)
+	return nodx.Group(rs...)
 
 }

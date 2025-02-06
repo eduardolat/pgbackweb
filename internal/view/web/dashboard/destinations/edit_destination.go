@@ -3,16 +3,15 @@ package destinations
 import (
 	"database/sql"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
+	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/components"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	htmx "github.com/nodxdev/nodxgo-htmx"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func (h *handlers) editDestinationHandler(c echo.Context) error {
@@ -20,15 +19,15 @@ func (h *handlers) editDestinationHandler(c echo.Context) error {
 
 	destinationID, err := uuid.Parse(c.Param("destinationID"))
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	var formData createDestinationDTO
 	if err := c.Bind(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	_, err = h.servs.DestinationsService.UpdateDestination(
@@ -43,37 +42,37 @@ func (h *handlers) editDestinationHandler(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
-	return htmx.RespondAlertWithRefresh(c, "Destination updated")
+	return respondhtmx.AlertWithRefresh(c, "Destination updated")
 }
 
 func editDestinationButton(
 	destination dbgen.DestinationsServicePaginateDestinationsRow,
-) gomponents.Node {
+) nodx.Node {
 	idPref := "edit-destination-" + destination.ID.String()
 	formID := idPref + "-form"
 	btnClass := idPref + "-btn"
 	loadingID := idPref + "-loading"
 
-	htmxAttributes := func(url string) gomponents.Node {
-		return gomponents.Group([]gomponents.Node{
+	htmxAttributes := func(url string) nodx.Node {
+		return nodx.Group(
 			htmx.HxPost(url),
-			htmx.HxInclude("#" + formID),
-			htmx.HxDisabledELT("." + btnClass),
-			htmx.HxIndicator("#" + loadingID),
+			htmx.HxInclude("#"+formID),
+			htmx.HxDisabledELT("."+btnClass),
+			htmx.HxIndicator("#"+loadingID),
 			htmx.HxValidate("true"),
-		})
+		)
 	}
 
 	mo := component.Modal(component.ModalParams{
 		Size:  component.SizeMd,
 		Title: "Edit destination",
-		Content: []gomponents.Node{
-			html.Form(
-				html.ID(formID),
-				html.Class("space-y-2"),
+		Content: []nodx.Node{
+			nodx.FormEl(
+				nodx.Id(formID),
+				nodx.Class("space-y-2"),
 
 				component.InputControl(component.InputControlParams{
 					Name:        "name",
@@ -82,8 +81,8 @@ func editDestinationButton(
 					Required:    true,
 					Type:        component.InputTypeText,
 					HelpText:    "A name to easily identify the destination",
-					Children: []gomponents.Node{
-						html.Value(destination.Name),
+					Children: []nodx.Node{
+						nodx.Value(destination.Name),
 					},
 				}),
 
@@ -93,8 +92,8 @@ func editDestinationButton(
 					Placeholder: "my-bucket",
 					Required:    true,
 					Type:        component.InputTypeText,
-					Children: []gomponents.Node{
-						html.Value(destination.BucketName),
+					Children: []nodx.Node{
+						nodx.Value(destination.BucketName),
 					},
 				}),
 
@@ -104,8 +103,8 @@ func editDestinationButton(
 					Placeholder: "s3-us-west-1.amazonaws.com",
 					Required:    true,
 					Type:        component.InputTypeText,
-					Children: []gomponents.Node{
-						html.Value(destination.Endpoint),
+					Children: []nodx.Node{
+						nodx.Value(destination.Endpoint),
 					},
 				}),
 
@@ -115,8 +114,8 @@ func editDestinationButton(
 					Placeholder: "us-west-1",
 					Required:    true,
 					Type:        component.InputTypeText,
-					Children: []gomponents.Node{
-						html.Value(destination.Region),
+					Children: []nodx.Node{
+						nodx.Value(destination.Region),
 					},
 				}),
 
@@ -127,8 +126,8 @@ func editDestinationButton(
 					Required:    true,
 					Type:        component.InputTypeText,
 					HelpText:    "It will be stored securely using PGP encryption.",
-					Children: []gomponents.Node{
-						html.Value(destination.DecryptedAccessKey),
+					Children: []nodx.Node{
+						nodx.Value(destination.DecryptedAccessKey),
 					},
 				}),
 
@@ -139,36 +138,36 @@ func editDestinationButton(
 					Required:    true,
 					Type:        component.InputTypeText,
 					HelpText:    "It will be stored securely using PGP encryption.",
-					Children: []gomponents.Node{
-						html.Value(destination.DecryptedSecretKey),
+					Children: []nodx.Node{
+						nodx.Value(destination.DecryptedSecretKey),
 					},
 				}),
 			),
 
-			html.Div(
-				html.Class("flex justify-between items-center pt-4"),
-				html.Div(
-					html.Button(
+			nodx.Div(
+				nodx.Class("flex justify-between items-center pt-4"),
+				nodx.Div(
+					nodx.Button(
 						htmxAttributes("/dashboard/destinations/test"),
-						components.Classes{
+						nodx.ClassMap{
 							btnClass:                      true,
 							"btn btn-neutral btn-outline": true,
 						},
-						html.Type("button"),
+						nodx.Type("button"),
 						component.SpanText("Test connection"),
 						lucide.PlugZap(),
 					),
 				),
-				html.Div(
-					html.Class("flex justify-end items-center space-x-2"),
+				nodx.Div(
+					nodx.Class("flex justify-end items-center space-x-2"),
 					component.HxLoadingMd(loadingID),
-					html.Button(
+					nodx.Button(
 						htmxAttributes("/dashboard/destinations/"+destination.ID.String()+"/edit"),
-						components.Classes{
+						nodx.ClassMap{
 							btnClass:          true,
 							"btn btn-primary": true,
 						},
-						html.Type("button"),
+						nodx.Type("button"),
 						component.SpanText("Save"),
 						lucide.Save(),
 					),
@@ -177,7 +176,7 @@ func editDestinationButton(
 		},
 	})
 
-	return html.Div(
+	return nodx.Div(
 		mo.HTML,
 		component.OptionsDropdownButton(
 			mo.OpenerAttr,

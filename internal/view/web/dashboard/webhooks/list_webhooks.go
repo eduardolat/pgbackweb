@@ -12,10 +12,10 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
+	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	htmx "github.com/nodxdev/nodxgo-htmx"
 )
 
 func (h *handlers) listWebhooksHandler(c echo.Context) error {
@@ -25,10 +25,10 @@ func (h *handlers) listWebhooksHandler(c echo.Context) error {
 		Page int `query:"page" validate:"required,min=1"`
 	}
 	if err := c.Bind(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	pagination, whooks, err := h.servs.WebhooksService.PaginateWebhooks(
@@ -38,10 +38,10 @@ func (h *handlers) listWebhooksHandler(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
-	return echoutil.RenderGomponent(
+	return echoutil.RenderNodx(
 		c, http.StatusOK, listWebhooks(pagination, whooks),
 	)
 }
@@ -49,7 +49,7 @@ func (h *handlers) listWebhooksHandler(c echo.Context) error {
 func listWebhooks(
 	pagination paginateutil.PaginateResponse,
 	whooks []dbgen.Webhook,
-) gomponents.Node {
+) nodx.Node {
 	if len(whooks) < 1 {
 		return component.EmptyResultsTr(component.EmptyResultsParams{
 			Title:    "No webhooks found",
@@ -57,24 +57,24 @@ func listWebhooks(
 		})
 	}
 
-	trs := []gomponents.Node{}
+	trs := []nodx.Node{}
 	for _, whook := range whooks {
-		trs = append(trs, html.Tr(
-			html.Td(component.OptionsDropdown(
+		trs = append(trs, nodx.Tr(
+			nodx.Td(component.OptionsDropdown(
 				webhookExecutionsButton(whook.ID),
 				runWebhookButton(whook.ID),
 				editWebhookButton(whook.ID),
 				duplicateWebhookButton(whook.ID),
 				deleteWebhookButton(whook.ID),
 			)),
-			html.Td(
-				html.Div(
-					html.Class("flex items-center space-x-2"),
+			nodx.Td(
+				nodx.Div(
+					nodx.Class("flex items-center space-x-2"),
 					component.IsActivePing(whook.IsActive),
 					component.SpanText(whook.Name),
 				),
 			),
-			html.Td(component.SpanText(
+			nodx.Td(component.SpanText(
 				func() string {
 					if name, ok := webhooks.FullEventTypes[whook.EventType]; ok {
 						return name
@@ -82,15 +82,15 @@ func listWebhooks(
 					return whook.EventType
 				}(),
 			)),
-			html.Td(component.SpanText(fmt.Sprintf("%d", len(whook.TargetIds)))),
-			html.Td(component.SpanText(
+			nodx.Td(component.SpanText(fmt.Sprintf("%d", len(whook.TargetIds)))),
+			nodx.Td(component.SpanText(
 				whook.CreatedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 			)),
 		))
 	}
 
 	if pagination.HasNextPage {
-		trs = append(trs, html.Tr(
+		trs = append(trs, nodx.Tr(
 			htmx.HxGet(func() string {
 				url := "/dashboard/webhooks/list"
 				url = strutil.AddQueryParamToUrl(url, "page", fmt.Sprintf("%d", pagination.NextPage))

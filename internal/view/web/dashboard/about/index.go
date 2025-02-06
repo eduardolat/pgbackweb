@@ -9,25 +9,24 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
 func (h *handlers) indexPageHandler(c echo.Context) error {
 	reqCtx := reqctx.GetCtx(c)
-	return echoutil.RenderGomponent(c, http.StatusOK, indexPage(reqCtx))
+	return echoutil.RenderNodx(c, http.StatusOK, indexPage(reqCtx))
 }
 
-func indexPage(reqCtx reqctx.Ctx) gomponents.Node {
-	content := []gomponents.Node{
+func indexPage(reqCtx reqctx.Ctx) nodx.Node {
+	content := []nodx.Node{
 		component.H1Text("About PG Back Web"),
 		component.H2Text(config.Version),
 
-		html.Div(
-			html.Class("grid grid-cols-2 gap-4 mt-4"),
+		nodx.Div(
+			nodx.Class("grid grid-cols-2 gap-4 mt-4"),
 
 			component.CardBox(component.CardBoxParams{
-				Children: []gomponents.Node{
+				Children: []nodx.Node{
 					component.PText(`
 						PG Back Web was born in July 2024 out of a need for a simple and
 						user-friendly backup solution for self-hosted PostgreSQL databases.
@@ -40,38 +39,38 @@ func indexPage(reqCtx reqctx.Ctx) gomponents.Node {
 			}),
 
 			component.CardBox(component.CardBoxParams{
-				Children: []gomponents.Node{
-					html.Table(
-						html.Class("table"),
-						html.Tr(
-							html.Th(component.SpanText("License")),
-							html.Td(
-								html.A(
-									html.Class("link"),
-									html.Href("https://github.com/eduardolat/pgbackweb/blob/main/LICENSE"),
-									html.Target("_blank"),
+				Children: []nodx.Node{
+					nodx.Table(
+						nodx.Class("table"),
+						nodx.Tr(
+							nodx.Th(component.SpanText("License")),
+							nodx.Td(
+								nodx.A(
+									nodx.Class("link"),
+									nodx.Href("https://github.com/eduardolat/pgbackweb/blob/main/LICENSE"),
+									nodx.Target("_blank"),
 									component.SpanText("MIT"),
 								),
 							),
 						),
-						html.Tr(
-							html.Th(component.SpanText("About the author")),
-							html.Td(
-								html.A(
-									html.Class("link"),
-									html.Href("https://eduardo.lat"),
-									html.Target("_blank"),
+						nodx.Tr(
+							nodx.Th(component.SpanText("About the author")),
+							nodx.Td(
+								nodx.A(
+									nodx.Class("link"),
+									nodx.Href("https://eduardo.lat"),
+									nodx.Target("_blank"),
 									component.SpanText("https://eduardo.lat"),
 								),
 							),
 						),
-						html.Tr(
-							html.Th(component.SpanText("Repository")),
-							html.Td(
-								html.A(
-									html.Class("link"),
-									html.Href("https://github.com/eduardolat/pgbackweb"),
-									html.Target("_blank"),
+						nodx.Tr(
+							nodx.Th(component.SpanText("Repository")),
+							nodx.Td(
+								nodx.A(
+									nodx.Class("link"),
+									nodx.Href("https://github.com/eduardolat/pgbackweb"),
+									nodx.Target("_blank"),
 									component.SpanText("https://github.com/eduardolat/pgbackweb"),
 								),
 							),
@@ -79,6 +78,11 @@ func indexPage(reqCtx reqctx.Ctx) gomponents.Node {
 					),
 				},
 			}),
+		),
+
+		nodx.Div(
+			nodx.Class("mt-4"),
+			component.SupportProjectSponsors(),
 		),
 	}
 

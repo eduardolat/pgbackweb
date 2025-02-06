@@ -1,12 +1,10 @@
 package component
 
 import (
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/components"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
-func StatusBadge(status string) gomponents.Node {
+func StatusBadge(status string) nodx.Node {
 	class := ""
 	switch status {
 	case "running":
@@ -21,11 +19,11 @@ func StatusBadge(status string) gomponents.Node {
 		class = "badge-neutral"
 	}
 
-	return html.Span(
-		components.Classes{
+	return nodx.SpanEl(
+		nodx.ClassMap{
 			"badge": true,
 			class:   true,
 		},
-		gomponents.Text(status),
+		nodx.Text(status),
 	)
 }

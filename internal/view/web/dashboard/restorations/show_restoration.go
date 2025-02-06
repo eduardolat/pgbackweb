@@ -1,76 +1,75 @@
 package restorations
 
 import (
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func showRestorationButton(
 	restoration dbgen.RestorationsServicePaginateRestorationsRow,
-) gomponents.Node {
+) nodx.Node {
 	mo := component.Modal(component.ModalParams{
 		Title: "Restoration details",
 		Size:  component.SizeMd,
-		Content: []gomponents.Node{
-			html.Div(
-				html.Class("overflow-x-auto"),
-				html.Table(
-					html.Class("table [&_th]:text-nowrap"),
-					html.Tr(
-						html.Th(component.SpanText("ID")),
-						html.Td(component.SpanText(restoration.ID.String())),
+		Content: []nodx.Node{
+			nodx.Div(
+				nodx.Class("overflow-x-auto"),
+				nodx.Table(
+					nodx.Class("table [&_th]:text-nowrap"),
+					nodx.Tr(
+						nodx.Th(component.SpanText("ID")),
+						nodx.Td(component.SpanText(restoration.ID.String())),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Status")),
-						html.Td(component.StatusBadge(restoration.Status)),
+					nodx.Tr(
+						nodx.Th(component.SpanText("Status")),
+						nodx.Td(component.StatusBadge(restoration.Status)),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Backup")),
-						html.Td(component.SpanText(restoration.BackupName)),
+					nodx.Tr(
+						nodx.Th(component.SpanText("Backup")),
+						nodx.Td(component.SpanText(restoration.BackupName)),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Database")),
-						html.Td(component.SpanText(func() string {
+					nodx.Tr(
+						nodx.Th(component.SpanText("Database")),
+						nodx.Td(component.SpanText(func() string {
 							if restoration.DatabaseName.Valid {
 								return restoration.DatabaseName.String
 							}
 							return "Other database"
 						}())),
 					),
-					gomponents.If(
+					nodx.If(
 						restoration.Message.Valid,
-						html.Tr(
-							html.Th(component.SpanText("Message")),
-							html.Td(
-								html.Class("break-all"),
+						nodx.Tr(
+							nodx.Th(component.SpanText("Message")),
+							nodx.Td(
+								nodx.Class("break-all"),
 								component.SpanText(restoration.Message.String),
 							),
 						),
 					),
-					html.Tr(
-						html.Th(component.SpanText("Started At")),
-						html.Td(component.SpanText(
+					nodx.Tr(
+						nodx.Th(component.SpanText("Started At")),
+						nodx.Td(component.SpanText(
 							restoration.StartedAt.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 						)),
 					),
-					gomponents.If(
+					nodx.If(
 						restoration.FinishedAt.Valid,
-						html.Tr(
-							html.Th(component.SpanText("Finished At")),
-							html.Td(component.SpanText(
+						nodx.Tr(
+							nodx.Th(component.SpanText("Finished At")),
+							nodx.Td(component.SpanText(
 								restoration.FinishedAt.Time.Local().Format(timeutil.LayoutYYYYMMDDHHMMSSPretty),
 							)),
 						),
 					),
-					gomponents.If(
+					nodx.If(
 						restoration.FinishedAt.Valid,
-						html.Tr(
-							html.Th(component.SpanText("Took")),
-							html.Td(component.SpanText(
+						nodx.Tr(
+							nodx.Th(component.SpanText("Took")),
+							nodx.Td(component.SpanText(
 								restoration.FinishedAt.Time.Sub(restoration.StartedAt).String(),
 							)),
 						),
@@ -80,15 +79,15 @@ func showRestorationButton(
 		},
 	})
 
-	button := html.Button(
+	button := nodx.Button(
 		mo.OpenerAttr,
-		html.Class("btn btn-square btn-sm btn-ghost"),
+		nodx.Class("btn btn-square btn-sm btn-ghost"),
 		lucide.Eye(),
 	)
 
-	return html.Div(
-		html.Class("inline-block tooltip tooltip-right"),
-		html.Data("tip", "Show details"),
+	return nodx.Div(
+		nodx.Class("inline-block tooltip tooltip-right"),
+		nodx.Data("tip", "Show details"),
 		mo.HTML,
 		button,
 	)

@@ -4,16 +4,16 @@ import (
 	"database/sql"
 	"fmt"
 
-	lucide "github.com/eduardolat/gomponents-lucide"
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/staticdata"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
+	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	htmx "github.com/nodxdev/nodxgo-htmx"
+	lucide "github.com/nodxdev/nodxgo-lucide"
 )
 
 func (h *handlers) editBackupHandler(c echo.Context) error {
@@ -21,7 +21,7 @@ func (h *handlers) editBackupHandler(c echo.Context) error {
 
 	backupID, err := uuid.Parse(c.Param("backupID"))
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	var formData struct {
@@ -39,10 +39,10 @@ func (h *handlers) editBackupHandler(c echo.Context) error {
 		OptNoComments  string `form:"opt_no_comments" validate:"required,oneof=true false"`
 	}
 	if err := c.Bind(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 	if err := validate.Struct(&formData); err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
 	_, err = h.servs.BackupsService.UpdateBackup(
@@ -63,36 +63,36 @@ func (h *handlers) editBackupHandler(c echo.Context) error {
 		},
 	)
 	if err != nil {
-		return htmx.RespondToastError(c, err.Error())
+		return respondhtmx.ToastError(c, err.Error())
 	}
 
-	return htmx.RespondAlertWithRefresh(c, "Backup updated")
+	return respondhtmx.AlertWithRefresh(c, "Backup task updated")
 }
 
-func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.Node {
-	yesNoOptions := func(value bool) gomponents.Node {
-		return gomponents.Group([]gomponents.Node{
-			html.Option(
-				html.Value("true"),
-				gomponents.Text("Yes"),
-				gomponents.If(value, html.Selected()),
+func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) nodx.Node {
+	yesNoOptions := func(value bool) nodx.Node {
+		return nodx.Group(
+			nodx.Option(
+				nodx.Value("true"),
+				nodx.Text("Yes"),
+				nodx.If(value, nodx.Selected("")),
 			),
-			html.Option(
-				html.Value("false"),
-				gomponents.Text("No"),
-				gomponents.If(!value, html.Selected()),
+			nodx.Option(
+				nodx.Value("false"),
+				nodx.Text("No"),
+				nodx.If(!value, nodx.Selected("")),
 			),
-		})
+		)
 	}
 
 	mo := component.Modal(component.ModalParams{
 		Size:  component.SizeLg,
-		Title: "Edit backup",
-		Content: []gomponents.Node{
-			html.Form(
+		Title: "Edit backup task",
+		Content: []nodx.Node{
+			nodx.FormEl(
 				htmx.HxPost("/dashboard/backups/"+backup.ID.String()+"/edit"),
 				htmx.HxDisabledELT("find button"),
-				html.Class("space-y-2 text-base"),
+				nodx.Class("space-y-2 text-base"),
 
 				component.InputControl(component.InputControlParams{
 					Name:        "name",
@@ -100,8 +100,8 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 					Placeholder: "My backup",
 					Required:    true,
 					Type:        component.InputTypeText,
-					Children: []gomponents.Node{
-						html.Value(backup.Name),
+					Children: []nodx.Node{
+						nodx.Value(backup.Name),
 					},
 				}),
 
@@ -113,8 +113,8 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 					Type:        component.InputTypeText,
 					HelpText:    "The cron expression to schedule the backup",
 					Pattern:     `^\S+\s+\S+\s+\S+\s+\S+\s+\S+$`,
-					Children: []gomponents.Node{
-						html.Value(backup.CronExpression),
+					Children: []nodx.Node{
+						nodx.Value(backup.CronExpression),
 					},
 					HelpButtonChildren: cronExpressionHelp(),
 				}),
@@ -124,16 +124,16 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 					Label:       "Time zone",
 					Required:    true,
 					Placeholder: "Select a time zone",
-					Children: []gomponents.Node{
-						component.GMap(
+					Children: []nodx.Node{
+						nodx.Map(
 							staticdata.Timezones,
-							func(tz staticdata.Timezone) gomponents.Node {
-								return html.Option(
-									html.Value(tz.TzCode),
-									gomponents.Text(tz.Label),
-									gomponents.If(
+							func(tz staticdata.Timezone) nodx.Node {
+								return nodx.Option(
+									nodx.Value(tz.TzCode),
+									nodx.Text(tz.Label),
+									nodx.If(
 										tz.TzCode == backup.TimeZone,
-										html.Selected(),
+										nodx.Selected(""),
 									),
 								)
 							},
@@ -151,8 +151,8 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 					HelpText:           "Relative to the base directory of the destination",
 					HelpButtonChildren: destinationDirectoryHelp(),
 					Pattern:            `^\/\S*[^\/]$`,
-					Children: []gomponents.Node{
-						html.Value(backup.DestDir),
+					Children: []nodx.Node{
+						nodx.Value(backup.DestDir),
 					},
 				}),
 
@@ -164,10 +164,10 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 					Type:               component.InputTypeNumber,
 					Pattern:            "[0-9]+",
 					HelpButtonChildren: retentionDaysHelp(),
-					Children: []gomponents.Node{
-						html.Min("0"),
-						html.Max("36500"),
-						html.Value(fmt.Sprintf("%d", backup.RetentionDays)),
+					Children: []nodx.Node{
+						nodx.Min("0"),
+						nodx.Max("36500"),
+						nodx.Value(fmt.Sprintf("%d", backup.RetentionDays)),
 					},
 				}),
 
@@ -175,15 +175,15 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 					Name:     "is_active",
 					Label:    "Activate backup",
 					Required: true,
-					Children: []gomponents.Node{
+					Children: []nodx.Node{
 						yesNoOptions(backup.IsActive),
 					},
 				}),
 
-				html.Div(
-					html.Class("pt-4"),
-					html.Div(
-						html.Class("flex justify-start items-center space-x-1"),
+				nodx.Div(
+					nodx.Class("pt-4"),
+					nodx.Div(
+						nodx.Class("flex justify-start items-center space-x-1"),
 						component.H2Text("Options"),
 						component.HelpButtonModal(component.HelpButtonModalParams{
 							ModalTitle: "Backup options",
@@ -191,13 +191,13 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 						}),
 					),
 
-					html.Div(
-						html.Class("mt-2 grid grid-cols-2 gap-2"),
+					nodx.Div(
+						nodx.Class("mt-2 grid grid-cols-2 gap-2"),
 						component.SelectControl(component.SelectControlParams{
 							Name:     "opt_data_only",
 							Label:    "--data-only",
 							Required: true,
-							Children: []gomponents.Node{
+							Children: []nodx.Node{
 								yesNoOptions(backup.OptDataOnly),
 							},
 						}),
@@ -206,7 +206,7 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 							Name:     "opt_schema_only",
 							Label:    "--schema-only",
 							Required: true,
-							Children: []gomponents.Node{
+							Children: []nodx.Node{
 								yesNoOptions(backup.OptSchemaOnly),
 							},
 						}),
@@ -215,7 +215,7 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 							Name:     "opt_clean",
 							Label:    "--clean",
 							Required: true,
-							Children: []gomponents.Node{
+							Children: []nodx.Node{
 								yesNoOptions(backup.OptClean),
 							},
 						}),
@@ -224,7 +224,7 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 							Name:     "opt_if_exists",
 							Label:    "--if-exists",
 							Required: true,
-							Children: []gomponents.Node{
+							Children: []nodx.Node{
 								yesNoOptions(backup.OptIfExists),
 							},
 						}),
@@ -233,7 +233,7 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 							Name:     "opt_create",
 							Label:    "--create",
 							Required: true,
-							Children: []gomponents.Node{
+							Children: []nodx.Node{
 								yesNoOptions(backup.OptCreate),
 							},
 						}),
@@ -242,19 +242,19 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 							Name:     "opt_no_comments",
 							Label:    "--no-comments",
 							Required: true,
-							Children: []gomponents.Node{
+							Children: []nodx.Node{
 								yesNoOptions(backup.OptNoComments),
 							},
 						}),
 					),
 				),
 
-				html.Div(
-					html.Class("flex justify-end items-center space-x-2 pt-2"),
+				nodx.Div(
+					nodx.Class("flex justify-end items-center space-x-2 pt-2"),
 					component.HxLoadingMd(),
-					html.Button(
-						html.Class("btn btn-primary"),
-						html.Type("submit"),
+					nodx.Button(
+						nodx.Class("btn btn-primary"),
+						nodx.Type("submit"),
 						component.SpanText("Save"),
 						lucide.Save(),
 					),
@@ -263,12 +263,12 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) gomponents.
 		},
 	})
 
-	return html.Div(
+	return nodx.Div(
 		mo.HTML,
 		component.OptionsDropdownButton(
 			mo.OpenerAttr,
 			lucide.Pencil(),
-			component.SpanText("Edit backup"),
+			component.SpanText("Edit backup task"),
 		),
 	)
 }

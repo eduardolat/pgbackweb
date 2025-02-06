@@ -1,31 +1,55 @@
 package component
 
 import (
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/components"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
 )
 
 type CardBoxParams struct {
 	Class    string
-	Children []gomponents.Node
+	BgBase   bgBase
+	Children []nodx.Node
 }
 
 // CardBox renders a card box with the given children.
-func CardBox(params CardBoxParams) gomponents.Node {
-	return html.Div(
-		components.Classes{
-			"rounded-box shadow-md bg-base-100 p-4": true,
-			params.Class:                            true,
+func CardBox(params CardBoxParams) nodx.Node {
+	if params.BgBase.Value == "" {
+		params.BgBase = bgBase100
+	}
+
+	return nodx.Div(
+		nodx.ClassMap{
+			"rounded-box shadow-md p-4": true,
+			"bg-base-100":               params.BgBase == bgBase100,
+			"bg-base-200":               params.BgBase == bgBase200,
+			"bg-base-300":               params.BgBase == bgBase300,
+			params.Class:                true,
 		},
-		gomponents.Group(params.Children),
+		nodx.Group(params.Children...),
 	)
 }
 
 // CardBoxSimple is the same as CardBox, but with a less verbose
 // api and default props. It renders a card box with the given children.
-func CardBoxSimple(children ...gomponents.Node) gomponents.Node {
+func CardBoxSimple(children ...nodx.Node) nodx.Node {
 	return CardBox(CardBoxParams{
+		Children: children,
+	})
+}
+
+// CardBoxSimpleBgBase200 is the same as CardBox, but with a less verbose
+// api and default props. It renders a card box with the given children.
+func CardBoxSimpleBgBase200(children ...nodx.Node) nodx.Node {
+	return CardBox(CardBoxParams{
+		BgBase:   bgBase200,
+		Children: children,
+	})
+}
+
+// CardBoxSimpleBgBase300 is the same as CardBox, but with a less verbose
+// api and default props. It renders a card box with the given children.
+func CardBoxSimpleBgBase300(children ...nodx.Node) nodx.Node {
+	return CardBox(CardBoxParams{
+		BgBase:   bgBase300,
 		Children: children,
 	})
 }

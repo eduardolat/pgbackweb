@@ -2,20 +2,36 @@ version: "3"
 
 dotenv: [".env"]
 
+interval: 500ms
+
 tasks:
-  on:
-    desc: Start development environment, should be run from the host machine
-    cmds:
-      - docker compose -f ./docker/compose.dev.yaml up -d --build
-      - docker compose -f ./docker/compose.dev.yaml exec app /bin/bash
-
-  off:
-    desc: Stop development environment, should be run from the host machine
-    cmd: docker compose -f ./docker/compose.dev.yaml down
-
   dev:
     desc: Build and serve the project with hot reloading
-    cmd: air -c .air.toml
+    watch: true
+    sources:
+      - "**/*.go"
+      - "**/*.sql"
+      - "**/*.js"
+      - "**/*.css"
+      - "**/*.json"
+      - exclude: "./.git/**"
+      - exclude: "./node_modules/**"
+      - exclude: "./internal/database/dbgen/**"
+      - exclude: "./internal/view/static/build/**"
+      - exclude: "./temp/**"
+      - exclude: "./tmp/**"
+      - exclude: "./dist/**"
+      - exclude: "**/*.test.go"
+      - exclude: "**/*.generated.go"
+      - exclude: "**/*.sql.go"
+      - exclude: "**/*.gen.go"
+      - exclude: "**/*.gen.sql"
+      - exclude: "**/*.min.css"
+      - exclude: "**/*.min.js"
+    deps:
+      - build
+    cmds:
+      - ./dist/app
 
   build:
     desc: Build the project
@@ -54,9 +70,14 @@ tasks:
   gen-db:
     desc: Generate sqlc files
     silent: true
-    cmd: sqlc generate
+    cmds:
+      - deno run -A ./scripts/sqlc-prebuild.ts
+      - sqlc generate
     sources:
-      - ./internal/**/*.sql
+      - ./internal/service/**/*.sql
+    generates:
+      - ./internal/database/queries.gen.sql
+      - ./internal/database/dbgen/*.go
 
   reset-db:
     desc: Reset the database
@@ -67,13 +88,12 @@ tasks:
     silent: true
     cmds:
       - >
-        npm run tailwindcss --
-        --config ./tailwind.config.js
-        --input ./internal/view/static/css/style.css
-        --output ./internal/view/static/css/style.min.css --minify
-      - >
-        npm run esbuild -- ./internal/view/static/js/app.js
-        --bundle --minify --outfile=./internal/view/static/js/app.min.js
+          deno task tailwindcss --
+          --minify
+          --config ./tailwind.config.ts
+          --input ./internal/view/static/css/style.css
+          --output ./internal/view/static/build/style.min.css
+      - deno run -A ./scripts/build-js.ts
 
   tidy:
     desc: Tidy the go.mod file
@@ -83,14 +103,14 @@ tasks:
     desc: Format the go and js files
     cmds:
       - go fmt ./...
-      - npm run standard -- --fix
+      - deno fmt
 
   lint-only:
     desc: Lint the go and js files
     cmds:
       - task gen-db
       - golangci-lint run ./...
-      - npm run standard
+      - deno lint
 
   test-only:
     desc: Run the tests
@@ -118,6 +138,6 @@ tasks:
       - rm -rf ./tmp
       - rm -rf ./dist
 
-  fixperms: # Fixes the permissions of the files in the project
+  fixperms:
     desc: Fixes the permissions of the files in the project
-    cmd: ./scripts/fixperms.sh
+    cmd: chmod -R 777 ./

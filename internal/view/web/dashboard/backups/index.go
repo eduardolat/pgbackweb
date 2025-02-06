@@ -6,50 +6,49 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/view/reqctx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
-	"github.com/eduardolat/pgbackweb/internal/view/web/htmx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
 	"github.com/labstack/echo/v4"
-	"github.com/maragudk/gomponents"
-	"github.com/maragudk/gomponents/html"
+	nodx "github.com/nodxdev/nodxgo"
+	htmx "github.com/nodxdev/nodxgo-htmx"
 )
 
 func (h *handlers) indexPageHandler(c echo.Context) error {
 	reqCtx := reqctx.GetCtx(c)
-	return echoutil.RenderGomponent(c, http.StatusOK, indexPage(reqCtx))
+	return echoutil.RenderNodx(c, http.StatusOK, indexPage(reqCtx))
 }
 
-func indexPage(reqCtx reqctx.Ctx) gomponents.Node {
-	content := []gomponents.Node{
-		html.Div(
-			html.Class("flex justify-between items-start"),
-			component.H1Text("Backups"),
+func indexPage(reqCtx reqctx.Ctx) nodx.Node {
+	content := []nodx.Node{
+		nodx.Div(
+			nodx.Class("flex justify-between items-start"),
+			component.H1Text("Backup tasks"),
 			createBackupButton(),
 		),
 		component.CardBox(component.CardBoxParams{
 			Class: "mt-4",
-			Children: []gomponents.Node{
-				html.Div(
-					html.Class("overflow-x-auto"),
-					html.Table(
-						html.Class("table text-nowrap"),
-						html.THead(
-							html.Tr(
-								html.Th(html.Class("w-1")),
-								html.Th(component.SpanText("Name")),
-								html.Th(component.SpanText("Database")),
-								html.Th(component.SpanText("Destination")),
-								html.Th(component.SpanText("Schedule")),
-								html.Th(component.SpanText("Retention")),
-								html.Th(component.SpanText("--data-only")),
-								html.Th(component.SpanText("--schema-only")),
-								html.Th(component.SpanText("--clean")),
-								html.Th(component.SpanText("--if-exists")),
-								html.Th(component.SpanText("--create")),
-								html.Th(component.SpanText("--no-comments")),
-								html.Th(component.SpanText("Created at")),
+			Children: []nodx.Node{
+				nodx.Div(
+					nodx.Class("overflow-x-auto"),
+					nodx.Table(
+						nodx.Class("table text-nowrap"),
+						nodx.Thead(
+							nodx.Tr(
+								nodx.Th(nodx.Class("w-1")),
+								nodx.Th(component.SpanText("Name")),
+								nodx.Th(component.SpanText("Database")),
+								nodx.Th(component.SpanText("Destination")),
+								nodx.Th(component.SpanText("Schedule")),
+								nodx.Th(component.SpanText("Retention")),
+								nodx.Th(component.SpanText("--data-only")),
+								nodx.Th(component.SpanText("--schema-only")),
+								nodx.Th(component.SpanText("--clean")),
+								nodx.Th(component.SpanText("--if-exists")),
+								nodx.Th(component.SpanText("--create")),
+								nodx.Th(component.SpanText("--no-comments")),
+								nodx.Th(component.SpanText("Created at")),
 							),
 						),
-						html.TBody(
+						nodx.Tbody(
 							component.SkeletonTr(8),
 							htmx.HxGet("/dashboard/backups/list?page=1"),
 							htmx.HxTrigger("load"),
@@ -61,7 +60,7 @@ func indexPage(reqCtx reqctx.Ctx) gomponents.Node {
 	}
 
 	return layout.Dashboard(reqCtx, layout.DashboardParams{
-		Title: "Backups",
+		Title: "Backup tasks",
 		Body:  content,
 	})
 }

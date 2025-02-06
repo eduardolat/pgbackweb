@@ -1,0 +1,46 @@
+{
+  "referralLinks": [
+    {
+      "name": "Hapi",
+      "logo": "/images/third-party/hapi.png",
+      "link": "https://app.hapi.trade/rewards?code=LUIJER5",
+      "description": "Join Hapi to easily buy stocks and crypto! Enjoy a 100% chance to win-win up to $500 in crypto rewards in your first deposit!"
+    },
+    {
+      "name": "Digital Ocean",
+      "logo": "/images/third-party/digital-ocean.png",
+      "link": "https://m.do.co/c/d61ab0d1368a",
+      "description": "Sign up for DigitalOcean and unlock $200 in free cloud credits. Deploy your projects with reliable and high-performance servers."
+    },
+    {
+      "name": "Vultr",
+      "logo": "/images/third-party/vultr.webp",
+      "link": "https://www.vultr.com/?ref=8270577",
+      "description": "Enjoy robust performance and scalable cloud infrastructure that power your projects from day one. Plus, receive free credits to get started."
+    }
+  ],
+  "sponsors": {
+    "link": "https://buymeacoffee.com/eduardolat",
+    "gold": [
+      {
+        "name": "Become a gold sponsor",
+        "logo": "/images/plus.png",
+        "link": "https://buymeacoffee.com/eduardolat"
+      }
+    ],
+    "silver": [
+      {
+        "name": "Become a silver sponsor",
+        "logo": "/images/plus.png",
+        "link": "https://buymeacoffee.com/eduardolat"
+      }
+    ],
+    "bronze": [
+      {
+        "name": "Become a bronze sponsor",
+        "logo": "/images/plus.png",
+        "link": "https://buymeacoffee.com/eduardolat"
+      }
+    ]
+  }
+}

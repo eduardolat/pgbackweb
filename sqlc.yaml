@@ -3,8 +3,7 @@ version: "2"
 sql:
   - engine: "postgresql"
     schema: "./internal/database/migrations/"
-    queries:
-      - "./internal/service/*/"
+    queries: "./internal/database/dbgen/queries.gen.sql"
     gen:
       go:
         package: "dbgen"
