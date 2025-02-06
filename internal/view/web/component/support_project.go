@@ -130,3 +130,16 @@ func SupportProjectButton(size size) nodx.Node {
 		),
 	)
 }
+
+func SupportProjectAnchor(text string) nodx.Node {
+	mo := SupportProjectModal()
+
+	return nodx.Group(
+		mo.HTML,
+		nodx.A(
+			mo.OpenerAttr,
+			nodx.Class("link"),
+			SpanText(text),
+		),
+	)
+}
