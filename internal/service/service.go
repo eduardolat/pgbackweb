@@ -27,7 +27,7 @@ type Service struct {
 }
 
 func New(
-	env *config.Env, dbgen *dbgen.Queries,
+	env config.Env, dbgen *dbgen.Queries,
 	cr *cron.Cron, ints *integration.Integration,
 ) *Service {
 	webhooksService := webhooks.New(dbgen)

@@ -13,7 +13,7 @@ func (s *Service) GetDestination(
 	return s.dbgen.DestinationsServiceGetDestination(
 		ctx, dbgen.DestinationsServiceGetDestinationParams{
 			ID:            id,
-			EncryptionKey: *s.env.PBW_ENCRYPTION_KEY,
+			EncryptionKey: s.env.PBW_ENCRYPTION_KEY,
 		},
 	)
 }

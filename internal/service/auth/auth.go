@@ -12,11 +12,11 @@ const (
 )
 
 type Service struct {
-	env   *config.Env
+	env   config.Env
 	dbgen *dbgen.Queries
 }
 
-func New(env *config.Env, dbgen *dbgen.Queries) *Service {
+func New(env config.Env, dbgen *dbgen.Queries) *Service {
 	return &Service{
 		env:   env,
 		dbgen: dbgen,

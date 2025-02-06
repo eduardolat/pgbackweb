@@ -14,7 +14,7 @@ func (s *Service) GetDatabase(
 	return s.dbgen.DatabasesServiceGetDatabase(
 		ctx, dbgen.DatabasesServiceGetDatabaseParams{
 			ID:            id,
-			EncryptionKey: *s.env.PBW_ENCRYPTION_KEY,
+			EncryptionKey: s.env.PBW_ENCRYPTION_KEY,
 		},
 	)
 }

@@ -32,7 +32,7 @@ func (s *Service) PaginateDestinations(
 
 	destinations, err := s.dbgen.DestinationsServicePaginateDestinations(
 		ctx, dbgen.DestinationsServicePaginateDestinationsParams{
-			EncryptionKey: *s.env.PBW_ENCRYPTION_KEY,
+			EncryptionKey: s.env.PBW_ENCRYPTION_KEY,
 			Limit:         int32(params.Limit),
 			Offset:        int32(offset),
 		},

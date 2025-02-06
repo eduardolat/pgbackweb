@@ -41,7 +41,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	back, err := s.dbgen.ExecutionsServiceGetBackupData(
 		ctx, dbgen.ExecutionsServiceGetBackupDataParams{
 			BackupID:      backupID,
-			EncryptionKey: *s.env.PBW_ENCRYPTION_KEY,
+			EncryptionKey: s.env.PBW_ENCRYPTION_KEY,
 		},
 	)
 	if err != nil {

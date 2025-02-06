@@ -14,7 +14,10 @@ import (
 )
 
 func main() {
-	env := config.GetEnv()
+	env, err := config.GetEnv()
+	if err != nil {
+		panic(err)
+	}
 
 	db := database.Connect(env)
 	defer db.Close()
