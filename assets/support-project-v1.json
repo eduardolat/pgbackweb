@@ -21,8 +21,26 @@
   ],
   "sponsors": {
     "link": "https://buymeacoffee.com/eduardolat",
-    "bronze": [],
-    "silver": [],
-    "gold": []
+    "gold": [
+      {
+        "name": "Become a gold sponsor",
+        "logo": "/images/plus.png",
+        "link": "https://buymeacoffee.com/eduardolat"
+      }
+    ],
+    "silver": [
+      {
+        "name": "Become a silver sponsor",
+        "logo": "/images/plus.png",
+        "link": "https://buymeacoffee.com/eduardolat"
+      }
+    ],
+    "bronze": [
+      {
+        "name": "Become a bronze sponsor",
+        "logo": "/images/plus.png",
+        "link": "https://buymeacoffee.com/eduardolat"
+      }
+    ]
   }
 }
