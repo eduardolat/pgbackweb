@@ -2,19 +2,19 @@
   "referralLinks": [
     {
       "name": "Hapi",
-      "logo": "https://hapi-web-images.s3.amazonaws.com/Web/logo/Logo_Hapi_Original_u5a5oi.png",
+      "logo": "/images/third-party/hapi.png",
       "link": "https://app.hapi.trade/rewards?code=LUIJER5",
       "description": "Join Hapi to easily buy stocks and crypto! Enjoy a 100% chance to win win up to $500 in crypto rewards in your first deposit!"
     },
     {
       "name": "Digital Ocean",
-      "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/DigitalOcean_logo.svg/512px-DigitalOcean_logo.svg.png",
+      "logo": "/images/third-party/digital-ocean.png",
       "link": "https://m.do.co/c/d61ab0d1368a",
       "description": "Sign up for DigitalOcean and unlock $200 in free cloud credits. Deploy your projects with reliable and high-performance servers."
     },
     {
       "name": "Vultr",
-      "logo": "https://www.vultr.com/media/logo_onwhite.png",
+      "logo": "/images/third-party/vultr.webp",
       "link": "https://www.vultr.com/?ref=8270577",
       "description": "Enjoy robust performance and scalable cloud infrastructure that power your projects from day one. Plus, receive free credits to get started."
     }
