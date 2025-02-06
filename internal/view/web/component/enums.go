@@ -7,6 +7,7 @@ type (
 	color            enum.Member[string]
 	dropdownPosition enum.Member[string]
 	inputType        enum.Member[string]
+	bgBase           enum.Member[string]
 )
 
 var (
@@ -34,4 +35,8 @@ var (
 	InputTypeNumber   = inputType{"number"}
 	InputTypeTel      = inputType{"tel"}
 	InputTypeUrl      = inputType{"url"}
+
+	bgBase100 = bgBase{"bg-base-100"}
+	bgBase200 = bgBase{"bg-base-200"}
+	bgBase300 = bgBase{"bg-base-300"}
 )
