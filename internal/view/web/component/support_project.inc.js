@@ -24,10 +24,22 @@ window.alpineSupportProjectData = function () {
   return {
     data: null,
 
+    get isLoading() {
+      return this.data === null;
+    },
+
+    get sponsorsLink() {
+      return this.data?.sponsors?.link ?? "";
+    },
+
+    get referralLinks() {
+      return this.data?.referralLinks ?? [];
+    },
+
     async init() {
-      const stars = await this.getData();
-      if (stars !== null) {
-        this.stars = stars;
+      const data = await this.getData();
+      if (data !== null) {
+        this.data = data;
       }
     },
 
@@ -37,15 +49,14 @@ window.alpineSupportProjectData = function () {
       const cachedJSON = localStorage.getItem(cacheKey);
       if (cachedJSON) {
         const cached = JSON.parse(cachedJSON);
-
         // Cache for 2 minutes
         if (Date.now() - cached.timestamp < 2 * 60 * 1000) {
-          return cached.value;
+          return cached.data;
         }
       }
 
       const url =
-        "https://raw.githubusercontent.com/eduardolat/pgbackweb/main/assets/support-project-v1.json";
+        "https://raw.githubusercontent.com/eduardolat/pgbackweb/refs/heads/develop/assets/support-project-v1.json";
       try {
         const response = await fetch(url);
         if (!response.ok) {

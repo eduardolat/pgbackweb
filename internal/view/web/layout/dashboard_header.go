@@ -17,12 +17,12 @@ func dashboardHeader() nodx.Node {
 		},
 		nodx.Div(
 			nodx.Class("flex justify-start items-center space-x-2"),
+			component.SupportProjectButton(component.SizeSm),
 			component.ChangeThemeButton(component.ChangeThemeButtonParams{
 				Position: component.DropdownPositionBottom,
 				Size:     component.SizeSm,
 			}),
 			component.StarOnGithub(component.SizeSm),
-			component.SupportProjectButton(component.SizeSm),
 			dashboardHeaderUpdates(),
 		),
 		nodx.Div(
