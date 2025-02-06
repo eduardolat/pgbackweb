@@ -114,6 +114,11 @@ You only need to configure the following environment variables:
 - `PBW_POSTGRES_CONN_STRING`: The connection string for the PostgreSQL database
   that will store PG Back Web data.
 
+- `PBW_LISTEN_HOST`: Host for the server to listen on, default 0.0.0.0
+  (optional)
+
+- `PBW_LISTEN_PORT`: Port for the server to listen on, default 8085 (optional)
+
 - `TZ`: Your
   [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)
   (optional). Default is `UTC`. This impacts logging, backup filenames and
