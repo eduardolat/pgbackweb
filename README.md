@@ -149,6 +149,63 @@ updates:
   Next steps ⏭️
 </a>
 
+## Sponsors
+
+🙏 Thank you to the incredible sponsors for supporting this project! Your
+contributions help keep PG Back Web running and growing. If you'd like to join
+and become a sponsor, please visit the
+[sponsorship page](https://buymeacoffee.com/eduardolat) and be part of something
+great! 🚀
+
+### 🥇 Gold Sponsors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://buymeacoffee.com/eduardolat">
+        <img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/refs/heads/develop/internal/view/static/images/plus-circle.png" height="150" alt="Become a gold sponsor"/>
+        <br />
+        Become a gold sponsor
+      </a>
+    </td>
+  </tr>
+</table>
+
+### 🥈 Silver Sponsors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://fetchgoat.com?utm_source=pgbackweb&utm_medium=referral&utm_campaign=sponsorship">
+        <img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/refs/heads/develop/assets/sponsors/FetchGoat.png" height="100" alt="FetchGoat - Simplifying Logistics"/>
+        <br />
+        FetchGoat - Simplifying Logistics
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://buymeacoffee.com/eduardolat">
+        <img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/refs/heads/develop/internal/view/static/images/plus-circle.png" height="100" alt="Become a silver sponsor"/>
+        <br />
+        Become a silver sponsor
+      </a>
+    </td>
+  </tr>
+</table>
+
+### 🥉 Bronze Sponsors
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://buymeacoffee.com/eduardolat">
+        <img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/refs/heads/develop/internal/view/static/images/plus-circle.png" height="80" alt="Become a bronze sponsor"/>
+        <br />
+        Become a bronze sponsor
+      </a>
+    </td>
+  </tr>
+</table>
+
 ## Join the Community
 
 Got ideas to improve PG Back Web? Contribute to the project! Every suggestion
