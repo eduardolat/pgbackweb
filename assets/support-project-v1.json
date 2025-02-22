@@ -30,14 +30,14 @@
     ],
     "silver": [
       {
-        "name": "FetchGoat",
-        "logo": "https://raw.githubusercontent.com/eduardolat/pgbackweb/refs/heads/develop/assets/sponsors/FetchGoat.png",
-        "link": "https://fetchgoat.com?utm_source=pgbackweb&utm_medium=referral&utm_campaign=sponsorship"
-      },
-      {
         "name": "Become a silver sponsor",
         "logo": "/images/plus.png",
         "link": "https://buymeacoffee.com/eduardolat"
+      },
+      {
+        "name": "FetchGoat - Simplifying Logistics",
+        "logo": "https://raw.githubusercontent.com/eduardolat/pgbackweb/refs/heads/develop/assets/sponsors/FetchGoat.png",
+        "link": "https://fetchgoat.com?utm_source=pgbackweb&utm_medium=referral&utm_campaign=sponsorship"
       }
     ],
     "bronze": [
