@@ -7,6 +7,12 @@
       "description": "Join Hapi to easily buy stocks and crypto! Enjoy a 100% chance to win-win up to $500 in crypto rewards in your first deposit!"
     },
     {
+      "name": "Hetzner",
+      "logo": "https://raw.githubusercontent.com/eduardolat/pgbackweb/refs/heads/develop/assets/logos/hetzner.png",
+      "link": "https://hetzner.cloud/?ref=TdOypLgK8yGR",
+      "description": "Get started with Hetzner Cloud today and enjoy €20 in free credits just for signing up through this link! Their powerful cloud servers offer excellent performance at competitive prices. After you spend your first €10, I'll receive €10 in credits too, making it a win-win for both of us!"
+    },
+    {
       "name": "Digital Ocean",
       "logo": "/images/third-party/digital-ocean.png",
       "link": "https://m.do.co/c/d61ab0d1368a",
