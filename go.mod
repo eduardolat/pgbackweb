@@ -10,6 +10,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.17.49
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.72.3
 	github.com/caarlos0/env/v11 v11.3.1
+	github.com/coreos/go-oidc/v3 v3.14.1
 	github.com/go-co-op/gocron/v2 v2.11.0
 	github.com/go-playground/validator/v10 v10.22.0
 	github.com/google/uuid v1.6.0
@@ -21,9 +22,10 @@ require (
 	github.com/nodxdev/nodxgo-htmx v0.1.0
 	github.com/nodxdev/nodxgo-lucide v0.1.1
 	github.com/orsinium-labs/enum v1.4.0
-	github.com/stretchr/testify v1.9.0
-	golang.org/x/crypto v0.25.0
-	golang.org/x/sync v0.7.0
+	github.com/stretchr/testify v1.10.0
+	golang.org/x/crypto v0.36.0
+	golang.org/x/oauth2 v0.30.0
+	golang.org/x/sync v0.12.0
 )
 
 require (
@@ -43,6 +45,7 @@ require (
 	github.com/aws/smithy-go v1.22.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
+	github.com/go-jose/go-jose/v4 v4.0.5 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/jonboulle/clockwork v0.4.0 // indirect
@@ -56,8 +59,8 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8 // indirect
-	golang.org/x/net v0.27.0 // indirect
-	golang.org/x/sys v0.22.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/net v0.37.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

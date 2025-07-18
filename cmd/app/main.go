@@ -38,7 +38,10 @@ func main() {
 	dbgen := dbgen.New(db)
 
 	ints := integration.New()
-	servs := service.New(env, dbgen, cr, ints)
+	servs, err := service.New(env, dbgen, cr, ints)
+	if err != nil {
+		logger.FatalError("error initializing services", logger.KV{"error": err})
+	}
 	initSchedule(cr, servs)
 
 	app := echo.New()

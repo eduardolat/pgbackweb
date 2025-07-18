@@ -16,5 +16,21 @@ func validateEnv(env Env) error {
 		return fmt.Errorf("invalid listen port %s, valid values are 1-65535", env.PBW_LISTEN_PORT)
 	}
 
+	// Validate OIDC configuration if enabled
+	if env.PBW_OIDC_ENABLED {
+		if env.PBW_OIDC_ISSUER_URL == "" {
+			return fmt.Errorf("PBW_OIDC_ISSUER_URL is required when OIDC is enabled")
+		}
+		if env.PBW_OIDC_CLIENT_ID == "" {
+			return fmt.Errorf("PBW_OIDC_CLIENT_ID is required when OIDC is enabled")
+		}
+		if env.PBW_OIDC_CLIENT_SECRET == "" {
+			return fmt.Errorf("PBW_OIDC_CLIENT_SECRET is required when OIDC is enabled")
+		}
+		if env.PBW_OIDC_REDIRECT_URL == "" {
+			return fmt.Errorf("PBW_OIDC_REDIRECT_URL is required when OIDC is enabled")
+		}
+	}
+
 	return nil
 }
