@@ -13,6 +13,9 @@ import (
 	"github.com/google/uuid"
 )
 
+// main runs a command-line utility to reset a user's password in the PostgreSQL database.
+// It prompts for a user's email, verifies the user exists, generates a new random password,
+// updates the password in the database, and displays the new password to the operator.
 func main() {
 	env, err := config.GetEnv()
 	if err != nil {
@@ -60,7 +63,7 @@ func main() {
 	err = dbg.UsersServiceChangePassword(
 		context.Background(), dbgen.UsersServiceChangePasswordParams{
 			ID:       userID,
-			Password: hashedPassword,
+			Password: sql.NullString{String: hashedPassword, Valid: true},
 		},
 	)
 	if err != nil {
