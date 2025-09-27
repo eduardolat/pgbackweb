@@ -58,7 +58,9 @@ tasks:
 
   setversion:
     desc: Set the version from latest git tag in the relevant files
-    cmd: node ./scripts/set-version.ts
+    cmds:
+      - chmod +x ./scripts/set-version.sh
+      - ./scripts/set-version.sh
 
   serve:
     desc: Serve the built project
