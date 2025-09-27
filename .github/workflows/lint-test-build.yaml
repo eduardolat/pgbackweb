@@ -48,8 +48,8 @@ jobs:
             deno install &&
             go mod download &&
             task fixperms &&
-            task check-deps &&
-            task lint-only &&
-            task test-only &&
+            task checkdeps &&
+            task lint &&
+            task test &&
             task build
           "

@@ -113,4 +113,4 @@ RUN set -e && \
 
 # Run the app
 EXPOSE 8085
-CMD ["task", "migrate-serve"]
+CMD ["task", "servem"]
