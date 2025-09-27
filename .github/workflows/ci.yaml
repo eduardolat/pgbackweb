@@ -1,4 +1,4 @@
-name: Lint, test, and build
+name: CI (Lint, Test, Build)
 on:
   workflow_dispatch:
   push:
@@ -11,7 +11,7 @@ on:
       - develop
 
 jobs:
-  lint-test-build:
+  ci:
     strategy:
       matrix:
         vars:
@@ -42,14 +42,4 @@ jobs:
           --file docker/Dockerfile.dev .
 
       - name: Run lint, test, and build
-        run: >
-          docker run --rm -v $PWD:/app pgbackweb:latest /bin/bash -c "
-            cd /app &&
-            deno install &&
-            go mod download &&
-            task fixperms &&
-            task checkdeps &&
-            task lint &&
-            task test &&
-            task build
-          "
+        run: docker run --rm -v $PWD:/app pgbackweb:latest /bin/bash -c "cd /app && task ci"

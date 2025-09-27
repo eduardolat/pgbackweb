@@ -3,6 +3,22 @@ version: "3"
 dotenv: [".env"]
 
 tasks:
+  ci:
+    desc: Run the CI tasks
+    cmds:
+      - task: deps
+      - task: fixperms
+      - task: checkdeps
+      - task: lint
+      - task: test
+      - task: build
+
+  deps:
+    desc: Install code dependencies
+    cmds:
+      - npm install
+      - go mod download
+
   dev:
     desc: Build and serve the project with hot reloading
     watch: true
