@@ -5,6 +5,7 @@ import (
 
 	"github.com/eduardolat/pgbackweb/internal/service"
 	"github.com/eduardolat/pgbackweb/internal/view/middleware"
+	"github.com/eduardolat/pgbackweb/internal/view/web/oidc"
 	"github.com/labstack/echo/v4"
 )
 
@@ -31,4 +32,7 @@ func MountRouter(
 
 	requireAuth.POST("/logout", h.logoutHandler)
 	requireAuth.POST("/logout-all", h.logoutAllSessionsHandler)
+
+	// Mount OIDC routes
+	oidc.MountRouter(parent, mids, servs)
 }

@@ -11,3 +11,8 @@ func New(dbgen *dbgen.Queries) *Service {
 		dbgen: dbgen,
 	}
 }
+
+// IsOIDCUser checks if a user is authenticated via OIDC
+func (s *Service) IsOIDCUser(user dbgen.User) bool {
+	return user.OidcProvider.Valid && user.OidcSubject.Valid
+}

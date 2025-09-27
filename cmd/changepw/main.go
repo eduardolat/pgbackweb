@@ -60,7 +60,7 @@ func main() {
 	err = dbg.UsersServiceChangePassword(
 		context.Background(), dbgen.UsersServiceChangePasswordParams{
 			ID:       userID,
-			Password: hashedPassword,
+			Password: sql.NullString{String: hashedPassword, Valid: true},
 		},
 	)
 	if err != nil {

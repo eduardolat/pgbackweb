@@ -18,6 +18,8 @@ func (s *Service) SetSessionCookie(c echo.Context, token string) {
 		Value:    token,
 		MaxAge:   int(maxSessionAge.Seconds()),
 		HttpOnly: true,
+		Secure:   true, // Force HTTPS
+		SameSite: http.SameSiteLaxMode,
 		Path:     "/",
 	}
 	c.SetCookie(&cookie)
@@ -29,6 +31,8 @@ func (s *Service) ClearSessionCookie(c echo.Context) {
 		Value:    "",
 		MaxAge:   -1,
 		HttpOnly: true,
+		Secure:   true, // Force HTTPS
+		SameSite: http.SameSiteLaxMode,
 		Path:     "/",
 	}
 	c.SetCookie(&cookie)

@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
@@ -128,7 +129,7 @@ func (h *handlers) createFirstUserHandler(c echo.Context) error {
 	_, err := h.servs.UsersService.CreateUser(ctx, dbgen.UsersServiceCreateUserParams{
 		Name:     formData.Name,
 		Email:    formData.Email,
-		Password: formData.Password,
+		Password: sql.NullString{String: formData.Password, Valid: true},
 	})
 	if err != nil {
 		return respondhtmx.ToastError(c, err.Error())
