@@ -12,6 +12,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// main initializes environment configuration, scheduled tasks, database connections, services, and starts the web server.
 func main() {
 	env, err := config.GetEnv()
 	if err != nil {
@@ -38,7 +39,10 @@ func main() {
 	dbgen := dbgen.New(db)
 
 	ints := integration.New()
-	servs := service.New(env, dbgen, cr, ints)
+	servs, err := service.New(env, dbgen, cr, ints)
+	if err != nil {
+		logger.FatalError("error initializing services", logger.KV{"error": err})
+	}
 	initSchedule(cr, servs)
 
 	app := echo.New()

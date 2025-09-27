@@ -2,6 +2,7 @@ package auth
 
 import (
 	"net/http"
+	"net/url"
 
 	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
@@ -31,13 +32,67 @@ func (h *handlers) loginPageHandler(c echo.Context) error {
 		return c.Redirect(http.StatusFound, "/auth/create-first-user")
 	}
 
-	return echoutil.RenderNodx(c, http.StatusOK, loginPage())
+	// Check for error message in URL parameters
+	errorMsg := c.QueryParam("error")
+	if errorMsg != "" {
+		// URL decode the error message to handle encoded characters
+		if decodedMsg, err := url.QueryUnescape(errorMsg); err == nil {
+			errorMsg = decodedMsg
+		}
+	}
+
+	return echoutil.RenderNodx(c, http.StatusOK, loginPage(h.servs.OIDCService.IsEnabled(), errorMsg))
 }
 
-func loginPage() nodx.Node {
+// loginPage constructs the login page UI as a NodX node tree, optionally displaying an error message and an OIDC login option.
+// 
+// If an error message is provided, a toast notification is triggered on page load. If OIDC login is enabled, a button for SSO login and a divider are included before the traditional email/password login form.
+// 
+// Returns the complete login page node wrapped in the authentication layout.
+func loginPage(oidcEnabled bool, errorMsg string) nodx.Node {
 	content := []nodx.Node{
 		component.H1Text("Login"),
+	}
 
+	// Add JavaScript to show toast notification if error message is present
+	if errorMsg != "" {
+		// Use a data attribute to safely pass the error message to JavaScript
+		content = append(content,
+			nodx.Script(
+				nodx.Attr("data-error-message", errorMsg),
+				nodx.Text(`
+					(function() {
+						const errorMsg = document.currentScript.dataset.errorMessage;
+						if (errorMsg) {
+							window.toaster.error(errorMsg);
+						}
+					})();
+				`),
+			),
+		)
+	}
+
+	// Add OIDC login option if enabled
+	if oidcEnabled {
+		content = append(content,
+			nodx.Div(
+				nodx.Class("mt-4"),
+				nodx.A(
+					nodx.Href("/auth/oidc/login"),
+					nodx.Class("btn btn-outline btn-block"),
+					component.SpanText("Login with SSO"),
+					lucide.ExternalLink(),
+				),
+			),
+			nodx.Div(
+				nodx.Class("divider"),
+				nodx.Text("OR"),
+			),
+		)
+	}
+
+	// Traditional login form
+	content = append(content,
 		nodx.FormEl(
 			htmx.HxPost("/auth/login"),
 			htmx.HxDisabledELT("find button"),
@@ -72,7 +127,7 @@ func loginPage() nodx.Node {
 				),
 			),
 		),
-	}
+	)
 
 	return layout.Auth(layout.AuthParams{
 		Title: "Login",
