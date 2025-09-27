@@ -1,4 +1,4 @@
-#!/usr/bin/env -S deno -A
+#!/usr/local/bin/node
 
 /**
  * This script is responsible for creating the final build of all the project's
