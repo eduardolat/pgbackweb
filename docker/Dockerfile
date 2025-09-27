@@ -111,6 +111,7 @@ COPY . .
 # Build the app
 RUN set -e && \
     task fixperms && \
+    task setversion && \
     task build && \
     cp ./dist/change-password /usr/local/bin/change-password && \
     chmod +x /usr/local/bin/change-password
