@@ -14,10 +14,11 @@ jobs:
   lint-test-build:
     strategy:
       matrix:
-        vars: [
-          { os: ubuntu-24.04, platform: linux/amd64 },
-          { os: ubuntu-24.04-arm, platform: linux/arm64 },
-        ]
+        vars:
+          [
+            { os: ubuntu-24.04, platform: linux/amd64 },
+            { os: ubuntu-24.04-arm, platform: linux/arm64 },
+          ]
 
     name: Lint, test, and build the code
     runs-on: ${{ matrix.vars.os }}

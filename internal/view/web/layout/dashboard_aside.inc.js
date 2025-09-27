@@ -4,13 +4,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (!el) return;
 
-  const saveScrollPosition = window.debounce(
-    () => {
-      const scrollPosition = el.scrollTop;
-      localStorage.setItem(key, scrollPosition);
-    },
-    200,
-  );
+  const saveScrollPosition = window.debounce(() => {
+    const scrollPosition = el.scrollTop;
+    localStorage.setItem(key, scrollPosition);
+  }, 200);
   el.addEventListener("scroll", saveScrollPosition);
 
   const scrollPosition = localStorage.getItem(key);

@@ -18,9 +18,7 @@
         /////
         "editor.formatOnSave": true,
         "editor.foldingStrategy": "indentation",
-        "editor.rulers": [
-          80
-        ],
+        "editor.rulers": [80],
         "files.eol": "\n",
         /////
         // Language specific settings
@@ -51,9 +49,7 @@
           "editor.defaultFormatter": "golang.go"
         },
         "go.lintTool": "golangci-lint",
-        "go.lintFlags": [
-          "--fast"
-        ],
+        "go.lintFlags": ["--fast"],
         /////
         // Tailwind CSS + NodX
         /////
@@ -61,14 +57,8 @@
           "go": "go"
         },
         "tailwindCSS.experimental.classRegex": [
-          [
-            "Class\\(([^)]*)\\)",
-            "[\"`]([^\"`]*)[\"`]"
-          ], // Class("...") or Class(`...`)
-          [
-            "ClassMap\\{([^)]*)\\}",
-            "[\"`]([^\"`]*)[\"`]"
-          ] // ClassMap{"..."} or ClassMap{`...`}
+          ["Class\\(([^)]*)\\)", "[\"`]([^\"`]*)[\"`]"], // Class("...") or Class(`...`)
+          ["ClassMap\\{([^)]*)\\}", "[\"`]([^\"`]*)[\"`]"] // ClassMap{"..."} or ClassMap{`...`}
         ]
       }
     }

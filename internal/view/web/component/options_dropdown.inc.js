@@ -32,8 +32,7 @@ window.alpineOptionsDropdown = function () {
       const buttonRect = this.buttonEl.getBoundingClientRect();
       const contentHeight = this.contentEl.offsetHeight;
       const windowHeight = window.innerHeight;
-      const moreSpaceBelow =
-        (windowHeight - buttonRect.bottom) > buttonRect.top;
+      const moreSpaceBelow = windowHeight - buttonRect.bottom > buttonRect.top;
 
       this.contentEl.style.left = `${buttonRect.left}px`;
 
