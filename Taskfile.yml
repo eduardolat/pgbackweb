@@ -140,4 +140,6 @@ tasks:
 
   fixperms:
     desc: Fixes the permissions of the files in the project
-    cmd: chmod -R 777 ./
+    cmds:
+      - chmod -f -R 777 /workspaces # For dev container
+      - chmod -f -R 777 /app # For prod container
