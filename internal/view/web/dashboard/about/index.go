@@ -49,7 +49,7 @@ func indexPage(reqCtx reqctx.Ctx) nodx.Node {
 									nodx.Class("link"),
 									nodx.Href("https://github.com/eduardolat/pgbackweb/blob/main/LICENSE"),
 									nodx.Target("_blank"),
-									component.SpanText("MIT"),
+									component.SpanText("AGPL v3"),
 								),
 							),
 						),

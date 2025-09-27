@@ -56,7 +56,7 @@ the security and availability of your PostgreSQL data:
 - 🔔 **Webhooks**: Get notified when a backup finishes, failed, health check
   fails, or other events.
 - 🔒 **Security first**: PGP encryption to protect your sensitive information.
-- 🛡️ **Open-source trust**: Open-source code under MIT license, backed by the
+- 🛡️ **Open-source trust**: Open-source code under AGPL v3 license, backed by the
   robust pg_dump tool.
 - 🌚 **Dark mode**: Because we all love dark mode.
 
@@ -213,8 +213,7 @@ and pull request is welcome.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
-for details.
+This project is 100% open source and is licensed under the AGPL v3 License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
