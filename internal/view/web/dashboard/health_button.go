@@ -36,14 +36,9 @@ func healthButton(
 	databasesQty dbgen.DatabasesServiceGetDatabasesQtyRow,
 	destinationsQty dbgen.DestinationsServiceGetDestinationsQtyRow,
 ) nodx.Node {
-	isHealthy := true
-
-	if databasesQty.Unhealthy > 0 {
-		isHealthy = false
-	}
-	if destinationsQty.Unhealthy > 0 {
-		isHealthy = false
-	}
+	areDatabasesHealthy := databasesQty.Unhealthy == 0
+	areDestinationsHealthy := destinationsQty.Unhealthy == 0
+	isHealthy := areDatabasesHealthy && areDestinationsHealthy
 
 	pingColor := component.ColorSuccess
 	if !isHealthy {
