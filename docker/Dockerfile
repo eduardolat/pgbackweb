@@ -36,7 +36,7 @@ RUN apt update && apt install -y postgresql-common && \
         wget unzip tzdata git \
         postgresql-client-13 postgresql-client-14 \
         postgresql-client-15 postgresql-client-16 \
-        postgresql-client-17 && \
+        postgresql-client-17 postgresql-client-18 && \
     rm -rf /var/lib/apt/lists/*
 
 # Install downloadable binaries
