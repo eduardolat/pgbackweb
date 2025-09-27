@@ -60,7 +60,8 @@ var (
 		PSQL:    "/usr/lib/postgresql/18/bin/psql",
 	}}
 
-	PGVersions = []PGVersion{PG13, PG14, PG15, PG16, PG17, PG18}
+	PGVersions     = []PGVersion{PG13, PG14, PG15, PG16, PG17, PG18}
+	PGVersionsDesc = []PGVersion{PG18, PG17, PG16, PG15, PG14, PG13}
 )
 
 type Client struct{}
