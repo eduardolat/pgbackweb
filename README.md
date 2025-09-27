@@ -8,8 +8,8 @@
   </p>
 </p>
 <p align="center">
-  <a href="https://github.com/eduardolat/pgbackweb/actions/workflows/lint-test-build.yaml?query=branch%3Amain">
-    <img src="https://github.com/eduardolat/pgbackweb/actions/workflows/lint-test-build.yaml/badge.svg" alt="Tests Status"/>
+  <a href="https://github.com/eduardolat/pgbackweb/actions/workflows/ci.yaml?query=branch%3Amain">
+    <img src="https://github.com/eduardolat/pgbackweb/actions/workflows/ci.yaml/badge.svg" alt="CI Status"/>
   </a>
   <a href="https://goreportcard.com/report/eduardolat/pgbackweb">
     <img src="https://goreportcard.com/badge/eduardolat/pgbackweb" alt="Go Report Card"/>
@@ -48,7 +48,7 @@ the security and availability of your PostgreSQL data:
 - 📤 **Instant download & restore**: Restore and download your backups when you
   need them, directly from the web interface.
 - 🖥 **Multi-version support**: Compatible with PostgreSQL 13, 14, 15, 16,
-  and 17.
+  17, and 18.
 - 📁 **Local & S3 storage**: Store backups locally or add as many S3 buckets as
   you want for greater flexibility.
 - ❤️‍🩹 **Health checks**: Automatically check the health of your databases and
@@ -56,7 +56,7 @@ the security and availability of your PostgreSQL data:
 - 🔔 **Webhooks**: Get notified when a backup finishes, failed, health check
   fails, or other events.
 - 🔒 **Security first**: PGP encryption to protect your sensitive information.
-- 🛡️ **Open-source trust**: Open-source code under MIT license, backed by the
+- 🛡️ **Open-source trust**: Open-source code under AGPL v3 license, backed by the
   robust pg_dump tool.
 - 🌚 **Dark mode**: Because we all love dark mode.
 
@@ -213,8 +213,7 @@ and pull request is welcome.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
-for details.
+This project is 100% open source and is licensed under the AGPL v3 License - see the [LICENSE](LICENSE) file for details.
 
 ---
 

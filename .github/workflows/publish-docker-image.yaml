@@ -8,7 +8,7 @@ on:
         required: true
         default: main
       tag:
-        description: The version tag for the Docker image (e.g., 1.0.0)
+        description: The version tag for the Docker image (e.g., 1.0.0) ⚠️ Without v prefix ⚠️
         required: true
       latest:
         description: Choose "yes" to also tag the image as "latest" in Docker Hub
@@ -22,10 +22,11 @@ jobs:
   build-and-push-images:
     strategy:
       matrix:
-        vars: [
-          { os: ubuntu-24.04, platform: amd64 },
-          { os: ubuntu-24.04-arm, platform: arm64 },
-        ]
+        vars:
+          [
+            { os: ubuntu-24.04, platform: amd64 },
+            { os: ubuntu-24.04-arm, platform: arm64 },
+          ]
 
     name: Build and push images
     runs-on: ${{ matrix.vars.os }}

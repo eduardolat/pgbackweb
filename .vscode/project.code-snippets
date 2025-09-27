@@ -1,34 +1,22 @@
 {
   "If error return error": {
     "prefix": "rerr",
-    "body": [
-      "if err != nil {",
-      "\treturn err",
-      "}",
-      ""
-    ],
-    "description": "Inserts code to check for error and return it"
+    "body": ["if err != nil {", "\treturn err", "}", ""],
+    "description": "Inserts code to check for error and return it",
   },
   "Get request context": {
     "prefix": "grcr", // Get Request Context Request
-    "body": [
-      "ctx := c.Request().Context()"
-    ],
-    "description": "Get's the request from echo context"
+    "body": ["ctx := c.Request().Context()"],
+    "description": "Get's the request from echo context",
   },
   "Get request echo context": {
     "prefix": "grce", // Get Request Context Echo
-    "body": [
-      "reqCtx := reqctx.GetCtx(c)"
-    ],
-    "description": "Inserts code to get echo context from a request"
+    "body": ["reqCtx := reqctx.GetCtx(c)"],
+    "description": "Inserts code to get echo context from a request",
   },
   "Get both request and echo context": {
     "prefix": "grcb", // Get Request Context Both
-    "body": [
-      "ctx := c.Request().Context()",
-      "reqCtx := reqctx.GetCtx(c)"
-    ],
-    "description": "Inserts code to get both request and echo context"
+    "body": ["ctx := c.Request().Context()", "reqCtx := reqctx.GetCtx(c)"],
+    "description": "Inserts code to get both request and echo context",
   },
 }

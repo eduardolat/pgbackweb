@@ -56,7 +56,7 @@ export function initHelpers() {
   function textareaAutoGrow(element) {
     if (!element?.style) return;
     element.style.height = "1px";
-    element.style.height = (element.scrollHeight + 2) + "px";
+    element.style.height = element.scrollHeight + 2 + "px";
   }
 
   function formatJson(inJSON) {

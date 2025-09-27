@@ -9,7 +9,7 @@ import (
 
 func PGVersionSelectOptions(selectedVersion sql.NullString) nodx.Node {
 	return nodx.Map(
-		postgres.PGVersions,
+		postgres.PGVersionsDesc,
 		func(pgVersion postgres.PGVersion) nodx.Node {
 			return nodx.Option(
 				nodx.Value(pgVersion.Value.Version),

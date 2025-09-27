@@ -7,7 +7,7 @@
       "extensions": [
         "golang.go",
         "bradlc.vscode-tailwindcss",
-        "denoland.vscode-deno",
+        "esbenp.prettier-vscode",
         "mhutchie.git-graph",
         "mutantdino.resourcemonitor",
         "Compile-TomaszKasperczyk.copy-to-llm"
@@ -18,44 +18,38 @@
         /////
         "editor.formatOnSave": true,
         "editor.foldingStrategy": "indentation",
-        "editor.rulers": [
-          80
-        ],
+        "editor.rulers": [80],
         "files.eol": "\n",
         /////
         // Language specific settings
         /////
         "[json]": {
-          "editor.defaultFormatter": "denoland.vscode-deno"
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
         },
         "[jsonc]": {
-          "editor.defaultFormatter": "denoland.vscode-deno"
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
         },
         "[typescript]": {
-          "editor.defaultFormatter": "denoland.vscode-deno"
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
         },
         "[javascript]": {
-          "editor.defaultFormatter": "denoland.vscode-deno"
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
         },
         "[css]": {
-          "editor.defaultFormatter": "denoland.vscode-deno"
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
         },
         "[html]": {
-          "editor.defaultFormatter": "denoland.vscode-deno"
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
         },
         "[markdown]": {
-          "editor.defaultFormatter": "denoland.vscode-deno"
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
         },
         // Go & Golangci-lint
         "[go]": {
           "editor.defaultFormatter": "golang.go"
         },
         "go.lintTool": "golangci-lint",
-        "go.lintFlags": [
-          "--fast"
-        ],
-        // Deno
-        "deno.enable": true,
+        "go.lintFlags": ["--fast"],
         /////
         // Tailwind CSS + NodX
         /////
@@ -63,14 +57,8 @@
           "go": "go"
         },
         "tailwindCSS.experimental.classRegex": [
-          [
-            "Class\\(([^)]*)\\)",
-            "[\"`]([^\"`]*)[\"`]"
-          ], // Class("...") or Class(`...`)
-          [
-            "ClassMap\\{([^)]*)\\}",
-            "[\"`]([^\"`]*)[\"`]"
-          ] // ClassMap{"..."} or ClassMap{`...`}
+          ["Class\\(([^)]*)\\)", "[\"`]([^\"`]*)[\"`]"], // Class("...") or Class(`...`)
+          ["ClassMap\\{([^)]*)\\}", "[\"`]([^\"`]*)[\"`]"] // ClassMap{"..."} or ClassMap{`...`}
         ]
       }
     }
