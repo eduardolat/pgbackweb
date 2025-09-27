@@ -79,6 +79,10 @@ RUN set -e && \
     # Make downloaded binaries executable
     chmod +x /usr/local/bin/* && \
 
+    # Default git config
+    # https://github.com/golangci/golangci-lint/issues/4033
+    git config --global --add safe.directory '*' && \
+
     # Clean up downloads and APT cache
     mkdir -p /app && cd /app && rm -rf /tmp/downloads && \
     rm -rf /var/lib/apt/lists/* && \
