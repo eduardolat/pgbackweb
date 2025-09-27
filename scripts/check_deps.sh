@@ -34,6 +34,8 @@ check_command "/usr/lib/postgresql/16/bin/psql --version" "PostgreSQL 16 psql"
 check_command "/usr/lib/postgresql/16/bin/pg_dump --version" "PostgreSQL 16 pg_dump"
 check_command "/usr/lib/postgresql/17/bin/psql --version" "PostgreSQL 17 psql"
 check_command "/usr/lib/postgresql/17/bin/pg_dump --version" "PostgreSQL 17 pg_dump"
+check_command "/usr/lib/postgresql/18/bin/psql --version" "PostgreSQL 18 psql"
+check_command "/usr/lib/postgresql/18/bin/pg_dump --version" "PostgreSQL 18 pg_dump"
 
 # Check software installed by downloading binaries
 check_command "task --version" "task"
