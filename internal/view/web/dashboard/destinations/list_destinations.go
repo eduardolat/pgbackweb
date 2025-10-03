@@ -63,9 +63,9 @@ func listDestinations(
 		trs = append(trs, nodx.Tr(
 			nodx.Td(component.OptionsDropdown(
 				component.OptionsDropdownA(
-					nodx.Href(
+					nodx.Href(pathutil.BuildPath(
 						fmt.Sprintf("/dashboard/executions?destination=%s", destination.ID),
-					),
+					)),
 					nodx.Target("_blank"),
 					lucide.List(),
 					component.SpanText("Show executions"),
@@ -131,9 +131,9 @@ func listDestinations(
 
 	if pagination.HasNextPage {
 		trs = append(trs, nodx.Tr(
-			htmx.HxGet(fmt.Sprintf(
+			htmx.HxGet(pathutil.BuildPath(fmt.Sprintf(
 				"/dashboard/destinations/list?page=%d", pagination.NextPage,
-			)),
+			))),
 			htmx.HxTrigger("intersect once"),
 			htmx.HxSwap("afterend"),
 		))

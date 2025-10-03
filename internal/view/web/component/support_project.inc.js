@@ -55,6 +55,47 @@ window.alpineSupportProjectData = function () {
       }
     },
 
+    prefixImagePath(path) {
+      // If the path starts with / and doesn't start with http, add the path prefix
+      if (path && path.startsWith("/") && !path.startsWith("http")) {
+        return window.PBW_PATH_PREFIX + path;
+      }
+      return path;
+    },
+
+    processData(data) {
+      // Add path prefix to all image URLs
+      if (data.referralLinks) {
+        data.referralLinks = data.referralLinks.map((link) => ({
+          ...link,
+          logo: this.prefixImagePath(link.logo),
+        }));
+      }
+
+      if (data.sponsors) {
+        if (data.sponsors.gold) {
+          data.sponsors.gold = data.sponsors.gold.map((sponsor) => ({
+            ...sponsor,
+            logo: this.prefixImagePath(sponsor.logo),
+          }));
+        }
+        if (data.sponsors.silver) {
+          data.sponsors.silver = data.sponsors.silver.map((sponsor) => ({
+            ...sponsor,
+            logo: this.prefixImagePath(sponsor.logo),
+          }));
+        }
+        if (data.sponsors.bronze) {
+          data.sponsors.bronze = data.sponsors.bronze.map((sponsor) => ({
+            ...sponsor,
+            logo: this.prefixImagePath(sponsor.logo),
+          }));
+        }
+      }
+
+      return data;
+    },
+
     async getData() {
       const cacheKey = "pbw-support-project-data";
 
@@ -63,7 +104,7 @@ window.alpineSupportProjectData = function () {
         const cached = JSON.parse(cachedJSON);
         // Cache for 2 minutes
         if (Date.now() - cached.timestamp < 2 * 60 * 1000) {
-          return cached.data;
+          return this.processData(cached.data);
         }
       }
 
@@ -80,7 +121,7 @@ window.alpineSupportProjectData = function () {
           timestamp: Date.now(),
         });
         localStorage.setItem(cacheKey, dataToCache);
-        return data;
+        return this.processData(data);
       } catch {
         return null;
       }

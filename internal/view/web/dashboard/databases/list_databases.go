@@ -65,9 +65,9 @@ func listDatabases(
 				nodx.Div(
 					nodx.Class("flex flex-col space-y-1"),
 					component.OptionsDropdownA(
-						nodx.Href(
+						nodx.Href(pathutil.BuildPath(
 							fmt.Sprintf("/dashboard/executions?database=%s", database.ID),
-						),
+						)),
 						nodx.Target("_blank"),
 						lucide.List(),
 						component.SpanText("Show executions"),
@@ -105,9 +105,9 @@ func listDatabases(
 
 	if pagination.HasNextPage {
 		trs = append(trs, nodx.Tr(
-			htmx.HxGet(fmt.Sprintf(
+			htmx.HxGet(pathutil.BuildPath(fmt.Sprintf(
 				"/dashboard/databases/list?page=%d", pagination.NextPage,
-			)),
+			))),
 			htmx.HxTrigger("intersect once"),
 			htmx.HxSwap("afterend"),
 		))
