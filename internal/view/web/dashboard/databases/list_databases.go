@@ -74,7 +74,7 @@ func listDatabases(
 					),
 					editDatabaseButton(database),
 					component.OptionsDropdownButton(
-						htmx.HxPost(pathutil.BuildPath("/dashboard/databases/"+database.ID.String()+"/test")),
+						htmx.HxPost(pathutil.BuildPath(fmt.Sprintf("/dashboard/databases/%s/test", database.ID))),
 						htmx.HxDisabledELT("this"),
 						lucide.DatabaseZap(),
 						component.SpanText("Test connection"),

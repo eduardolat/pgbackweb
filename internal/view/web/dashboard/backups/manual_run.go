@@ -2,6 +2,7 @@ package backups
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
@@ -28,7 +29,7 @@ func (h *handlers) manualRunHandler(c echo.Context) error {
 
 func manualRunbutton(backupID uuid.UUID) nodx.Node {
 	return component.OptionsDropdownButton(
-		htmx.HxPost(pathutil.BuildPath("/dashboard/backups/"+backupID.String()+"/run")),
+		htmx.HxPost(pathutil.BuildPath(fmt.Sprintf("/dashboard/backups/%s/run", backupID))),
 		htmx.HxDisabledELT("this"),
 		lucide.Zap(),
 		component.SpanText("Run backup now"),

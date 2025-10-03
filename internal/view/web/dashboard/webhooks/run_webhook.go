@@ -2,6 +2,7 @@ package webhooks
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
@@ -44,7 +45,7 @@ func (h *handlers) runWebhookHandler(c echo.Context) error {
 
 func runWebhookButton(webhookID uuid.UUID) nodx.Node {
 	return component.OptionsDropdownButton(
-		htmx.HxPost(pathutil.BuildPath("/dashboard/webhooks/"+webhookID.String()+"/run")),
+		htmx.HxPost(pathutil.BuildPath(fmt.Sprintf("/dashboard/webhooks/%s/run", webhookID))),
 		htmx.HxDisabledELT("this"),
 		lucide.Zap(),
 		component.SpanText("Run webhook now"),

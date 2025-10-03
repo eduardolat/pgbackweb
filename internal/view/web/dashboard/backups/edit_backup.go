@@ -91,7 +91,7 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) nodx.Node {
 		Title: "Edit backup task",
 		Content: []nodx.Node{
 			nodx.FormEl(
-				htmx.HxPost(pathutil.BuildPath("/dashboard/backups/"+backup.ID.String()+"/edit")),
+				htmx.HxPost(pathutil.BuildPath(fmt.Sprintf("/dashboard/backups/%s/edit", backup.ID))),
 				htmx.HxDisabledELT("find button"),
 				nodx.Class("space-y-2 text-base"),
 

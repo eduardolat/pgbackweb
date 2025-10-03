@@ -48,7 +48,7 @@ func (h *handlers) createDatabaseHandler(c echo.Context) error {
 func createDatabaseButton() nodx.Node {
 	htmxAttributes := func(url string) nodx.Node {
 		return nodx.Group(
-			htmx.HxPost(url),
+			htmx.HxPost(pathutil.BuildPath(url)),
 			htmx.HxInclude("#add-database-form"),
 			htmx.HxDisabledELT(".add-database-btn"),
 			htmx.HxIndicator("#add-database-loading"),

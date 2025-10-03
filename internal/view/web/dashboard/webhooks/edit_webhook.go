@@ -2,6 +2,7 @@ package webhooks
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
@@ -102,7 +103,7 @@ func editWebhookForm(
 	backups []dbgen.Backup,
 ) nodx.Node {
 	return nodx.FormEl(
-		htmx.HxPost(pathutil.BuildPath("/dashboard/webhooks/"+webhook.ID.String()+"/edit")),
+		htmx.HxPost(pathutil.BuildPath(fmt.Sprintf("/dashboard/webhooks/%s/edit", webhook.ID))),
 		htmx.HxDisabledELT("find button[type='submit']"),
 		nodx.Class("space-y-2"),
 
@@ -127,7 +128,7 @@ func editWebhookButton(webhookID uuid.UUID) nodx.Node {
 		Title: "Edit webhook",
 		Content: []nodx.Node{
 			nodx.Div(
-				htmx.HxGet(pathutil.BuildPath("/dashboard/webhooks/"+webhookID.String()+"/edit")),
+				htmx.HxGet(pathutil.BuildPath(fmt.Sprintf("/dashboard/webhooks/%s/edit", webhookID))),
 				htmx.HxSwap("outerHTML"),
 				htmx.HxTrigger("intersect once"),
 				nodx.Class("p-10 flex justify-center"),

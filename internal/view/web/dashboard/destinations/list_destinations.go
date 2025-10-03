@@ -72,7 +72,7 @@ func listDestinations(
 				),
 				editDestinationButton(destination),
 				component.OptionsDropdownButton(
-					htmx.HxPost(pathutil.BuildPath("/dashboard/destinations/"+destination.ID.String()+"/test")),
+					htmx.HxPost(pathutil.BuildPath(fmt.Sprintf("/dashboard/destinations/%s/test", destination.ID))),
 					htmx.HxDisabledELT("this"),
 					lucide.PlugZap(),
 					component.SpanText("Test connection"),

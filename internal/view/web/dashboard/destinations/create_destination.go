@@ -52,7 +52,7 @@ func (h *handlers) createDestinationHandler(c echo.Context) error {
 func createDestinationButton() nodx.Node {
 	htmxAttributes := func(url string) nodx.Node {
 		return nodx.Group(
-			htmx.HxPost(url),
+			htmx.HxPost(pathutil.BuildPath(url)),
 			htmx.HxInclude("#add-destination-form"),
 			htmx.HxDisabledELT(".add-destination-btn"),
 			htmx.HxIndicator("#add-destination-loading"),

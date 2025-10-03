@@ -108,7 +108,7 @@ func restoreExecutionForm(
 	databases []dbgen.DatabasesServiceGetAllDatabasesRow,
 ) nodx.Node {
 	return nodx.FormEl(
-		htmx.HxPost(pathutil.BuildPath("/dashboard/executions/"+execution.ID.String()+"/restore")),
+		htmx.HxPost(pathutil.BuildPath(fmt.Sprintf("/dashboard/executions/%s/restore", execution.ID))),
 		htmx.HxConfirm("Are you sure you want to restore this backup?"),
 		htmx.HxDisabledELT("find button"),
 
@@ -223,7 +223,7 @@ func restoreExecutionButton(execution dbgen.ExecutionsServicePaginateExecutionsR
 		Title: "Restore backup execution",
 		Content: []nodx.Node{
 			nodx.Div(
-				htmx.HxGet(pathutil.BuildPath("/dashboard/executions/"+execution.ID.String()+"/restore-form")),
+				htmx.HxGet(pathutil.BuildPath(fmt.Sprintf("/dashboard/executions/%s/restore-form", execution.ID))),
 				htmx.HxSwap("outerHTML"),
 				htmx.HxTrigger("intersect once"),
 				nodx.Class("p-10 flex justify-center"),

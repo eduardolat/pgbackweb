@@ -1,6 +1,8 @@
 package destinations
 
 import (
+	"fmt"
+
 	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
@@ -29,7 +31,7 @@ func (h *handlers) deleteDestinationHandler(c echo.Context) error {
 
 func deleteDestinationButton(destinationID uuid.UUID) nodx.Node {
 	return component.OptionsDropdownButton(
-		htmx.HxDelete(pathutil.BuildPath("/dashboard/destinations/"+destinationID.String())),
+		htmx.HxDelete(pathutil.BuildPath(fmt.Sprintf("/dashboard/destinations/%s", destinationID))),
 		htmx.HxConfirm("Are you sure you want to delete this destination?"),
 		lucide.Trash(),
 		component.SpanText("Delete destination"),

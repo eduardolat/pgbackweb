@@ -1,6 +1,7 @@
 package executions
 
 import (
+	"fmt"
 	"net/http"
 	"path/filepath"
 
@@ -122,7 +123,7 @@ func showExecutionButton(
 						nodx.Class("flex justify-end items-center space-x-2"),
 						deleteExecutionButton(execution.ID),
 						nodx.A(
-							nodx.Href(pathutil.BuildPath("/dashboard/executions/"+execution.ID.String()+"/download")),
+							nodx.Href(pathutil.BuildPath(fmt.Sprintf("/dashboard/executions/%s/download", execution.ID))),
 							nodx.Target("_blank"),
 							nodx.Class("btn btn-primary"),
 							component.SpanText("Download"),
