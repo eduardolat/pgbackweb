@@ -87,7 +87,7 @@ func createWebhookForm(
 	backups []dbgen.Backup,
 ) nodx.Node {
 	return nodx.FormEl(
-		htmx.HxPost("/dashboard/webhooks/create"),
+		htmx.HxPost(pathutil.BuildPath("/dashboard/webhooks/create")),
 		htmx.HxDisabledELT("find button[type='submit']"),
 		nodx.Class("space-y-2"),
 
@@ -112,7 +112,7 @@ func createWebhookButton() nodx.Node {
 		Title: "Create webhook",
 		Content: []nodx.Node{
 			nodx.Div(
-				htmx.HxGet("/dashboard/webhooks/create"),
+				htmx.HxGet(pathutil.BuildPath("/dashboard/webhooks/create")),
 				htmx.HxSwap("outerHTML"),
 				htmx.HxTrigger("intersect once"),
 				nodx.Class("p-10 flex justify-center"),

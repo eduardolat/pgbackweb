@@ -2,6 +2,7 @@ package profile
 
 import (
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	nodx "github.com/nodxdev/nodxgo"
@@ -15,7 +16,7 @@ func closeAllSessionsForm(sessions []dbgen.Session) nodx.Node {
 			component.H2Text("Close all sessions"),
 			component.PText("This will log you out from all devices including this one."),
 			nodx.Button(
-				htmx.HxPost("/auth/logout-all"),
+				htmx.HxPost(pathutil.BuildPath("/auth/logout-all")),
 				htmx.HxDisabledELT("this"),
 				htmx.HxConfirm("Are you sure you want to close all your sessions?"),
 				nodx.Class("mt-2 btn btn-error"),

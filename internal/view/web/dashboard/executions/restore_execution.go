@@ -7,6 +7,7 @@ import (
 
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
@@ -107,7 +108,7 @@ func restoreExecutionForm(
 	databases []dbgen.DatabasesServiceGetAllDatabasesRow,
 ) nodx.Node {
 	return nodx.FormEl(
-		htmx.HxPost("/dashboard/executions/"+execution.ID.String()+"/restore"),
+		htmx.HxPost(pathutil.BuildPath("/dashboard/executions/"+execution.ID.String()+"/restore")),
 		htmx.HxConfirm("Are you sure you want to restore this backup?"),
 		htmx.HxDisabledELT("find button"),
 
@@ -222,7 +223,7 @@ func restoreExecutionButton(execution dbgen.ExecutionsServicePaginateExecutionsR
 		Title: "Restore backup execution",
 		Content: []nodx.Node{
 			nodx.Div(
-				htmx.HxGet("/dashboard/executions/"+execution.ID.String()+"/restore-form"),
+				htmx.HxGet(pathutil.BuildPath("/dashboard/executions/"+execution.ID.String()+"/restore-form")),
 				htmx.HxSwap("outerHTML"),
 				htmx.HxTrigger("intersect once"),
 				nodx.Class("p-10 flex justify-center"),

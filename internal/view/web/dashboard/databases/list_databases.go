@@ -8,6 +8,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/service/databases"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/util/paginateutil"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
@@ -73,7 +74,7 @@ func listDatabases(
 					),
 					editDatabaseButton(database),
 					component.OptionsDropdownButton(
-						htmx.HxPost("/dashboard/databases/"+database.ID.String()+"/test"),
+						htmx.HxPost(pathutil.BuildPath("/dashboard/databases/"+database.ID.String()+"/test")),
 						htmx.HxDisabledELT("this"),
 						lucide.DatabaseZap(),
 						component.SpanText("Test connection"),

@@ -40,7 +40,7 @@ func loginPage() nodx.Node {
 		component.H1Text("Login"),
 
 		nodx.FormEl(
-			htmx.HxPost("/auth/login"),
+			htmx.HxPost(pathutil.BuildPath("/auth/login")),
 			htmx.HxDisabledELT("find button"),
 			nodx.Class("mt-4 space-y-2"),
 

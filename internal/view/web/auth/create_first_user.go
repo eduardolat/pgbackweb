@@ -41,7 +41,7 @@ func createFirstUserPage() nodx.Node {
 		component.H1Text("Create first user"),
 
 		nodx.FormEl(
-			htmx.HxPost("/auth/create-first-user"),
+			htmx.HxPost(pathutil.BuildPath("/auth/create-first-user")),
 			htmx.HxDisabledELT("find button"),
 			nodx.Class("mt-4 space-y-2"),
 

@@ -106,7 +106,7 @@ func createBackupForm(
 	serverTZ := time.Now().Location().String()
 
 	return nodx.FormEl(
-		htmx.HxPost("/dashboard/backups"),
+		htmx.HxPost(pathutil.BuildPath("/dashboard/backups")),
 		htmx.HxDisabledELT("find button"),
 		nodx.Class("space-y-2 text-base"),
 
@@ -323,7 +323,7 @@ func createBackupButton() nodx.Node {
 		Title: "Create backup task",
 		Content: []nodx.Node{
 			nodx.Div(
-				htmx.HxGet("/dashboard/backups/create-form"),
+				htmx.HxGet(pathutil.BuildPath("/dashboard/backups/create-form")),
 				htmx.HxSwap("outerHTML"),
 				htmx.HxTrigger("intersect once"),
 				nodx.Class("p-10 flex justify-center"),
