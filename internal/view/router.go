@@ -1,9 +1,11 @@
 package view
 
 import (
+	"io/fs"
 	"time"
 
 	"github.com/eduardolat/pgbackweb/internal/config"
+	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/service"
 	"github.com/eduardolat/pgbackweb/internal/view/api"
 	"github.com/eduardolat/pgbackweb/internal/view/middleware"
@@ -24,7 +26,15 @@ func MountRouter(app *echo.Echo, servs *service.Service, env config.Env) {
 			ExcludedFiles: []string{"/robots.txt"},
 		},
 	)
-	baseGroup.Group("", browserCache).StaticFS("", static.StaticFs)
+
+	// Mount static files
+	staticFS, err := fs.Sub(static.StaticFs, ".")
+	if err != nil {
+		logger.FatalError("failed to create static filesystem", logger.KV{"error": err})
+	}
+
+	staticGroup := baseGroup.Group("", browserCache)
+	staticGroup.StaticFS("/", staticFS)
 
 	apiGroup := baseGroup.Group("/api")
 	api.MountRouter(apiGroup, mids, servs)

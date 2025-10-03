@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/google/uuid"
@@ -121,7 +122,7 @@ func showExecutionButton(
 						nodx.Class("flex justify-end items-center space-x-2"),
 						deleteExecutionButton(execution.ID),
 						nodx.A(
-							nodx.Href("/dashboard/executions/"+execution.ID.String()+"/download"),
+							nodx.Href(pathutil.BuildPath("/dashboard/executions/"+execution.ID.String()+"/download")),
 							nodx.Target("_blank"),
 							nodx.Class("btn btn-primary"),
 							component.SpanText("Download"),
