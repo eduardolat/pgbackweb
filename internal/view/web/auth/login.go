@@ -5,6 +5,7 @@ import (
 
 	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
@@ -28,7 +29,7 @@ func (h *handlers) loginPageHandler(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Internal server error")
 	}
 	if usersQty == 0 {
-		return c.Redirect(http.StatusFound, "/auth/create-first-user")
+		return c.Redirect(http.StatusFound, pathutil.BuildPath("/auth/create-first-user"))
 	}
 
 	return echoutil.RenderNodx(c, http.StatusOK, loginPage())
@@ -108,5 +109,5 @@ func (h *handlers) loginHandler(c echo.Context) error {
 	}
 
 	h.servs.AuthService.SetSessionCookie(c, session.DecryptedToken)
-	return respondhtmx.Redirect(c, "/dashboard")
+	return respondhtmx.Redirect(c, pathutil.BuildPath("/dashboard"))
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/integration"
 	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/service"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/view"
 	"github.com/labstack/echo/v4"
 )
@@ -17,6 +18,9 @@ func main() {
 	if err != nil {
 		logger.FatalError("error getting environment variables", logger.KV{"error": err})
 	}
+
+	// Initialize the path prefix utility
+	pathutil.SetPathPrefix(env.PBW_PATH_PREFIX)
 
 	cr, err := cron.New()
 	if err != nil {
@@ -44,7 +48,7 @@ func main() {
 	app := echo.New()
 	app.HideBanner = true
 	app.HidePort = true
-	view.MountRouter(app, servs)
+	view.MountRouter(app, servs, env)
 
 	address := env.PBW_LISTEN_HOST + ":" + env.PBW_LISTEN_PORT
 	logger.Info("server started at http://localhost:"+env.PBW_LISTEN_PORT, logger.KV{

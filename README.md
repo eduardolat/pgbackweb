@@ -79,6 +79,7 @@ services:
     environment:
       PBW_ENCRYPTION_KEY: "my_secret_key" # Change this to a strong key
       PBW_POSTGRES_CONN_STRING: "postgresql://postgres:password@postgres:5432/pgbackweb?sslmode=disable"
+      # PBW_PATH_PREFIX: "/pgbackweb" # Optional: Use this if serving under a subpath
       TZ: "America/Guatemala" # Set your timezone, optional
     depends_on:
       postgres:
@@ -118,6 +119,10 @@ You only need to configure the following environment variables:
   (optional)
 
 - `PBW_LISTEN_PORT`: Port for the server to listen on, default 8085 (optional)
+
+- `PBW_PATH_PREFIX`: Path prefix for the application URL. Use this when serving
+  the application under a subpath (e.g., `/pgbackweb`). Must start with `/` and
+  not end with `/`. Default is empty (optional)
 
 - `TZ`: Your
   [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)

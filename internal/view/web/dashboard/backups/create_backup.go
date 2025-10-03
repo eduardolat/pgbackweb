@@ -7,6 +7,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/staticdata"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
@@ -70,7 +71,7 @@ func (h *handlers) createBackupHandler(c echo.Context) error {
 		return respondhtmx.ToastError(c, err.Error())
 	}
 
-	return respondhtmx.Redirect(c, "/dashboard/backups")
+	return respondhtmx.Redirect(c, pathutil.BuildPath("/dashboard/backups"))
 }
 
 func (h *handlers) createBackupFormHandler(c echo.Context) error {
