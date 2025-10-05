@@ -56,8 +56,14 @@ window.alpineSupportProjectData = function () {
     },
 
     prefixImagePath(path) {
-      // If the path starts with / and doesn't start with http, add the path prefix
-      if (path && path.startsWith("/") && !path.startsWith("http")) {
+      // If the path starts with / and is not an absolute URL, add the path prefix
+      if (
+        path &&
+        path.startsWith("/") &&
+        !path.startsWith("//") &&
+        !path.startsWith("http://") &&
+        !path.startsWith("https://")
+      ) {
         return window.PBW_PATH_PREFIX + path;
       }
       return path;
