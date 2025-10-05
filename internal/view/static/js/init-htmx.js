@@ -45,7 +45,7 @@ export function initHTMX() {
     document.addEventListener(key, triggers[key]);
   }
 
-  //  Add trigger to use sweetalert2 for confirms
+  // Add trigger to use custom dialogs for confirms
   document.addEventListener("htmx:confirm", function (e) {
     if (!e.detail.target.hasAttribute("hx-confirm")) return;
 
