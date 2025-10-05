@@ -56,6 +56,12 @@ tasks:
       - go build -o ./dist/app ./cmd/app/.
       - go build -o ./dist/change-password ./cmd/changepw/.
 
+  setversion:
+    desc: Set the version from latest git tag in the relevant files
+    cmds:
+      - chmod +x ./scripts/set-version.sh
+      - ./scripts/set-version.sh {{.CLI_ARGS}}
+
   serve:
     desc: Serve the built project
     cmd: ./dist/app
