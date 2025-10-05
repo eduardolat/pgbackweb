@@ -4,9 +4,9 @@ import (
 	"io/fs"
 	"time"
 
-	"github.com/eduardolat/pgbackweb/internal/config"
 	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/service"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/view/api"
 	"github.com/eduardolat/pgbackweb/internal/view/middleware"
 	"github.com/eduardolat/pgbackweb/internal/view/static"
@@ -14,11 +14,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func MountRouter(app *echo.Echo, servs *service.Service, env config.Env) {
+func MountRouter(app *echo.Echo, servs *service.Service) {
 	mids := middleware.New(servs)
 
 	// Create the base group with the path prefix (if any)
-	baseGroup := app.Group(env.PBW_PATH_PREFIX)
+	baseGroup := app.Group(pathutil.GetPathPrefix())
 
 	browserCache := mids.NewBrowserCacheMiddleware(
 		middleware.BrowserCacheMiddlewareConfig{

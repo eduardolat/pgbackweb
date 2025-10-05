@@ -19,7 +19,6 @@ func main() {
 		logger.FatalError("error getting environment variables", logger.KV{"error": err})
 	}
 
-	// Initialize the path prefix utility
 	pathutil.SetPathPrefix(env.PBW_PATH_PREFIX)
 
 	cr, err := cron.New()
@@ -48,7 +47,7 @@ func main() {
 	app := echo.New()
 	app.HideBanner = true
 	app.HidePort = true
-	view.MountRouter(app, servs, env)
+	view.MountRouter(app, servs)
 
 	address := env.PBW_LISTEN_HOST + ":" + env.PBW_LISTEN_PORT
 	logger.Info("server started at http://localhost:"+env.PBW_LISTEN_PORT, logger.KV{
