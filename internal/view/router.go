@@ -1,8 +1,11 @@
 package view
 
 import (
+	"io/fs"
 	"time"
 
+	"github.com/eduardolat/pgbackweb/internal/config"
+	"github.com/eduardolat/pgbackweb/internal/logger"
 	"github.com/eduardolat/pgbackweb/internal/service"
 	"github.com/eduardolat/pgbackweb/internal/view/api"
 	"github.com/eduardolat/pgbackweb/internal/view/middleware"
@@ -11,8 +14,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func MountRouter(app *echo.Echo, servs *service.Service) {
+func MountRouter(app *echo.Echo, servs *service.Service, env config.Env) {
 	mids := middleware.New(servs)
+
+	// Create the base group with the path prefix (if any)
+	baseGroup := app.Group(env.PBW_PATH_PREFIX)
 
 	browserCache := mids.NewBrowserCacheMiddleware(
 		middleware.BrowserCacheMiddlewareConfig{
@@ -20,11 +26,19 @@ func MountRouter(app *echo.Echo, servs *service.Service) {
 			ExcludedFiles: []string{"/robots.txt"},
 		},
 	)
-	app.Group("", browserCache).StaticFS("", static.StaticFs)
 
-	apiGroup := app.Group("/api")
+	// Mount static files
+	staticFS, err := fs.Sub(static.StaticFs, ".")
+	if err != nil {
+		logger.FatalError("failed to create static filesystem", logger.KV{"error": err})
+	}
+
+	staticGroup := baseGroup.Group("", browserCache)
+	staticGroup.StaticFS("/", staticFS)
+
+	apiGroup := baseGroup.Group("/api")
 	api.MountRouter(apiGroup, mids, servs)
 
-	webGroup := app.Group("", mids.InjectReqctx)
+	webGroup := baseGroup.Group("", mids.InjectReqctx)
 	web.MountRouter(webGroup, mids, servs)
 }

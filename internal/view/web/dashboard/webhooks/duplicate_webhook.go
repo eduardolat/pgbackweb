@@ -1,6 +1,9 @@
 package webhooks
 
 import (
+	"fmt"
+
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/google/uuid"
@@ -27,7 +30,7 @@ func (h *handlers) duplicateWebhookHandler(c echo.Context) error {
 
 func duplicateWebhookButton(webhookID uuid.UUID) nodx.Node {
 	return component.OptionsDropdownButton(
-		htmx.HxPost("/dashboard/webhooks/"+webhookID.String()+"/duplicate"),
+		htmx.HxPost(pathutil.BuildPath(fmt.Sprintf("/dashboard/webhooks/%s/duplicate", webhookID))),
 		htmx.HxConfirm("Are you sure you want to duplicate this webhook?"),
 		lucide.CopyPlus(),
 		component.SpanText("Duplicate webhook"),

@@ -8,6 +8,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/service/executions"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/util/paginateutil"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
@@ -117,7 +118,7 @@ func listExecutions(
 	if pagination.HasNextPage {
 		trs = append(trs, nodx.Tr(
 			htmx.HxGet(func() string {
-				url := "/dashboard/executions/list"
+				url := pathutil.BuildPath("/dashboard/executions/list")
 				url = strutil.AddQueryParamToUrl(url, "page", fmt.Sprintf("%d", pagination.NextPage))
 				if queryData.Database != uuid.Nil {
 					url = strutil.AddQueryParamToUrl(url, "database", queryData.Database.String())

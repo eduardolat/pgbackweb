@@ -92,7 +92,7 @@ func listWebhooks(
 	if pagination.HasNextPage {
 		trs = append(trs, nodx.Tr(
 			htmx.HxGet(func() string {
-				url := "/dashboard/webhooks/list"
+				url := pathutil.BuildPath("/dashboard/webhooks/list")
 				url = strutil.AddQueryParamToUrl(url, "page", fmt.Sprintf("%d", pagination.NextPage))
 				return url
 			}()),

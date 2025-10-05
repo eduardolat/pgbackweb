@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/view/reqctx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/labstack/echo/v4"
@@ -15,7 +16,7 @@ func (h *handlers) logoutHandler(c echo.Context) error {
 	}
 
 	h.servs.AuthService.ClearSessionCookie(c)
-	return respondhtmx.Redirect(c, "/auth/login")
+	return respondhtmx.Redirect(c, pathutil.BuildPath("/auth/login"))
 }
 
 func (h *handlers) logoutAllSessionsHandler(c echo.Context) error {
@@ -28,5 +29,5 @@ func (h *handlers) logoutAllSessionsHandler(c echo.Context) error {
 	}
 
 	h.servs.AuthService.ClearSessionCookie(c)
-	return respondhtmx.Redirect(c, "/auth/login")
+	return respondhtmx.Redirect(c, pathutil.BuildPath("/auth/login"))
 }

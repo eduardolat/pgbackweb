@@ -8,6 +8,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/service/restorations"
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
 	"github.com/eduardolat/pgbackweb/internal/util/paginateutil"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
@@ -109,7 +110,7 @@ func listRestorations(
 	if pagination.HasNextPage {
 		trs = append(trs, nodx.Tr(
 			htmx.HxGet(func() string {
-				url := "/dashboard/restorations/list"
+				url := pathutil.BuildPath("/dashboard/restorations/list")
 				url = strutil.AddQueryParamToUrl(url, "page", fmt.Sprintf("%d", pagination.NextPage))
 				if queryData.Execution != uuid.Nil {
 					url = strutil.AddQueryParamToUrl(url, "execution", queryData.Execution.String())

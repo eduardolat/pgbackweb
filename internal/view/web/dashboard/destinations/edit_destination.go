@@ -4,6 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
@@ -58,7 +59,7 @@ func editDestinationButton(
 
 	htmxAttributes := func(url string) nodx.Node {
 		return nodx.Group(
-			htmx.HxPost(url),
+			htmx.HxPost(pathutil.BuildPath(url)),
 			htmx.HxInclude("#"+formID),
 			htmx.HxDisabledELT("."+btnClass),
 			htmx.HxIndicator("#"+loadingID),

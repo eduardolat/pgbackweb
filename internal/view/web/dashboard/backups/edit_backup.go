@@ -6,6 +6,7 @@ import (
 
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/staticdata"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/validate"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
@@ -90,7 +91,7 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) nodx.Node {
 		Title: "Edit backup task",
 		Content: []nodx.Node{
 			nodx.FormEl(
-				htmx.HxPost("/dashboard/backups/"+backup.ID.String()+"/edit"),
+				htmx.HxPost(pathutil.BuildPath(fmt.Sprintf("/dashboard/backups/%s/edit", backup.ID))),
 				htmx.HxDisabledELT("find button"),
 				nodx.Class("space-y-2 text-base"),
 

@@ -88,7 +88,7 @@ func webhookExecutionsList(
 	if pagination.HasNextPage {
 		trs = append(trs, nodx.Tr(
 			htmx.HxGet(func() string {
-				url := "/dashboard/webhooks/" + webhookID.String() + "/executions"
+				url := pathutil.BuildPath("/dashboard/webhooks/" + webhookID.String() + "/executions")
 				url = strutil.AddQueryParamToUrl(url, "page", fmt.Sprintf("%d", pagination.NextPage))
 				return url
 			}()),
@@ -258,7 +258,7 @@ func webhookExecutionsButton(webhookID uuid.UUID) nodx.Node {
 				),
 				nodx.Tbody(
 					htmx.HxGet(
-						"/dashboard/webhooks/"+webhookID.String()+"/executions?page=1",
+						pathutil.BuildPath("/dashboard/webhooks/"+webhookID.String()+"/executions?page=1"),
 					),
 					htmx.HxIndicator("#webhook-executions-loading"),
 					htmx.HxTrigger("intersect once"),
