@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/eduardolat/pgbackweb/internal/config"
 	"github.com/eduardolat/pgbackweb/internal/cron"
 	"github.com/eduardolat/pgbackweb/internal/database"
@@ -49,8 +51,9 @@ func main() {
 	app.HidePort = true
 	view.MountRouter(app, servs)
 
-	address := env.PBW_LISTEN_HOST + ":" + env.PBW_LISTEN_PORT
-	logger.Info("server started at http://localhost:"+env.PBW_LISTEN_PORT, logger.KV{
+	address := fmt.Sprintf("%s:%s", env.PBW_LISTEN_HOST, env.PBW_LISTEN_PORT)
+	localURL := fmt.Sprintf("http://localhost:%s%s", env.PBW_LISTEN_PORT, pathutil.GetPathPrefix())
+	logger.Info("server started at "+localURL, logger.KV{
 		"listenHost": env.PBW_LISTEN_HOST,
 		"listenPort": env.PBW_LISTEN_PORT,
 	})
