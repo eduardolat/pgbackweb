@@ -1,6 +1,7 @@
 package component
 
 import (
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	nodx "github.com/nodxdev/nodxgo"
 )
 
@@ -12,7 +13,7 @@ func Logotype() nodx.Node {
 		},
 		nodx.Img(
 			nodx.Class("w-[60px] h-auto"),
-			nodx.Src("/images/logo.png"),
+			nodx.Src(pathutil.BuildPath("/images/logo.png")),
 			nodx.Alt("PG Back Web"),
 		),
 		nodx.SpanEl(

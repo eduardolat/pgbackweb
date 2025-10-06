@@ -3,6 +3,7 @@ package layout
 import (
 	"fmt"
 
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	nodx "github.com/nodxdev/nodxgo"
 	alpine "github.com/nodxdev/nodxgo-alpine"
 	htmx "github.com/nodxdev/nodxgo-htmx"
@@ -22,7 +23,7 @@ func dashboardAside() nodx.Node {
 			nodx.Href("https://github.com/eduardolat/pgbackweb"),
 			nodx.Target("_blank"),
 			nodx.Img(
-				nodx.Src("/images/logo.png"),
+				nodx.Src(pathutil.BuildPath("/images/logo.png")),
 				nodx.Alt("PG Back Web"),
 				nodx.Class("w-[50px] h-auto"),
 			),
@@ -45,63 +46,63 @@ func dashboardAside() nodx.Node {
 			dashboardAsideItem(
 				lucide.LayoutDashboard,
 				"Summary",
-				"/dashboard",
+				pathutil.BuildPath("/dashboard"),
 				true,
 			),
 
 			dashboardAsideItem(
 				lucide.Database,
 				"Databases",
-				"/dashboard/databases",
+				pathutil.BuildPath("/dashboard/databases"),
 				false,
 			),
 
 			dashboardAsideItem(
 				lucide.HardDrive,
 				"Destinations",
-				"/dashboard/destinations",
+				pathutil.BuildPath("/dashboard/destinations"),
 				false,
 			),
 
 			dashboardAsideItem(
 				lucide.DatabaseBackup,
 				"Backup tasks",
-				"/dashboard/backups",
+				pathutil.BuildPath("/dashboard/backups"),
 				false,
 			),
 
 			dashboardAsideItem(
 				lucide.List,
 				"Executions",
-				"/dashboard/executions",
+				pathutil.BuildPath("/dashboard/executions"),
 				false,
 			),
 
 			dashboardAsideItem(
 				lucide.ArchiveRestore,
 				"Restorations",
-				"/dashboard/restorations",
+				pathutil.BuildPath("/dashboard/restorations"),
 				false,
 			),
 
 			dashboardAsideItem(
 				lucide.Webhook,
 				"Webhooks",
-				"/dashboard/webhooks",
+				pathutil.BuildPath("/dashboard/webhooks"),
 				false,
 			),
 
 			dashboardAsideItem(
 				lucide.User,
 				"Profile",
-				"/dashboard/profile",
+				pathutil.BuildPath("/dashboard/profile"),
 				false,
 			),
 
 			dashboardAsideItem(
 				lucide.Info,
 				"About",
-				"/dashboard/about",
+				pathutil.BuildPath("/dashboard/about"),
 				false,
 			),
 		),

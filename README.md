@@ -7,6 +7,7 @@
     🐘 Effortless PostgreSQL backups with a user-friendly web interface! 🌐💾
   </p>
 </p>
+
 <p align="center">
   <a href="https://github.com/eduardolat/pgbackweb/actions/workflows/ci.yaml?query=branch%3Amain">
     <img src="https://github.com/eduardolat/pgbackweb/actions/workflows/ci.yaml/badge.svg" alt="CI Status"/>
@@ -28,10 +29,16 @@
   </a>
 </p>
 
+> [!NOTE]
+> **We're growing! New name, bigger future**
+>
+> PG Back Web is becoming **UFO Backup**! The new name reflects a future where the project expands beyond PostgreSQL, making powerful backups simple and accessible for everyone
+>
+> Curious about the roadmap or want to shape the project's future? Join the [community](https://ufobackup.uforg.dev/r/community) to discuss ideas and influence decisions, everyone's input is welcome!
+
 ## Why PG Back Web?
 
-PG Back Web isn't just another backup tool. It's your trusted ally in ensuring
-the security and availability of your PostgreSQL data:
+PG Back Web isn't just another backup tool. It's your trusted ally in ensuring the security and availability of your PostgreSQL data:
 
 - 🎯 **Designed for everyone**: From individual developers to teams.
 - ⏱️ **Save time**: Automate your backups and forget about manual tasks.
@@ -39,34 +46,23 @@ the security and availability of your PostgreSQL data:
 
 ## Features
 
-- 📦 **Intuitive web interface**: Manage your backups with ease, no database
-  expertise required.
-- 📅 **Scheduled backups**: Set it and forget it. PG Back Web takes care of the
-  rest.
-- 📈 **Backup monitoring**: Visualize the status of your backups with execution
-  logs.
-- 📤 **Instant download & restore**: Restore and download your backups when you
-  need them, directly from the web interface.
-- 🖥 **Multi-version support**: Compatible with PostgreSQL 13, 14, 15, 16,
-  17, and 18.
-- 📁 **Local & S3 storage**: Store backups locally or add as many S3 buckets as
-  you want for greater flexibility.
-- ❤️‍🩹 **Health checks**: Automatically check the health of your databases and
-  destinations.
-- 🔔 **Webhooks**: Get notified when a backup finishes, failed, health check
-  fails, or other events.
+- 📦 **Intuitive web interface**: Manage your backups with ease, no database expertise required.
+- 📅 **Scheduled backups**: Set it and forget it. PG Back Web takes care of the rest.
+- 📈 **Backup monitoring**: Visualize the status of your backups with execution logs.
+- 📤 **Instant download & restore**: Restore and download your backups when you need them, directly from the web interface.
+- 🖥 **Multi-version support**: Compatible with PostgreSQL 13, 14, 15, 16, 17, and 18.
+- 📁 **Local & S3 storage**: Store backups locally or add as many S3 buckets as you want for greater flexibility.
+- ❤️‍🩹 **Health checks**: Automatically check the health of your databases and destinations.
+- 🔔 **Webhooks**: Get notified when a backup finishes, failed, health check fails, or other events.
 - 🔒 **Security first**: PGP encryption to protect your sensitive information.
-- 🛡️ **Open-source trust**: Open-source code under AGPL v3 license, backed by the
-  robust pg_dump tool.
+- 🛡️ **Open-source trust**: Open-source code under AGPL v3 license, backed by the robust pg_dump tool.
 - 🌚 **Dark mode**: Because we all love dark mode.
 
 ## Installation
 
-PG Back Web is available as a Docker image. You just need to set 3 environment
-variables and you're good to go!
+PG Back Web is available as a Docker image. You just need to set 3 environment variables and you're good to go!
 
-Here's an example of how you can run PG Back Web with Docker Compose, feel free
-to adapt it to your needs:
+Here's an example of how you can run PG Back Web with Docker Compose, feel free to adapt it to your needs:
 
 ```yaml
 services:
@@ -77,15 +73,15 @@ services:
     volumes:
       - ./backups:/backups # If you only use S3 destinations, you don't need this volume
     environment:
+      # Optional environment variables are ignored, see the configuration section below for more details
       PBW_ENCRYPTION_KEY: "my_secret_key" # Change this to a strong key
       PBW_POSTGRES_CONN_STRING: "postgresql://postgres:password@postgres:5432/pgbackweb?sslmode=disable"
-      TZ: "America/Guatemala" # Set your timezone, optional
     depends_on:
       postgres:
         condition: service_healthy
 
   postgres:
-    image: postgres:17
+    image: postgres:18
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: pgbackweb
@@ -101,28 +97,23 @@ services:
       retries: 5
 ```
 
-You can watch [this youtube video](https://www.youtube.com/watch?v=vf7SLrSO8sw)
-to see how easy it is to set up PG Back Web.
+You can watch [this youtube video](https://www.youtube.com/watch?v=vf7SLrSO8sw) to see how easy it is to set up PG Back Web.
 
 ## Configuration
 
 You only need to configure the following environment variables:
 
-- `PBW_ENCRYPTION_KEY`: Your encryption key. Generate a strong one and store it
-  in a safe place, as PG Back Web uses it to encrypt sensitive data.
+- `PBW_ENCRYPTION_KEY`: Your encryption key. Generate a strong random one and store it in a safe place, as PG Back Web uses it to encrypt sensitive data.
 
-- `PBW_POSTGRES_CONN_STRING`: The connection string for the PostgreSQL database
-  that will store PG Back Web data.
+- `PBW_POSTGRES_CONN_STRING`: The connection string for the PostgreSQL database that will store PG Back Web data.
 
-- `PBW_LISTEN_HOST`: Host for the server to listen on, default 0.0.0.0
-  (optional)
+- `PBW_LISTEN_HOST`: Optional. Host for the server to listen on, default 0.0.0.0
 
-- `PBW_LISTEN_PORT`: Port for the server to listen on, default 8085 (optional)
+- `PBW_LISTEN_PORT`: Optional. Port for the server to listen on, default 8085
 
-- `TZ`: Your
-  [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)
-  (optional). Default is `UTC`. This impacts logging, backup filenames and
-  default timezone in the web interface.
+- `PBW_PATH_PREFIX`: Optional. Path prefix for the application URL. Use this when you want to serve the application under a subpath (e.g., `/pgbackweb`). Must start with `/` and not end with `/`. Default is empty.
+
+- `TZ`: Optional. Your [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List). Default is `UTC`. This impacts logging, backup filenames and default timezone in the web interface.
 
 ## Screenshot
 
@@ -130,20 +121,17 @@ You only need to configure the following environment variables:
 
 ## Reset password
 
-You can reset your PG Back Web password by running the following command in the
-server where PG Back Web is running:
+You can reset your PG Back Web password by running the following command in the server where PG Back Web is running:
 
 ```bash
 docker exec -it <container_name_or_id> sh -c change-password
 ```
 
-You should replace `<container_name_or_id>` with the name or ID of the PG Back
-Web container, then just follow the instructions.
+You should replace `<container_name_or_id>` with the name or ID of the PG Back Web container, then just follow the instructions.
 
 ## Next steps
 
-In this link you can see a list of features that have been confirmed for future
-updates:
+In this link you can see a list of features that have been confirmed for future updates:
 
 <a href="https://github.com/eduardolat/pgbackweb/issues?q=is%3Aissue+is%3Aopen+label%3A%22confirmed+next+step%22">
   Next steps ⏭️
@@ -151,11 +139,7 @@ updates:
 
 ## Sponsors
 
-🙏 Thank you to the incredible sponsors for supporting this project! Your
-contributions help keep PG Back Web running and growing. If you'd like to join
-and become a sponsor, please visit the
-[sponsorship page](https://buymeacoffee.com/eduardolat) and be part of something
-great! 🚀
+🙏 Thank you to the incredible sponsors for supporting this project! Your contributions help keep PG Back Web running and growing. If you'd like to join and become a sponsor, please visit the [sponsorship page](https://buymeacoffee.com/eduardolat) and be part of something great! 🚀
 
 ### 🥇 Gold Sponsors
 
@@ -208,8 +192,7 @@ great! 🚀
 
 ## Join the Community
 
-Got ideas to improve PG Back Web? Contribute to the project! Every suggestion
-and pull request is welcome.
+Got ideas to improve PG Back Web? Contribute to the project! Every suggestion and pull request is welcome.
 
 ## License
 
@@ -217,6 +200,4 @@ This project is 100% open source and is licensed under the AGPL v3 License - see
 
 ---
 
-💖 **Love PG Back Web?** Give us a ⭐ on GitHub and share the project with your
-colleagues. Together, we can make PostgreSQL backups more accessible to
-everyone!
+💖 **Love PG Back Web?** Give us a ⭐ on GitHub and share the project with your colleagues. Together, we can make PostgreSQL backups more accessible to everyone!

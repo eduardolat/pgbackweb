@@ -16,5 +16,9 @@ func validateEnv(env Env) error {
 		return fmt.Errorf("invalid listen port %s, valid values are 1-65535", env.PBW_LISTEN_PORT)
 	}
 
+	if !validate.PathPrefix(env.PBW_PATH_PREFIX) {
+		return fmt.Errorf("invalid path prefix %s, must start with / and not end with / (or be empty)", env.PBW_PATH_PREFIX)
+	}
+
 	return nil
 }

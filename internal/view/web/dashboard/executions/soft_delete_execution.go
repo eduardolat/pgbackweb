@@ -1,6 +1,9 @@
 package executions
 
 import (
+	"fmt"
+
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
 	"github.com/google/uuid"
@@ -28,7 +31,7 @@ func (h *handlers) deleteExecutionHandler(c echo.Context) error {
 
 func deleteExecutionButton(executionID uuid.UUID) nodx.Node {
 	return nodx.Button(
-		htmx.HxDelete("/dashboard/executions/"+executionID.String()),
+		htmx.HxDelete(pathutil.BuildPath(fmt.Sprintf("/dashboard/executions/%s", executionID))),
 		htmx.HxDisabledELT("this"),
 		htmx.HxConfirm("Are you sure you want to delete this execution? It will delete the backup file from the destination and it can't be recovered."),
 		nodx.Class("btn btn-error btn-outline"),

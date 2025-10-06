@@ -3,7 +3,10 @@ import daisyui from "daisyui";
 import * as daisyuiThemes from "daisyui/src/theming/themes";
 
 export default {
-  content: ["./internal/view/web/**/*.go"],
+  content: [
+    "./internal/view/web/**/*.go",
+    "./internal/view/static/js/init-dialogs.js",
+  ],
   plugins: [daisyui as any],
   daisyui: {
     logs: false,

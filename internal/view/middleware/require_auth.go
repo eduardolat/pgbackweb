@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/eduardolat/pgbackweb/internal/logger"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/view/reqctx"
 	"github.com/labstack/echo/v4"
 	htmx "github.com/nodxdev/nodxgo-htmx"
@@ -29,11 +30,13 @@ func (m *Middleware) RequireAuth(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		if usersQty == 0 {
-			htmx.ServerSetRedirect(c.Response().Header(), "/auth/create-first-user")
-			return c.Redirect(http.StatusFound, "/auth/create-first-user")
+			redirectPath := pathutil.BuildPath("/auth/create-first-user")
+			htmx.ServerSetRedirect(c.Response().Header(), redirectPath)
+			return c.Redirect(http.StatusFound, redirectPath)
 		}
 
-		htmx.ServerSetRedirect(c.Response().Header(), "/auth/login")
-		return c.Redirect(http.StatusFound, "/auth/login")
+		redirectPath := pathutil.BuildPath("/auth/login")
+		htmx.ServerSetRedirect(c.Response().Header(), redirectPath)
+		return c.Redirect(http.StatusFound, redirectPath)
 	}
 }

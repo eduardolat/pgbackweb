@@ -1,6 +1,7 @@
 package layout
 
 import (
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	nodx "github.com/nodxdev/nodxgo"
 	htmx "github.com/nodxdev/nodxgo-htmx"
@@ -28,19 +29,19 @@ func dashboardHeader() nodx.Node {
 		nodx.Div(
 			nodx.Class("flex justify-end items-center space-x-2"),
 			nodx.Div(
-				htmx.HxGet("/dashboard/health-button"),
+				htmx.HxGet(pathutil.BuildPath("/dashboard/health-button")),
 				htmx.HxSwap("outerHTML"),
 				htmx.HxTrigger("load once"),
 			),
 			nodx.A(
-				nodx.Href("https://discord.gg/BmAwq29UZ8"),
+				nodx.Href("https://ufobackup.uforg.dev/r/community"),
 				nodx.Target("_blank"),
 				nodx.Class("btn btn-ghost btn-neutral"),
-				component.SpanText("Chat on Discord"),
+				component.SpanText("Join the community"),
 				lucide.ExternalLink(),
 			),
 			nodx.Button(
-				htmx.HxPost("/auth/logout"),
+				htmx.HxPost(pathutil.BuildPath("/auth/logout")),
 				htmx.HxDisabledELT("this"),
 				nodx.Class("btn btn-ghost btn-neutral"),
 				component.SpanText("Log out"),

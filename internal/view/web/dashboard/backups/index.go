@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/eduardolat/pgbackweb/internal/util/echoutil"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/view/reqctx"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/layout"
@@ -50,7 +51,7 @@ func indexPage(reqCtx reqctx.Ctx) nodx.Node {
 						),
 						nodx.Tbody(
 							component.SkeletonTr(8),
-							htmx.HxGet("/dashboard/backups/list?page=1"),
+							htmx.HxGet(pathutil.BuildPath("/dashboard/backups/list?page=1")),
 							htmx.HxTrigger("load"),
 						),
 					),

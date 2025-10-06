@@ -1,6 +1,7 @@
 package layout
 
 import (
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/view/static"
 	nodx "github.com/nodxdev/nodxgo"
 )
@@ -32,6 +33,9 @@ func commonHead() nodx.Node {
 		nodx.Meta(nodx.Charset("utf-8")),
 		nodx.Meta(nodx.Name("viewport"), nodx.Content("width=device-width, initial-scale=1")),
 
+		// Inject path prefix as global JavaScript variable
+		nodx.Script(nodx.Rawf("window.PBW_PATH_PREFIX = '%s';", pathutil.GetPathPrefix())),
+
 		// https://htmx.org/quirks/
 		nodx.Meta(nodx.Name("htmx-config"), nodx.Content(`{"disableInheritance":true, "responseHandling": [{"code":"...", "swap": true}]}`)),
 
@@ -41,7 +45,6 @@ func commonHead() nodx.Node {
 
 		nodx.Script(src("/libs/htmx/htmx-2.0.1.min.js"), nodx.Defer("")),
 		nodx.Script(src("/libs/alpinejs/alpinejs-3.14.1.min.js"), nodx.Defer("")),
-		nodx.Script(src("/libs/sweetalert2/sweetalert2-11.13.1.min.js")),
 		nodx.Script(src("/libs/chartjs/chartjs-4.4.3.umd.min.js")),
 
 		nodx.Link(nodx.Rel("stylesheet"), href("/libs/notyf/notyf-3.10.0.min.css")),
