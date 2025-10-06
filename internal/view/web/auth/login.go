@@ -51,6 +51,9 @@ func loginPage() nodx.Node {
 				Required:     true,
 				Type:         component.InputTypeEmail,
 				AutoComplete: "email",
+				Children: []nodx.Node{
+					nodx.Autofocus(""),
+				},
 			}),
 
 			component.InputControl(component.InputControlParams{

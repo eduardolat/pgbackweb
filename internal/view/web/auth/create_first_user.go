@@ -53,6 +53,9 @@ func createFirstUserPage() nodx.Node {
 					Required:     true,
 					Type:         component.InputTypeText,
 					AutoComplete: "name",
+					Children: []nodx.Node{
+						nodx.Autofocus(""),
+					},
 				}),
 
 				component.InputControl(component.InputControlParams{
