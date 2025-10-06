@@ -43,7 +43,11 @@ func createS3Client(
 		return nil, fmt.Errorf("error initializing storage config: %w", err)
 	}
 
-	s3Client := s3.NewFromConfig(conf)
+	// Create S3 client with path-style addressing enabled
+	// This is required for S3-compatible services like Backblaze
+	s3Client := s3.NewFromConfig(conf, func(o *s3.Options) {
+		o.UsePathStyle = true
+	})
 	return s3Client, nil
 }
 
