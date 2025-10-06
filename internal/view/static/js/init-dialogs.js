@@ -4,7 +4,7 @@ export function initDialogs() {
    * @param {string} text - The text to display
    * @returns {Promise<{isConfirmed: boolean, isDismissed: boolean}>}
    */
-  async function swalAlert(text) {
+  async function customAlert(text) {
     return showDialog(text, false);
   }
 
@@ -13,7 +13,7 @@ export function initDialogs() {
    * @param {string} text - The text to display
    * @returns {Promise<{isConfirmed: boolean, isDismissed: boolean}>}
    */
-  async function swalConfirm(text) {
+  async function customConfirm(text) {
     return showDialog(text, true);
   }
 
@@ -132,6 +132,6 @@ export function initDialogs() {
     }
   }
 
-  window.swalAlert = swalAlert;
-  window.swalConfirm = swalConfirm;
+  window.customAlert = customAlert;
+  window.customConfirm = customConfirm;
 }
