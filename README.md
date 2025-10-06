@@ -74,7 +74,7 @@ services:
         condition: service_healthy
 
   postgres:
-    image: postgres:17
+    image: postgres:18
     environment:
       POSTGRES_USER: postgres
       POSTGRES_DB: pgbackweb
