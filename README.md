@@ -29,6 +29,13 @@
   </a>
 </p>
 
+> [!NOTE]
+> **We're growing! New name, bigger future**
+>
+> PG Back Web is becoming **UFO Backup**! The new name reflects a future where the project expands beyond PostgreSQL, making powerful backups simple and accessible for everyone
+>
+> Curious about the roadmap or want to shape the project's future? Join the [community](https://ufobackup.uforg.dev/r/community) to discuss ideas and influence decisions, everyone's input is welcome!
+
 ## Why PG Back Web?
 
 PG Back Web isn't just another backup tool. It's your trusted ally in ensuring the security and availability of your PostgreSQL data:
