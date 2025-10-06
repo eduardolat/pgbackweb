@@ -24,5 +24,5 @@ jobs:
         with:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: pages deploy ./docs/dist --project-name=ufobackup
+          command: pages deploy ./docs --project-name=ufobackup
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
