@@ -34,10 +34,10 @@ func dashboardHeader() nodx.Node {
 				htmx.HxTrigger("load once"),
 			),
 			nodx.A(
-				nodx.Href("https://discord.gg/BmAwq29UZ8"),
+				nodx.Href("https://ufobackup.uforg.dev/r/community"),
 				nodx.Target("_blank"),
 				nodx.Class("btn btn-ghost btn-neutral"),
-				component.SpanText("Chat on Discord"),
+				component.SpanText("Join the community"),
 				lucide.ExternalLink(),
 			),
 			nodx.Button(
