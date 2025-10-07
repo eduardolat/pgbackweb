@@ -1,6 +1,6 @@
 FROM golang:1.25-trixie AS golang
 FROM debian:trixie
-
+LABEL org.opencontainers.image.source="https://github.com/eduardolat/pgbackweb"
 # Declare ARG to make it available in the RUN commands
 ARG TARGETPLATFORM
 RUN echo "Building for ${TARGETPLATFORM}"
