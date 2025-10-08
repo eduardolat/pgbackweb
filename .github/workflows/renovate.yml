@@ -2,7 +2,7 @@ name: "Renovate"
 on:
   workflow_dispatch:
     inputs:
-      debug:
+      DEBUG:
         description: "Enable debug logging"
         type: boolean
         required: false
@@ -20,7 +20,7 @@ jobs:
         with:
           token: ${{ secrets.RENOVATE_TOKEN }}
         env:
-          LOG_LEVEL: ${{ inputs.DEBUG == 'true' && 'debug' || 'info' }}
+          LOG_LEVEL: ${{ inputs.DEBUG && 'debug' || 'info' }}
           RENOVATE_REPOSITORIES: "['${{ github.repository }}']"
           RENOVATE_COMMIT_MESSAGE_SUFFIX: '{{#unless groupName}}{{#if (equals updateType "digest")}}(from {{currentDigestShort}}){{else}}(from {{currentVersion}}){{/if}}{{/unless}}'
           RENOVATE_LABELS: "['dependencies']"
