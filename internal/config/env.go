@@ -13,6 +13,8 @@ type Env struct {
 	PBW_LISTEN_HOST          string `env:"PBW_LISTEN_HOST" envDefault:"0.0.0.0"`
 	PBW_LISTEN_PORT          string `env:"PBW_LISTEN_PORT" envDefault:"8085"`
 	PBW_PATH_PREFIX          string `env:"PBW_PATH_PREFIX" envDefault:""`
+	PBW_DB_MAX_CONNS         int    `env:"PBW_DB_MAX_CONNS" envDefault:"10"`
+	PBW_DB_MAX_IDLE_CONNS    int    `env:"PBW_DB_MAX_IDLE_CONNS" envDefault:"5"`
 }
 
 var (
