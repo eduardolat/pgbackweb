@@ -36,6 +36,29 @@
 >
 > Curious about the roadmap or want to shape the project's future? Join the [community](https://ufobackup.uforg.dev/r/community) to discuss ideas and influence decisions, everyone's input is welcome!
 
+## Sponsors
+
+Thank you to the following sponsors for supporting PG Back Web! Your contributions help keep the project running and growing! 🚀
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://buymeacoffee.com/eduardolat">
+        <img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/refs/heads/develop/internal/view/static/images/plus-circle.png" height="100" alt="Become a sponsor"/>
+        <br />
+        Become a sponsor
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://fetchgoat.com?utm_source=pgbackweb&utm_medium=referral&utm_campaign=sponsorship">
+        <img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/refs/heads/develop/assets/sponsors/FetchGoat.png" height="100" alt="FetchGoat - Simplifying Logistics"/>
+        <br />
+        FetchGoat - Simplifying Logistics
+      </a>
+    </td>
+  </tr>
+</table>
+
 ## Why PG Back Web?
 
 PG Back Web isn't just another backup tool. It's your trusted ally in ensuring the security and availability of your PostgreSQL data:
@@ -137,7 +160,7 @@ In this link you can see a list of features that have been confirmed for future 
   Next steps ⏭️
 </a>
 
-## Sponsors
+## Become a Sponsor
 
 🙏 Thank you to the incredible sponsors for supporting this project! Your contributions help keep PG Back Web running and growing. If you'd like to join and become a sponsor, please visit the [sponsorship page](https://buymeacoffee.com/eduardolat) and be part of something great! 🚀
 
@@ -152,6 +175,13 @@ In this link you can see a list of features that have been confirmed for future 
         Become a gold sponsor
       </a>
     </td>
+    <td align="center">
+      <a href="https://fetchgoat.com?utm_source=pgbackweb&utm_medium=referral&utm_campaign=sponsorship">
+        <img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/refs/heads/develop/assets/sponsors/FetchGoat.png" height="150" alt="FetchGoat - Simplifying Logistics"/>
+        <br />
+        FetchGoat - Simplifying Logistics
+      </a>
+    </td>
   </tr>
 </table>
 
@@ -159,13 +189,6 @@ In this link you can see a list of features that have been confirmed for future 
 
 <table>
   <tr>
-    <td align="center">
-      <a href="https://fetchgoat.com?utm_source=pgbackweb&utm_medium=referral&utm_campaign=sponsorship">
-        <img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/refs/heads/develop/assets/sponsors/FetchGoat.png" height="100" alt="FetchGoat - Simplifying Logistics"/>
-        <br />
-        FetchGoat - Simplifying Logistics
-      </a>
-    </td>
     <td align="center">
       <a href="https://buymeacoffee.com/eduardolat">
         <img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/refs/heads/develop/internal/view/static/images/plus-circle.png" height="100" alt="Become a silver sponsor"/>
