@@ -1,0 +1,31 @@
+config:
+  pbwEncryptionKey: my_secret_key
+  tz: America/Guatemala
+  pbwPostgresConnectionString: postgresql://USERNAME:PASSWORD@HOST:5432/DB_NAME?sslmode=disable
+kubernetesClusterDomain: cluster.local
+pgbackweb:
+  pgbackweb:
+    image:
+      repository: eduardolat/pgbackweb
+      tag: latest
+  replicas: 1
+ingress:
+  ingressClassName: nginx
+  annotations:
+    kubernetes.io/tls-acme: "true"
+  enabled: true
+  hosts:
+  - host: pgbackweb.example.com
+    paths:
+    - /
+  pathType: Prefix
+  tls:
+  - hosts:
+    - pgbackweb.example.com
+    secretName: pgbackweb.example.com-tls
+service:
+  port: 8085
+  ports:
+  - port: 8085
+    targetPort: 8085
+  type: ClusterIP

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pgbackweb.fullname" . }}-pgbackweb
+  labels:
+  {{- include "pgbackweb.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.pgbackweb.replicas }}
+  selector:
+    matchLabels:
+      app: pgbackweb
+    {{- include "pgbackweb.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: pgbackweb
+      {{- include "pgbackweb.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: PBW_ENCRYPTION_KEY
+          valueFrom:
+            configMapKeyRef:
+              key: PBW_ENCRYPTION_KEY
+              name: {{ include "pgbackweb.fullname" . }}-config
+        - name: PBW_POSTGRES_CONN_STRING
+          valueFrom:
+            configMapKeyRef:
+              key: PBW_POSTGRES_CONN_STRING
+              name: {{ include "pgbackweb.fullname" . }}-config
+        - name: TZ
+          valueFrom:
+            configMapKeyRef:
+              key: TZ
+              name: {{ include "pgbackweb.fullname" . }}-config
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.pgbackweb.pgbackweb.image.repository }}:{{ .Values.pgbackweb.pgbackweb.image.tag
+          | default .Chart.AppVersion }}
+        name: pgbackweb
+        ports:
+        - containerPort: 8085
+        resources: {}
