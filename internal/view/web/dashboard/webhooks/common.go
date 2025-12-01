@@ -2,6 +2,7 @@ package webhooks
 
 import (
 	"fmt"
+	"runtime"
 	"slices"
 
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
@@ -335,17 +336,113 @@ func createAndUpdateWebhookForm(
 		}),
 
 		component.TextareaControl(component.TextareaControlParams{
-			Name:        "body",
-			Label:       "Body",
-			Placeholder: `{ "key": "value" }`,
-			HelpText:    `By default it will send an empty json object {}.`,
+			Name:  "body",
+			Label: "Body",
+			Placeholder: `{
+  "event": "{{.EventType}}",
+  "status":  "{{if .Database.Healthy}}Success{{else}}Failed{{end}}",
+  "database": "{{.Database.Name}}",
+  "file_size_bytes": "{{.Execution.FileSize}}",
+  "file_size": "{{.Execution.FileSize | formatFileSize }}"
+}`,
+			HelpText: `Rendered using Go text/template. Leave empty to send "{}".`,
+
+			HelpButtonChildren: []nodx.Node{
+
+				component.H3Text("Template Rendering (Go `text/template`)"),
+				component.PText(`Use dot notation to reference payload fields. For example: {{.Database.Name}}`),
+
+				component.H4Text("Examples"),
+				nodx.Pre(
+					nodx.Class("bg-base-200 text-base-content p-3 text-sm rounded-md"),
+					nodx.Text(`Status: {{.Execution.Status}}
+Condition: {{if .Database.Healthy}}Healthy{{else}}Unhealthy{{end}}
+With helper: {{.Database.Healthy | boolToStatus}}`),
+				),
+
+				component.H4Text("Available Fields"),
+
+				nodx.Div(
+					nodx.Class("space-y-4 p-3 bg-base-200 rounded-md"),
+
+					// Root
+					component.H5Text("Root (`.`)"),
+					nodx.Ul(
+						nodx.Class("list-disc ml-5"),
+						nodx.Li(nodx.Text("{{.EventType}}")),
+						nodx.Li(nodx.Text("{{.Msg}}")),
+						nodx.Li(nodx.Text("{{.Database}}")),
+						nodx.Li(nodx.Text("{{.Destination}}")),
+						nodx.Li(nodx.Text("{{.Execution}}")),
+					),
+
+					// Database
+					component.H5Text("Database Fields"),
+					nodx.Ul(
+						nodx.Class("list-disc ml-5"),
+						nodx.Li(nodx.Text("{{.Database.ID}}")),
+						nodx.Li(nodx.Text("{{.Database.Name}}")),
+						nodx.Li(nodx.Text("{{.Database.PgVersion}}")),
+						nodx.Li(nodx.Text("{{.Database.Host}}")),
+						nodx.Li(nodx.Text("{{.Database.Healthy}}")),
+						nodx.Li(nodx.Text("{{.Database.Error}}")),
+						nodx.Li(nodx.Text("{{.Database.Timestamp}}")),
+						nodx.Li(nodx.Text("{{.Database.LastCheckedAt}} (nullable)")),
+						nodx.Li(nodx.Text("{{.Database.LastErrorMessage}} (nullable)")),
+						nodx.Li(nodx.Text("{{.Database.LastSuccess}} (nullable)")),
+					),
+
+					// Destination
+					component.H5Text("Destination Fields"),
+					nodx.Ul(
+						nodx.Class("list-disc ml-5"),
+						nodx.Li(nodx.Text("{{.Destination.ID}}")),
+						nodx.Li(nodx.Text("{{.Destination.Name}}")),
+						nodx.Li(nodx.Text("{{.Destination.Healthy}}")),
+						nodx.Li(nodx.Text("{{.Destination.Error}}")),
+						nodx.Li(nodx.Text("{{.Destination.Region}}")),
+						nodx.Li(nodx.Text("{{.Destination.Endpoint}}")),
+						nodx.Li(nodx.Text("{{.Destination.BucketName}}")),
+						nodx.Li(nodx.Text("{{.Destination.LastCheckedAt}} (nullable)")),
+						nodx.Li(nodx.Text("{{.Destination.LastErrorMessage}} (nullable)")),
+						nodx.Li(nodx.Text("{{.Destination.LastSuccess}} (nullable)")),
+					),
+
+					// Execution
+					component.H5Text("Execution Fields"),
+					nodx.Ul(
+						nodx.Class("list-disc ml-5"),
+						nodx.Li(nodx.Text("{{.Execution.ID}}")),
+						nodx.Li(nodx.Text("{{.Execution.Status}}")),
+						nodx.Li(nodx.Text("{{.Execution.Message}}")),
+						nodx.Li(nodx.Text("{{.Execution.Path}}")),
+						nodx.Li(nodx.Text("{{.Execution.StartedAt}}")),
+						nodx.Li(nodx.Text("{{.Execution.FinishedAt}}")),
+						nodx.Li(nodx.Text("{{.Execution.FileSize}}")),
+					),
+				),
+
+				component.H4Text("Helper Functions"),
+				nodx.Pre(
+					nodx.Class("bg-base-200 text-base-content p-3 text-sm rounded-md"),
+					nodx.Text(`{{.Execution.StartedAt | formatTime}}
+{{.Execution.FileSize | formatFileSize}}`),
+				),
+
+				nodx.P(
+					nodx.A(
+						nodx.Href(fmt.Sprintf("https://pkg.go.dev/text/template@%s", runtime.Version())),
+						nodx.Target("_blank"),
+						nodx.Text("Go Template Documentation →"),
+					),
+				),
+			},
+
 			Children: []nodx.Node{
 				alpine.XRef("bodyTextarea"),
 				alpine.XOn("click.outside", "formatBodyTextarea()"),
 				alpine.XOn("input", "autoGrowBodyTextarea()"),
-				nodx.If(
-					shouldPrefill, nodx.Text(pickedWebhook.Body.String),
-				),
+				nodx.If(shouldPrefill, nodx.Text(pickedWebhook.Body.String)),
 			},
 		}),
 	)
