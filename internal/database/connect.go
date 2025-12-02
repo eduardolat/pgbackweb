@@ -29,8 +29,14 @@ func Connect(env config.Env) *sql.DB {
 		)
 	}
 
-	db.SetMaxOpenConns(10)
-	logger.Info("connected to DB")
+	// Configure connection pool from environment variables
+	db.SetMaxOpenConns(env.PBW_DB_MAX_CONNS)
+	db.SetMaxIdleConns(env.PBW_DB_MAX_IDLE_CONNS)
+	
+	logger.Info("connected to DB", logger.KV{
+		"maxOpenConns": env.PBW_DB_MAX_CONNS,
+		"maxIdleConns": env.PBW_DB_MAX_IDLE_CONNS,
+	})
 
 	return db
 }
