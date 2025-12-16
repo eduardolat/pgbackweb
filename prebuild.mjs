@@ -42,7 +42,7 @@ try {
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
-  
+
   fs.writeFileSync(path.join(rootDir, outputFilePath), outFileContent);
   console.log("SQLC prebuild completed successfully");
 } catch (error) {
