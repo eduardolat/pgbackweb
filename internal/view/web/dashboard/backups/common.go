@@ -181,3 +181,46 @@ func pgDumpOptionsHelp() []nodx.Node {
 		),
 	}
 }
+
+func filterHelp() []nodx.Node {
+	return []nodx.Node{
+		component.H3Text("Backup Filter"),
+		component.PText(`
+			The filter option allows you to selectively include or exclude database objects
+			from your backup using pg_dump's --filter parameter. You can use either Text Mode
+			to write filters manually or Guided Mode for an easier interface.
+		`),
+
+		nodx.Div(
+			nodx.Class("mt-2"),
+			component.H3Text("Filter Format"),
+			component.PText(`
+				Each filter line follows the format:
+			`),
+			nodx.Pre(
+				nodx.Class("bg-base-200 p-2 rounded mt-1 text-sm overflow-x-auto"),
+				nodx.Text("{ include | exclude } { extension | foreign_data | table | table_and_children | table_data | table_data_and_children | schema } PATTERN"),
+			),
+		),
+
+		nodx.Div(
+			nodx.Class("mt-2"),
+			component.H3Text("Examples"),
+			nodx.Pre(
+				nodx.Class("bg-base-200 p-2 rounded mt-1 text-sm overflow-x-auto"),
+				nodx.Text("# Include all tables in public schema\ninclude table public.*\n\n# Exclude temporary tables\nexclude table public.temp_*\n\n# Include specific schema\ninclude schema myschema"),
+			),
+		),
+
+		nodx.Div(
+			nodx.Class("mt-4 flex justify-end"),
+			nodx.A(
+				nodx.Class("btn btn-ghost"),
+				nodx.Href("https://www.postgresql.org/docs/current/app-pgdump.html"),
+				nodx.Target("_blank"),
+				component.SpanText("Learn more in pg_dump documentation"),
+				lucide.ExternalLink(nodx.Class("ml-1")),
+			),
+		),
+	}
+}

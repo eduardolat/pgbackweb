@@ -1,6 +1,7 @@
 package backups
 
 import (
+	"database/sql"
 	"net/http"
 	"time"
 
@@ -38,6 +39,7 @@ func (h *handlers) createBackupHandler(c echo.Context) error {
 		OptIfExists    string    `form:"opt_if_exists" validate:"required,oneof=true false"`
 		OptCreate      string    `form:"opt_create" validate:"required,oneof=true false"`
 		OptNoComments  string    `form:"opt_no_comments" validate:"required,oneof=true false"`
+		FilterContent  string    `form:"filter_content" validate:"omitempty"`
 	}
 	if err := c.Bind(&formData); err != nil {
 		return respondhtmx.ToastError(c, err.Error())
@@ -65,6 +67,7 @@ func (h *handlers) createBackupHandler(c echo.Context) error {
 			OptIfExists:    formData.OptIfExists == "true",
 			OptCreate:      formData.OptCreate == "true",
 			OptNoComments:  formData.OptNoComments == "true",
+			FilterContent:  sql.NullString{String: formData.FilterContent, Valid: formData.FilterContent != ""},
 		},
 	)
 	if err != nil {
@@ -301,6 +304,179 @@ func createBackupForm(
 						yesNoOptions(),
 					},
 				}),
+			),
+		),
+
+		nodx.Div(
+			nodx.Class("pt-4"),
+			nodx.Div(
+				nodx.Class("flex justify-start items-center space-x-1"),
+				component.H2Text("Filter"),
+				component.HelpButtonModal(component.HelpButtonModalParams{
+					ModalTitle: "Backup filter",
+					Children:   filterHelp(),
+				}),
+			),
+
+			nodx.Div(
+				nodx.Class("mt-2"),
+				alpine.XData(`{
+					filterMode: 'text',
+					filterRows: [{action: 'include', type: 'table', pattern: ''}],
+					textFilter: '',
+					
+					addRow() {
+						this.filterRows.push({action: 'include', type: 'table', pattern: ''});
+					},
+					
+					removeRow(index) {
+						this.filterRows.splice(index, 1);
+					},
+					
+					convertToText() {
+						let text = '';
+						this.filterRows.forEach(row => {
+							if (row.pattern) {
+								text += row.action + ' ' + row.type + ' ' + row.pattern + '\n';
+							}
+						});
+						this.textFilter = text;
+						this.filterMode = 'text';
+					},
+					
+					convertToGuided() {
+						this.filterRows = [];
+						const lines = this.textFilter.split('\n');
+						lines.forEach(line => {
+							line = line.trim();
+							if (line && !line.startsWith('#')) {
+								const parts = line.split(/\s+/);
+								if (parts.length >= 3) {
+									this.filterRows.push({
+										action: parts[0],
+										type: parts[1],
+										pattern: parts.slice(2).join(' ')
+									});
+								}
+							}
+						});
+						if (this.filterRows.length === 0) {
+							this.filterRows = [{action: 'include', type: 'table', pattern: ''}];
+						}
+						this.filterMode = 'guided';
+					},
+					
+					syncToHidden() {
+						let content = '';
+						if (this.filterMode === 'text') {
+							content = this.textFilter;
+						} else {
+							this.filterRows.forEach(row => {
+								if (row.pattern) {
+									content += row.action + ' ' + row.type + ' ' + row.pattern + '\n';
+								}
+							});
+						}
+						document.querySelector('[name=filter_content]').value = content;
+					}
+				}`),
+
+				// Toggle buttons
+				nodx.Div(
+					nodx.Class("flex gap-2 mb-2"),
+					nodx.Button(
+						nodx.Type("button"),
+						nodx.Class("btn btn-sm"),
+						alpine.XBind("class", "filterMode === 'text' ? 'btn-primary' : ''"),
+						alpine.XOn("click", "convertToText()"),
+						component.SpanText("Text Mode"),
+					),
+					nodx.Button(
+						nodx.Type("button"),
+						nodx.Class("btn btn-sm"),
+						alpine.XBind("class", "filterMode === 'guided' ? 'btn-primary' : ''"),
+						alpine.XOn("click", "convertToGuided()"),
+						component.SpanText("Guided Mode"),
+					),
+				),
+
+				// Text mode
+				alpine.Template(
+					alpine.XIf("filterMode === 'text'"),
+					nodx.Div(
+						nodx.Class("form-control"),
+						nodx.LabelEl(
+							nodx.Class("label"),
+							component.SpanText("Filter content (one filter per line, lines starting with # are comments)"),
+						),
+						nodx.Textarea(
+							nodx.Class("textarea textarea-bordered h-32 font-mono text-sm"),
+							nodx.Placeholder("# Comment line\ninclude table public.*\nexclude table public.temp_*"),
+							alpine.XModel("textFilter"),
+							alpine.XOn("input", "syncToHidden()"),
+						),
+					),
+				),
+
+				// Guided mode
+				alpine.Template(
+					alpine.XIf("filterMode === 'guided'"),
+					nodx.Div(
+						nodx.Class("space-y-2"),
+						alpine.Template(
+							alpine.XFor("(row, index) in filterRows"),
+							nodx.Div(
+								nodx.Class("flex gap-2 items-center"),
+								nodx.Select(
+									nodx.Class("select select-bordered select-sm"),
+									alpine.XModel("row.action"),
+									alpine.XOn("change", "syncToHidden()"),
+									nodx.Option(nodx.Value("include"), nodx.Text("Include")),
+									nodx.Option(nodx.Value("exclude"), nodx.Text("Exclude")),
+								),
+								nodx.Select(
+									nodx.Class("select select-bordered select-sm"),
+									alpine.XModel("row.type"),
+									alpine.XOn("change", "syncToHidden()"),
+									nodx.Option(nodx.Value("extension"), nodx.Text("Extension")),
+									nodx.Option(nodx.Value("foreign_data"), nodx.Text("Foreign Data")),
+									nodx.Option(nodx.Value("table"), nodx.Text("Table"), nodx.Selected("")),
+									nodx.Option(nodx.Value("table_and_children"), nodx.Text("Table & Children")),
+									nodx.Option(nodx.Value("table_data"), nodx.Text("Table Data")),
+									nodx.Option(nodx.Value("table_data_and_children"), nodx.Text("Table Data & Children")),
+									nodx.Option(nodx.Value("schema"), nodx.Text("Schema")),
+								),
+								nodx.Input(
+									nodx.Class("input input-bordered input-sm flex-1"),
+									nodx.Type("text"),
+									nodx.Placeholder("Pattern (e.g., public.*)"),
+									alpine.XModel("row.pattern"),
+									alpine.XOn("input", "syncToHidden()"),
+								),
+								nodx.Button(
+									nodx.Type("button"),
+									nodx.Class("btn btn-sm btn-error"),
+									alpine.XOn("click", "removeRow(index)"),
+									alpine.XShow("filterRows.length > 1"),
+									lucide.Trash2(),
+								),
+							),
+						),
+						nodx.Button(
+							nodx.Type("button"),
+							nodx.Class("btn btn-sm btn-primary mt-2"),
+							alpine.XOn("click", "addRow()"),
+							component.SpanText("Add Row"),
+							lucide.Plus(),
+						),
+					),
+				),
+
+				// Hidden input to hold the actual filter content
+				nodx.Input(
+					nodx.Type("hidden"),
+					nodx.Name("filter_content"),
+				),
 			),
 		),
 

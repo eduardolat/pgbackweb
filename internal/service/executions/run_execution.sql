@@ -9,6 +9,7 @@ SELECT
   backups.opt_if_exists as backup_opt_if_exists,
   backups.opt_create as backup_opt_create,	
   backups.opt_no_comments as backup_opt_no_comments,
+  backups.filter_content as backup_filter_content,
 
   pgp_sym_decrypt(databases.connection_string, @encryption_key) AS decrypted_database_connection_string,
   databases.pg_version as database_pg_version,

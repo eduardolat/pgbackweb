@@ -135,6 +135,10 @@ type DumpParams struct {
 
 	// NoComments (--no-comments): Do not dump comments.
 	NoComments bool
+
+	// FilterContent (--filter): Filter content in the format specified by pg_dump.
+	// Each line should follow: { include | exclude } { extension | foreign_data | table | table_and_children | table_data | table_data_and_children | schema } PATTERN
+	FilterContent string
 }
 
 // Dump runs the pg_dump command with the given parameters. It returns the SQL
@@ -165,6 +169,21 @@ func (Client) Dump(
 	}
 	if pickedParams.NoComments {
 		args = append(args, "--no-comments")
+	}
+
+	// Handle filter content by creating a temporary file
+	var filterFile *os.File
+	if pickedParams.FilterContent != "" {
+		var err error
+		filterFile, err = os.CreateTemp("", "pgdump-filter-*.txt")
+		if err == nil {
+			defer os.Remove(filterFile.Name())
+			defer filterFile.Close()
+
+			if _, err := filterFile.WriteString(pickedParams.FilterContent); err == nil {
+				args = append(args, fmt.Sprintf("--filter=%s", filterFile.Name()))
+			}
+		}
 	}
 
 	errorBuffer := &bytes.Buffer{}
