@@ -64,7 +64,7 @@ func (h *handlers) editBackupHandler(c echo.Context) error {
 			OptIfExists:    sql.NullBool{Bool: formData.OptIfExists == "true", Valid: true},
 			OptCreate:      sql.NullBool{Bool: formData.OptCreate == "true", Valid: true},
 			OptNoComments:  sql.NullBool{Bool: formData.OptNoComments == "true", Valid: true},
-			FilterContent:  sql.NullString{String: formData.FilterContent, Valid: true},
+			FilterContent:  sql.NullString{String: formData.FilterContent, Valid: formData.FilterContent != ""},
 		},
 	)
 	if err != nil {
@@ -91,7 +91,11 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) nodx.Node {
 	}
 
 	// JSON encode the filter content for safe JS string embedding
-	filterContentJSON, _ := json.Marshal(backup.FilterContent.String)
+	filterContentJSON, err := json.Marshal(backup.FilterContent.String)
+	if err != nil {
+		// Fallback to empty string if marshaling fails (should never happen for strings)
+		filterContentJSON = []byte(`""`)
+	}
 	filterContentJSString := string(filterContentJSON)
 
 	mo := component.Modal(component.ModalParams{

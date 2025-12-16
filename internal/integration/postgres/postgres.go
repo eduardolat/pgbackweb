@@ -171,29 +171,44 @@ func (Client) Dump(
 		args = append(args, "--no-comments")
 	}
 
+	errorBuffer := &bytes.Buffer{}
+	reader, writer := io.Pipe()
+
 	// Handle filter content by creating a temporary file
 	var filterFile *os.File
+	var filterFileCleanup func()
 	if pickedParams.FilterContent != "" {
 		var err error
 		filterFile, err = os.CreateTemp("", "pgdump-filter-*.txt")
-		if err == nil {
-			defer os.Remove(filterFile.Name())
-			defer filterFile.Close()
-
-			if _, err := filterFile.WriteString(pickedParams.FilterContent); err == nil {
-				args = append(args, fmt.Sprintf("--filter=%s", filterFile.Name()))
-			}
+		if err != nil {
+			writer.CloseWithError(fmt.Errorf("failed to create filter temp file: %w", err))
+			return reader
 		}
+
+		filterFileCleanup = func() {
+			filterFile.Close()
+			os.Remove(filterFile.Name())
+		}
+
+		if _, err := filterFile.WriteString(pickedParams.FilterContent); err != nil {
+			filterFileCleanup()
+			writer.CloseWithError(fmt.Errorf("failed to write filter content: %w", err))
+			return reader
+		}
+
+		args = append(args, fmt.Sprintf("--filter=%s", filterFile.Name()))
 	}
 
-	errorBuffer := &bytes.Buffer{}
-	reader, writer := io.Pipe()
 	cmd := exec.Command(version.Value.PGDump, args...)
 	cmd.Stdout = writer
 	cmd.Stderr = errorBuffer
 
 	go func() {
 		defer writer.Close()
+		if filterFileCleanup != nil {
+			defer filterFileCleanup()
+		}
+
 		if err := cmd.Run(); err != nil {
 			writer.CloseWithError(fmt.Errorf(
 				"error running pg_dump v%s: %s",
