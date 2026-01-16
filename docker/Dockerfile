@@ -1,45 +1,18 @@
-FROM golang:1.25-trixie AS golang
-FROM debian:trixie
-LABEL org.opencontainers.image.source="https://github.com/eduardolat/pgbackweb"
+# Multi-stage build: Builder stage
+FROM golang:1.25-trixie AS builder
+
 # Declare ARG to make it available in the RUN commands
 ARG TARGETPLATFORM
-RUN echo "Building for ${TARGETPLATFORM}"
-RUN if [ "${TARGETPLATFORM}" != "linux/amd64" ] && [ "${TARGETPLATFORM}" != "linux/arm64" ]; then \
-        echo "Unsupported architecture: ${TARGETPLATFORM}" && \
-        exit 1; \
-    fi
-
 WORKDIR /app
-ENV DEBIAN_FRONTEND="noninteractive"
-ENV GOBIN="/usr/local/go/bin"
-ENV PATH="$PATH:/usr/local/go/bin"
 
-# Install golang from docker image
-COPY --from=golang /usr/local/go /usr/local/go
-
-# Install system dependencies and prepare system
-RUN set -e && \
-    # Create a temp dir for downloads
-    mkdir /tmp/downloads && cd /tmp/downloads && \
-    
-    # Add PostgreSQL APT repository
-    # https://www.postgresql.org/download/linux/debian/
-    apt update && apt install -y postgresql-common && \
-    /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \
-    
-    # Install APT packages
-    apt update && apt install -y \
-        wget unzip tzdata git npm \
-        postgresql-client-13 postgresql-client-14 \
-        postgresql-client-15 postgresql-client-16 \
-        postgresql-client-17 postgresql-client-18 && \
-    
-    # Install NodeJS
-    apt install -y npm && \
+# Install Node.js for frontend build
+RUN apt-get update && apt-get install -y npm && \
     npm install -g n@latest && \
     n 22.19.0 && \
+    rm -rf /var/lib/apt/lists/*
 
-    # Install downloadable binaries
+# Download and install build tools for correct architecture
+RUN mkdir -p /tmp/downloads && cd /tmp/downloads && \
     if [ "${TARGETPLATFORM}" = "linux/arm64" ]; then \
         echo "Downloading arm64 binaries" && \
         # Install task
@@ -49,11 +22,11 @@ RUN set -e && \
         # Install goose
         wget --no-verbose https://github.com/pressly/goose/releases/download/v3.25.0/goose_linux_arm64 && \
         mv ./goose_linux_arm64 /usr/local/bin/goose && \
-        # Install sqlc
+        # Install sqlc (if needed for build)
         wget --no-verbose https://github.com/sqlc-dev/sqlc/releases/download/v1.30.0/sqlc_1.30.0_linux_arm64.tar.gz && \
         tar -xzf sqlc_1.30.0_linux_arm64.tar.gz && \
         mv ./sqlc /usr/local/bin/sqlc && \
-        # Install golangci-lint
+        # Install golangci-lint (if needed for build)
         wget --no-verbose https://github.com/golangci/golangci-lint/releases/download/v2.5.0/golangci-lint-2.5.0-linux-arm64.tar.gz && \
         tar -xzf golangci-lint-2.5.0-linux-arm64.tar.gz && \
         mv ./golangci-lint-2.5.0-linux-arm64/golangci-lint /usr/local/bin/golangci-lint; \
@@ -75,46 +48,85 @@ RUN set -e && \
         tar -xzf golangci-lint-2.5.0-linux-amd64.tar.gz && \
         mv ./golangci-lint-2.5.0-linux-amd64/golangci-lint /usr/local/bin/golangci-lint; \
     fi && \
-
-    # Make downloaded binaries executable
     chmod +x /usr/local/bin/* && \
+    rm -rf /tmp/downloads
 
-    # Default git config
-    # https://github.com/golangci/golangci-lint/issues/4033
-    git config --global --add safe.directory '*' && \
-
-    # Clean up downloads and APT cache
-    mkdir -p /app && cd /app && rm -rf /tmp/downloads && \
-    rm -rf /var/lib/apt/lists/* && \
-
-    # Create backups dir
-    mkdir /backups && \
-    chmod 777 /backups
-
-##############
-# START HERE #
-##############
+# Default git config
+RUN git config --global --add safe.directory '*'
 
 # Copy and install node dependencies
-COPY package.json .
-COPY package-lock.json .
+COPY package.json package-lock.json ./
 RUN npm install
 
 # Copy and install go dependencies
-COPY go.mod .
-COPY go.sum .
+COPY go.mod go.sum ./
 RUN go mod download
 
 # Copy the rest of the files
 COPY . .
 
 # Build the app
-RUN set -e && \
-    task fixperms && \
-    task build && \
-    cp ./dist/change-password /usr/local/bin/change-password && \
-    chmod +x /usr/local/bin/change-password
+RUN task fixperms && task build
 
-# Run the app
+# Multi-stage build: Runtime stage
+FROM debian:trixie-slim
+
+LABEL org.opencontainers.image.source="https://github.com/eduardolat/pgbackweb"
+
+WORKDIR /app
+
+ENV DEBIAN_FRONTEND="noninteractive"
+
+# Install runtime dependencies only
+RUN set -e && \
+    # Add PostgreSQL APT repository
+    apt-get update && apt-get install -y --no-install-recommends \
+        postgresql-common ca-certificates tzdata && \
+    /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \
+    # Install PostgreSQL clients
+    apt-get update && apt-get install -y --no-install-recommends \
+        postgresql-client-13 postgresql-client-14 \
+        postgresql-client-15 postgresql-client-16 \
+        postgresql-client-17 postgresql-client-18 && \
+    # Clean up
+    apt-get clean autoclean && \
+    apt-get autoremove --yes && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Create necessary directories
+RUN mkdir -p /backups && \
+    chmod 777 /backups
+
+# Copy goose from builder stage (needed for migrations)
+COPY --from=builder /usr/local/bin/goose /usr/local/bin/goose
+
+# Copy built binaries from builder stage
+COPY --from=builder /app/dist/app /usr/local/bin/app
+COPY --from=builder /app/dist/change-password /usr/local/bin/change-password
+
+# Copy migrations, static files and templates
+COPY --from=builder /app/internal/database/migrations ./internal/database/migrations
+COPY --from=builder /app/internal/view/static ./internal/view/static
+
+# Create a non-root user
+RUN groupadd -r pgbackweb && useradd -r -g pgbackweb -d /app -s /bin/bash pgbackweb && \
+    chown -R pgbackweb:pgbackweb /app
+
+USER pgbackweb
+
 EXPOSE 8085
-CMD ["task", "servem"]
+
+# Create entrypoint script to handle migrations
+RUN echo '#!/bin/bash\n\
+set -e\n\
+\n\
+# Run migrations\n\
+echo "Running database migrations..."\n\
+goose -dir ./internal/database/migrations postgres "${PBW_POSTGRES_CONN_STRING}" up\n\
+echo "Migrations completed"\n\
+\n\
+# Start the application\n\
+exec /usr/local/bin/app' > /app/docker-entrypoint.sh && \
+    chmod +x /app/docker-entrypoint.sh
+
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
