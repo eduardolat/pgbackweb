@@ -201,9 +201,9 @@ func filterHelp() []nodx.Node {
 					component.PText(`
 						For PostgreSQL 17+, the filter is passed directly to pg_dump using the --filter parameter.
 						For PostgreSQL versions 13-16, filters are automatically converted to legacy arguments 
-						(--exclude-table, --exclude-table-data, --exclude-schema). Note: include filters and some 
-						filter types (extension, foreign_data, table_and_children, table_data_and_children) are 
-						only supported in PostgreSQL 17+.
+						(--table, --schema, --extension for includes; --exclude-table, --exclude-table-data, 
+						--exclude-schema for excludes). Note: some filter types (foreign_data, table_and_children, 
+						table_data_and_children) are only supported in PostgreSQL 17+.
 					`),
 				),
 			),

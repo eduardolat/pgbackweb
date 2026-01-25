@@ -108,8 +108,7 @@ func (Client) Test(version PGVersion, connString string) error {
 
 // convertFilterToLegacyArgs converts filter content to legacy pg_dump arguments
 // for PostgreSQL versions < 17 that don't support the --filter parameter.
-// It parses filter lines and converts them to equivalent legacy arguments like
-// --exclude-table, --exclude-table-data, --exclude-schema, etc.
+// It parses filter lines and converts them to equivalent legacy arguments.
 func convertFilterToLegacyArgs(filterContent string) []string {
 	var args []string
 	lines := strings.Split(filterContent, "\n")
@@ -131,22 +130,31 @@ func convertFilterToLegacyArgs(filterContent string) []string {
 		filterType := parts[1]
 		pattern := strings.Join(parts[2:], " ")
 
-		// Only process exclude actions for legacy mode
-		// Include actions are the default behavior and cannot be explicitly set in legacy mode
-		if action != "exclude" {
-			continue
-		}
-
 		// Map filter types to legacy pg_dump arguments
-		switch filterType {
-		case "table":
-			args = append(args, "--exclude-table="+pattern)
-		case "table_data":
-			args = append(args, "--exclude-table-data="+pattern)
-		case "schema":
-			args = append(args, "--exclude-schema="+pattern)
-			// Note: table_and_children, table_data_and_children, extension, and foreign_data
-			// don't have direct legacy equivalents, so they're not supported in older versions
+		switch action {
+		case "include":
+			switch filterType {
+			case "table":
+				args = append(args, "--table="+pattern)
+			case "schema":
+				args = append(args, "--schema="+pattern)
+			case "extension":
+				args = append(args, "--extension="+pattern)
+				// Note: table_and_children, table_data, table_data_and_children, and foreign_data
+				// don't have direct legacy include equivalents
+			}
+		case "exclude":
+			switch filterType {
+			case "table":
+				args = append(args, "--exclude-table="+pattern)
+			case "table_data":
+				args = append(args, "--exclude-table-data="+pattern)
+			case "schema":
+				args = append(args, "--exclude-schema="+pattern)
+				// Note: table_and_children, table_data_and_children, extension, and foreign_data
+				// don't have direct legacy exclude equivalents
+				// (extension has no exclude option in legacy mode)
+			}
 		}
 	}
 
