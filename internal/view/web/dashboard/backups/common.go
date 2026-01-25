@@ -192,6 +192,24 @@ func filterHelp() []nodx.Node {
 		`),
 
 		nodx.Div(
+			nodx.Class("mt-2 alert alert-info"),
+			nodx.Div(
+				nodx.Class("flex items-start"),
+				lucide.Info(nodx.Class("h-5 w-5 mt-0.5 mr-2")),
+				nodx.Div(
+					component.H3Text("PostgreSQL Version Compatibility"),
+					component.PText(`
+						For PostgreSQL 17+, the filter is passed directly to pg_dump using the --filter parameter.
+						For PostgreSQL versions 13-16, filters are automatically converted to legacy arguments 
+						(--exclude-table, --exclude-table-data, --exclude-schema). Note: include filters and some 
+						filter types (extension, foreign_data, table_and_children, table_data_and_children) are 
+						only supported in PostgreSQL 17+.
+					`),
+				),
+			),
+		),
+
+		nodx.Div(
 			nodx.Class("mt-2"),
 			component.H3Text("Filter Format"),
 			component.PText(`
