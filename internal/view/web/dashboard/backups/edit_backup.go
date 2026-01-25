@@ -64,7 +64,7 @@ func (h *handlers) editBackupHandler(c echo.Context) error {
 			OptIfExists:    sql.NullBool{Bool: formData.OptIfExists == "true", Valid: true},
 			OptCreate:      sql.NullBool{Bool: formData.OptCreate == "true", Valid: true},
 			OptNoComments:  sql.NullBool{Bool: formData.OptNoComments == "true", Valid: true},
-			FilterContent:  sql.NullString{String: formData.FilterContent, Valid: formData.FilterContent != ""},
+			FilterContent:  sql.NullString{String: formData.FilterContent, Valid: true},
 		},
 	)
 	if err != nil {
@@ -282,73 +282,77 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) nodx.Node {
 							
 							addRow() {
 								this.filterRows.push({action: 'include', type: 'table', pattern: ''});
+								this.syncToHidden();
 							},
 							
 							removeRow(index) {
 								this.filterRows.splice(index, 1);
-							},
-							
-							convertToText() {
-								let text = '';
+								this.syncToHidden();
+						},
+						
+						convertToText() {
+							let text = '';
+							this.filterRows.forEach(row => {
+								if (row.pattern) {
+									text += row.action + ' ' + row.type + ' ' + row.pattern + '\n';
+								}
+							});
+							this.textFilter = text;
+							this.filterMode = 'text';
+							this.syncToHidden();
+						},
+						
+						convertToGuided() {
+							this.filterRows = [];
+							const lines = this.textFilter.split('\n');
+							lines.forEach(line => {
+								line = line.trim();
+								if (line && !line.startsWith('#')) {
+									const parts = line.split(/\s+/);
+									if (parts.length >= 3) {
+										this.filterRows.push({
+											action: parts[0],
+											type: parts[1],
+											pattern: parts.slice(2).join(' ')
+										});
+									}
+								}
+							});
+							if (this.filterRows.length === 0) {
+								this.filterRows = [{action: 'include', type: 'table', pattern: ''}];
+							}
+							this.filterMode = 'guided';
+							this.syncToHidden();
+						},
+						
+						syncToHidden() {
+							let content = '';
+							if (this.filterMode === 'text') {
+								content = this.textFilter;
+							} else {
 								this.filterRows.forEach(row => {
 									if (row.pattern) {
-										text += row.action + ' ' + row.type + ' ' + row.pattern + '\n';
+										content += row.action + ' ' + row.type + ' ' + row.pattern + '\n';
 									}
 								});
-								this.textFilter = text;
-								this.filterMode = 'text';
-							},
-							
-							convertToGuided() {
-								this.filterRows = [];
-								const lines = this.textFilter.split('\n');
-								lines.forEach(line => {
-									line = line.trim();
-									if (line && !line.startsWith('#')) {
-										const parts = line.split(/\s+/);
-										if (parts.length >= 3) {
-											this.filterRows.push({
-												action: parts[0],
-												type: parts[1],
-												pattern: parts.slice(2).join(' ')
-											});
-										}
-									}
-								});
-								if (this.filterRows.length === 0) {
-									this.filterRows = [{action: 'include', type: 'table', pattern: ''}];
-								}
-								this.filterMode = 'guided';
-							},
-							
-							syncToHidden() {
-								let content = '';
-								if (this.filterMode === 'text') {
-									content = this.textFilter;
-								} else {
-									this.filterRows.forEach(row => {
-										if (row.pattern) {
-											content += row.action + ' ' + row.type + ' ' + row.pattern + '\n';
-										}
-									});
-								}
-								document.querySelector('[name=filter_content]').value = content;
 							}
-						}`, filterContentJSString)),
-
-						// Toggle buttons
-						nodx.Div(
-							nodx.Class("flex gap-2 mb-2"),
-							nodx.Button(
-								nodx.Type("button"),
-								nodx.Class("btn btn-sm"),
-								alpine.XBind("class", "filterMode === 'text' ? 'btn-primary' : ''"),
-								alpine.XOn("click", "convertToText()"),
-								component.SpanText("Text Mode"),
-							),
-							nodx.Button(
-								nodx.Type("button"),
-								nodx.Class("btn btn-sm"),
+							document.querySelector('[name=filter_content]').value = content;
+						}
+					}`, filterContentJSString)),
+					
+				// Toggle buttons
+				nodx.Div(
+					nodx.Class("flex gap-2 mb-2"),
+					nodx.Button(
+						nodx.Type("button"),
+						nodx.Class("btn btn-sm"),
+						alpine.XBind("class", "filterMode === 'text' ? 'btn-primary' : ''"),
+						alpine.XOn("click", "convertToText()"),
+						component.SpanText("Text Mode"),
+					),
+					nodx.Button(
+						nodx.Type("button"),
+						nodx.Class("btn btn-sm"),
 								alpine.XBind("class", "filterMode === 'guided' ? 'btn-primary' : ''"),
 								alpine.XOn("click", "convertToGuided()"),
 								component.SpanText("Guided Mode"),
@@ -431,6 +435,8 @@ func editBackupButton(backup dbgen.BackupsServicePaginateBackupsRow) nodx.Node {
 						nodx.Input(
 							nodx.Type("hidden"),
 							nodx.Name("filter_content"),
+							nodx.Value(backup.FilterContent.String),
+							alpine.XInit("syncToHidden()"),
 						),
 					),
 				),
