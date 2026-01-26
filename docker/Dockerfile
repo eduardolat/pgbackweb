@@ -81,7 +81,7 @@ ENV DEBIAN_FRONTEND="noninteractive"
 RUN set -e && \
     # Add PostgreSQL APT repository
     apt-get update && apt-get install -y --no-install-recommends \
-        postgresql-common ca-certificates tzdata && \
+        postgresql-common ca-certificates tzdata wget unzip && \
     /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \
     # Install PostgreSQL clients
     apt-get update && apt-get install -y --no-install-recommends \
