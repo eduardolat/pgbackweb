@@ -173,6 +173,9 @@ scrape_configs:
 - `pgbackweb_last_backup_duration_seconds`: Duration of the most recent backup in seconds.
 - `pgbackweb_last_backup_status`: Status of the last backup (1 for success, 0 for failure).
 - `pgbackweb_health_status`: Health status of databases and destinations (1 for healthy, 0 for unhealthy).
+- `pgbackweb_healthy_resources_count`: Number of healthy resources (databases/destinations).
+- `pgbackweb_total_resources_count`: Total number of resources (databases/destinations).
+- `pgbackweb_backup_tasks_status`: Per-task backup status (active/inactive task counts).
 - `pgbackweb_db_stats_*`: Standard database connection pool statistics.
 
 

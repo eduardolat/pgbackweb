@@ -46,7 +46,9 @@ func main() {
 	ints := integration.New()
 	servs := service.New(env, dbgen, cr, ints)
 	initSchedule(cr, servs)
-	provider.InitMetrics(env, db, servs)
+	if err := provider.InitMetrics(env, db, servs); err != nil {
+		logger.FatalError("error initializing metrics", logger.KV{"error": err})
+	}
 
 	app := echo.New()
 	app.HideBanner = true

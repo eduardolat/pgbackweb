@@ -58,6 +58,13 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	})
 
 	updateExec := func(params dbgen.ExecutionsServiceUpdateExecutionParams) error {
+		// Update database first
+		_, err := s.dbgen.ExecutionsServiceUpdateExecution(ctx, params)
+		if err != nil {
+			return err
+		}
+
+		// Only emit side effects if database update succeeded
 		if params.Status.String == "success" {
 			s.webhooksService.RunExecutionSuccess(backupID)
 			metrics.BackupsTotal.WithLabelValues("success", back.BackupName, back.DatabaseName).Inc()
@@ -89,10 +96,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 			})
 		}
 
-		_, err := s.dbgen.ExecutionsServiceUpdateExecution(
-			ctx, params,
-		)
-		return err
+		return nil
 	}
 
 	if !back.BackupIsLocal {

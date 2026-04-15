@@ -17,9 +17,9 @@ import (
 )
 
 // InitMetrics initializes the Prometheus metrics and starts the HTTP server if enabled.
-func InitMetrics(env config.Env, db *sql.DB, servs *service.Service) {
+func InitMetrics(env config.Env, db *sql.DB, servs *service.Service) error {
 	if !env.PBW_ENABLE_METRICS {
-		return
+		return nil
 	}
 
 	// Register DB stats collector
@@ -27,12 +27,16 @@ func InitMetrics(env config.Env, db *sql.DB, servs *service.Service) {
 
 	// Periodically update health status
 	go func() {
-		for {
-			ctx := context.Background()
+		ticker := time.NewTicker(1 * time.Minute)
+		defer ticker.Stop()
+
+		for range ticker.C {
+			ctxWithTimeout, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+
 			aggregatedDatabasesHealthy, aggregatedDestinationsHealthy := 1.0, 1.0
 			healthyDatabasesCount, healthyDestinationsCount := 0.0, 0.0
 
-			databases, err := servs.DatabasesService.GetAllDatabases(ctx)
+			databases, err := servs.DatabasesService.GetAllDatabases(ctxWithTimeout)
 			totalDatabasesCount := float64(len(databases))
 			if err == nil {
 				for _, db := range databases {
@@ -50,7 +54,7 @@ func InitMetrics(env config.Env, db *sql.DB, servs *service.Service) {
 				totalDatabasesCount = 0.0
 			}
 
-			destinations, err := servs.DestinationsService.GetAllDestinations(ctx)
+			destinations, err := servs.DestinationsService.GetAllDestinations(ctxWithTimeout)
 			totalDestinationsCount := float64(len(destinations))
 			if err == nil {
 				for _, dest := range destinations {
@@ -78,7 +82,7 @@ func InitMetrics(env config.Env, db *sql.DB, servs *service.Service) {
 			metrics.TotalResourcesCount.WithLabelValues("destination").Set(totalDestinationsCount)
 
 			// Update backup task status
-			allBackups, err := servs.BackupsService.GetAllBackups(ctx)
+			allBackups, err := servs.BackupsService.GetAllBackups(ctxWithTimeout)
 			activeBackupsCount, inactiveBackupsCount := 0.0, 0.0
 			if err == nil {
 				for _, backup := range allBackups {
@@ -92,7 +96,7 @@ func InitMetrics(env config.Env, db *sql.DB, servs *service.Service) {
 			metrics.BackupTasksStatus.WithLabelValues("active").Set(activeBackupsCount)
 			metrics.BackupTasksStatus.WithLabelValues("inactive").Set(inactiveBackupsCount)
 
-			time.Sleep(1 * time.Minute)
+			cancel()
 		}
 	}()
 
@@ -102,9 +106,15 @@ func InitMetrics(env config.Env, db *sql.DB, servs *service.Service) {
 
 	address := fmt.Sprintf("%s:%s", env.PBW_METRICS_LISTEN_HOST, env.PBW_METRICS_LISTEN_PORT)
 	go func() {
-		logger.Info("metrics server started at http://" + address + "/metrics")
+		logger.Info("metrics server started at http://"+address+"/metrics", logger.KV{
+			"address": address,
+		})
 		if err := http.ListenAndServe(address, mux); err != nil {
-			logger.Error("error starting metrics server", logger.KV{"error": err})
+			logger.FatalError("error starting metrics server", logger.KV{
+				"address": address,
+				"error":   err,
+			})
 		}
 	}()
+	return nil
 }
