@@ -13,6 +13,9 @@ type Env struct {
 	PBW_LISTEN_HOST          string `env:"PBW_LISTEN_HOST" envDefault:"0.0.0.0"`
 	PBW_LISTEN_PORT          string `env:"PBW_LISTEN_PORT" envDefault:"8085"`
 	PBW_PATH_PREFIX          string `env:"PBW_PATH_PREFIX" envDefault:""`
+	PBW_ENABLE_METRICS       bool   `env:"PBW_ENABLE_METRICS" envDefault:"false"`
+	PBW_METRICS_LISTEN_HOST  string `env:"PBW_METRICS_LISTEN_HOST" envDefault:"0.0.0.0"`
+	PBW_METRICS_LISTEN_PORT  string `env:"PBW_METRICS_LISTEN_PORT" envDefault:"2112"`
 }
 
 var (
