@@ -117,4 +117,5 @@ RUN set -e && \
 
 # Run the app
 EXPOSE 8085
+EXPOSE 2112
 CMD ["task", "servem"]

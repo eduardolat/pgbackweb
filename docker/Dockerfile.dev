@@ -100,4 +100,6 @@ RUN rm -rf /root/.bashrc
 COPY .devcontainer/.bashrc /root/.bashrc
 
 # Command just to keep the container running
+EXPOSE 8085
+EXPOSE 2112
 CMD ["sleep", "infinity"]
