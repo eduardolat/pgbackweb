@@ -9,6 +9,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/integration"
 	"github.com/eduardolat/pgbackweb/internal/logger"
+	"github.com/eduardolat/pgbackweb/internal/metrics/provider"
 	"github.com/eduardolat/pgbackweb/internal/service"
 	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/view"
@@ -45,6 +46,7 @@ func main() {
 	ints := integration.New()
 	servs := service.New(env, dbgen, cr, ints)
 	initSchedule(cr, servs)
+	provider.InitMetrics(env, db, servs)
 
 	app := echo.New()
 	app.HideBanner = true
