@@ -107,6 +107,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 			NoComments: back.BackupOptNoComments,
 		},
 	)
+	defer dumpReader.Close()
 
 	date := time.Now().Format(timeutil.LayoutSlashYYYYMMDD)
 	file := fmt.Sprintf(
@@ -133,6 +134,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 
 	if !back.BackupIsLocal {
 		fileSize, err = s.ints.StorageClient.S3Upload(
+			ctx,
 			back.DecryptedDestinationAccessKey, back.DecryptedDestinationSecretKey,
 			back.DestinationRegion.String, back.DestinationEndpoint.String,
 			back.DestinationBucketName.String, path, dumpReader,
