@@ -79,6 +79,7 @@ func listExecutions(
 		trs = append(trs, nodx.Tr(
 			nodx.Td(component.OptionsDropdown(
 				showExecutionButton(execution),
+				downloadExecutionDropdownButton(execution),
 				restoreExecutionButton(execution),
 			)),
 			nodx.Td(component.StatusBadge(execution.Status)),
