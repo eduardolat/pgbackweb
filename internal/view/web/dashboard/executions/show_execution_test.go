@@ -3,10 +3,12 @@ package executions
 import (
 	"bytes"
 	"database/sql"
+	"fmt"
 	"strings"
 	"testing"
 
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
+	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -27,8 +29,12 @@ func TestDownloadExecutionDropdownButton(t *testing.T) {
 		require.NoError(t, node.Render(&got))
 
 		html := got.String()
+		expectedHref := pathutil.BuildPath(
+			fmt.Sprintf("/dashboard/executions/%s/download", executionID),
+		)
+
 		assert.Contains(t, html, "Download backup")
-		assert.Contains(t, html, "/dashboard/executions/"+executionID.String()+"/download")
+		assert.Contains(t, html, expectedHref)
 		assert.Contains(t, html, `target="_blank"`)
 		assert.Contains(t, html, `rel="noopener noreferrer"`)
 	})
