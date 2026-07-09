@@ -56,7 +56,7 @@ RUN git config --global --add safe.directory '*'
 
 # Copy and install node dependencies
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
 
 # Copy and install go dependencies
 COPY go.mod go.sum ./
