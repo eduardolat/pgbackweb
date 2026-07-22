@@ -8,11 +8,12 @@ import (
 )
 
 type Env struct {
-	PBW_ENCRYPTION_KEY       string `env:"PBW_ENCRYPTION_KEY,required"`
-	PBW_POSTGRES_CONN_STRING string `env:"PBW_POSTGRES_CONN_STRING,required"`
-	PBW_LISTEN_HOST          string `env:"PBW_LISTEN_HOST" envDefault:"0.0.0.0"`
-	PBW_LISTEN_PORT          string `env:"PBW_LISTEN_PORT" envDefault:"8085"`
-	PBW_PATH_PREFIX          string `env:"PBW_PATH_PREFIX" envDefault:""`
+	PBW_ENCRYPTION_KEY        string `env:"PBW_ENCRYPTION_KEY,required"`
+	PBW_FILES_ENCRYPTION_KEY  string `env:"PBW_FILES_ENCRYPTION_KEY" envDefault:""`
+	PBW_POSTGRES_CONN_STRING  string `env:"PBW_POSTGRES_CONN_STRING,required"`
+	PBW_LISTEN_HOST           string `env:"PBW_LISTEN_HOST" envDefault:"0.0.0.0"`
+	PBW_LISTEN_PORT           string `env:"PBW_LISTEN_PORT" envDefault:"8085"`
+	PBW_PATH_PREFIX           string `env:"PBW_PATH_PREFIX" envDefault:""`
 }
 
 var (
