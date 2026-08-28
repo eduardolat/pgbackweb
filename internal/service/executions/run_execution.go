@@ -136,6 +136,7 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 			back.DecryptedDestinationAccessKey, back.DecryptedDestinationSecretKey,
 			back.DestinationRegion.String, back.DestinationEndpoint.String,
 			back.DestinationBucketName.String, path, dumpReader,
+			s.env.PBW_FILES_ENCRYPTION_KEY,
 		)
 		if err != nil {
 			logError(err)
