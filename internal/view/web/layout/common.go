@@ -32,6 +32,7 @@ func commonHead() nodx.Node {
 	return nodx.Group(
 		nodx.Meta(nodx.Charset("utf-8")),
 		nodx.Meta(nodx.Name("viewport"), nodx.Content("width=device-width, initial-scale=1")),
+		nodx.Meta(nodx.Name("robots"), nodx.Content("noindex, nofollow")),
 
 		// Inject path prefix as global JavaScript variable
 		nodx.Script(nodx.Rawf("window.PBW_PATH_PREFIX = '%s';", pathutil.GetPathPrefix())),

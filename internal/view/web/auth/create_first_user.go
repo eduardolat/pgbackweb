@@ -116,6 +116,25 @@ func createFirstUserPage() nodx.Node {
 func (h *handlers) createFirstUserHandler(c echo.Context) error {
 	ctx := c.Request().Context()
 
+	usersQty, err := h.servs.UsersService.GetUsersQty(ctx)
+	if err != nil {
+		logger.Error("failed to get users qty", logger.KV{
+			"ip":    c.RealIP(),
+			"ua":    c.Request().UserAgent(),
+			"error": err,
+		})
+		return c.String(http.StatusInternalServerError, "Internal server error")
+	}
+	if usersQty > 0 {
+		logger.Error("attempt to create a user when users already exist", logger.KV{
+			"ip": c.RealIP(),
+			"ua": c.Request().UserAgent(),
+		})
+		redirectPath := pathutil.BuildPath("/auth/login")
+		htmx.ServerSetRedirect(c.Response().Header(), redirectPath)
+		return c.Redirect(http.StatusFound, redirectPath)
+	}
+
 	var formData struct {
 		Name                 string `form:"name" validate:"required"`
 		Email                string `form:"email" validate:"required,email"`
@@ -129,7 +148,7 @@ func (h *handlers) createFirstUserHandler(c echo.Context) error {
 		return respondhtmx.ToastError(c, err.Error())
 	}
 
-	_, err := h.servs.UsersService.CreateUser(ctx, dbgen.UsersServiceCreateUserParams{
+	_, err = h.servs.UsersService.CreateUser(ctx, dbgen.UsersServiceCreateUserParams{
 		Name:     formData.Name,
 		Email:    formData.Email,
 		Password: formData.Password,

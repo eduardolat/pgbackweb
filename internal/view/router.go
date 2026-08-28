@@ -17,6 +17,9 @@ import (
 func MountRouter(app *echo.Echo, servs *service.Service) {
 	mids := middleware.New(servs)
 
+	// Register global middlewares
+	app.Use(mids.NoIndex)
+
 	// Create the base group with the path prefix (if any)
 	baseGroup := app.Group(pathutil.GetPathPrefix())
 
