@@ -5,11 +5,12 @@ services:
     container_name: pbw_devcontainer
     build:
       context: ../
-      dockerfile: ./docker/Dockerfile.dev
+      dockerfile: ./Dockerfile
+      target: devcontainer
+    volumes:
+      - ../:/workspaces/pgbackweb
     ports:
       - "8085:8085"
-    volumes:
-      - ../..:/workspaces:cached
     networks:
       - pbw_network
     depends_on:

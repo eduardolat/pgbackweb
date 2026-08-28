@@ -2,64 +2,44 @@
   "dockerComposeFile": "./compose.yaml",
   "service": "devcontainer",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "remoteUser": "root",
+  "postCreateCommand": "bash ./.devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [
         "golang.go",
         "bradlc.vscode-tailwindcss",
-        "esbenp.prettier-vscode",
-        "mhutchie.git-graph",
-        "mutantdino.resourcemonitor",
-        "Compile-TomaszKasperczyk.copy-to-llm"
+        "esbenp.prettier-vscode"
       ],
       "settings": {
-        /////
-        // Editor settings
-        /////
         "editor.formatOnSave": true,
-        "editor.foldingStrategy": "indentation",
-        "editor.rulers": [80],
-        "files.eol": "\n",
-        /////
-        // Language specific settings
-        /////
-        "[json]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+        // https://github.com/varavelio/nodxgo#tailwind-css
+        "files.associations": {
+          "*.css": "tailwindcss"
         },
-        "[jsonc]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[typescript]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[javascript]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[css]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[html]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[markdown]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        // Go & Golangci-lint
-        "[go]": {
-          "editor.defaultFormatter": "golang.go"
-        },
-        "go.lintTool": "golangci-lint",
-        "go.lintFlags": ["--fast"],
-        /////
-        // Tailwind CSS + NodX
-        /////
         "tailwindCSS.includeLanguages": {
           "go": "go"
         },
         "tailwindCSS.experimental.classRegex": [
           ["Class\\(([^)]*)\\)", "[\"`]([^\"`]*)[\"`]"], // Class("...") or Class(`...`)
           ["ClassMap\\{([^)]*)\\}", "[\"`]([^\"`]*)[\"`]"] // ClassMap{"..."} or ClassMap{`...`}
-        ]
+        ],
+
+        // https://golangci-lint.run/docs/welcome/integrations/#visual-studio-code
+        "[go]": {
+          "editor.defaultFormatter": "golang.go"
+        },
+        "go.useLanguageServer": true,
+        "go.testFlags": ["-v"],
+        "go.lintTool": "golangci-lint",
+        "go.lintFlags": ["--path-mode=abs", "--fast-only"],
+        "go.formatTool": "custom",
+        "go.alternateTools": {
+          "customFormatter": "golangci-lint"
+        },
+        "go.formatFlags": ["fmt", "--stdin"]
       }
     }
   }

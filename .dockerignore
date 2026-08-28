@@ -1,0 +1,13 @@
+# Environment
+.env
+.env.*
+
+# Temp files/folders
+tmp/
+temp/
+
+# Node.js
+node_modules/
+
+# Source control
+.git/

@@ -7,7 +7,6 @@ tasks:
     desc: Run the CI tasks
     cmds:
       - task: deps
-      - task: fixperms
       - task: checkdeps
       - task: lint
       - task: test
@@ -150,9 +149,3 @@ tasks:
     cmds:
       - rm -rf ./tmp
       - rm -rf ./dist
-
-  fixperms:
-    desc: Fixes the permissions of the files in the project
-    cmds:
-      - mkdir -p /workspaces && chmod -R 777 /workspaces # For dev container
-      - mkdir -p /app && chmod -R 777 /app # For prod container
