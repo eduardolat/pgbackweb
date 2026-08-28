@@ -3,10 +3,12 @@ package postgres
 import (
 	"archive/zip"
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
+	"sync"
 
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 	"github.com/orsinium-labs/enum"
@@ -65,6 +67,27 @@ var (
 )
 
 type Client struct{}
+
+type cancelableReadCloser struct {
+	reader io.ReadCloser
+	cancel context.CancelFunc
+	done   <-chan struct{}
+	once   sync.Once
+}
+
+func (r *cancelableReadCloser) Read(p []byte) (int, error) {
+	return r.reader.Read(p)
+}
+
+func (r *cancelableReadCloser) Close() error {
+	var err error
+	r.once.Do(func() {
+		r.cancel()
+		err = r.reader.Close()
+		<-r.done
+	})
+	return err
+}
 
 func New() *Client {
 	return &Client{}
@@ -138,10 +161,12 @@ type DumpParams struct {
 }
 
 // Dump runs the pg_dump command with the given parameters. It returns the SQL
-// dump as an io.Reader.
+// dump as an io.ReadCloser. Closing the returned reader cancels the running
+// pg_dump process so the PostgreSQL session is not left hanging when a
+// downstream consumer stops reading early.
 func (Client) Dump(
 	version PGVersion, connString string, params ...DumpParams,
-) io.Reader {
+) io.ReadCloser {
 	pickedParams := DumpParams{}
 	if len(params) > 0 {
 		pickedParams = params[0]
@@ -168,51 +193,76 @@ func (Client) Dump(
 	}
 
 	errorBuffer := &bytes.Buffer{}
+	ctx, cancel := context.WithCancel(context.Background())
 	reader, writer := io.Pipe()
-	cmd := exec.Command(version.Value.PGDump, args...)
+	done := make(chan struct{})
+	cmd := exec.CommandContext(ctx, version.Value.PGDump, args...)
 	cmd.Stdout = writer
 	cmd.Stderr = errorBuffer
 
 	go func() {
-		defer writer.Close()
+		defer close(done)
 		if err := cmd.Run(); err != nil {
-			writer.CloseWithError(fmt.Errorf(
+			_ = writer.CloseWithError(fmt.Errorf(
 				"error running pg_dump v%s: %s",
 				version.Value.Version, errorBuffer.String(),
 			))
+			return
 		}
+
+		_ = writer.Close()
 	}()
 
-	return reader
+	return &cancelableReadCloser{
+		reader: reader,
+		cancel: cancel,
+		done:   done,
+	}
 }
 
 // DumpZip runs the pg_dump command with the given parameters and returns the
-// ZIP-compressed SQL dump as an io.Reader.
+// ZIP-compressed SQL dump as an io.ReadCloser. Closing the returned reader also
+// cancels the underlying pg_dump process.
 func (c *Client) DumpZip(
 	version PGVersion, connString string, params ...DumpParams,
-) io.Reader {
+) io.ReadCloser {
 	dumpReader := c.Dump(version, connString, params...)
 	reader, writer := io.Pipe()
+	done := make(chan struct{})
 
 	go func() {
-		defer writer.Close()
+		defer close(done)
+		defer dumpReader.Close()
 
 		zipWriter := zip.NewWriter(writer)
-		defer zipWriter.Close()
+		defer func() {
+			if err := zipWriter.Close(); err != nil {
+				_ = writer.CloseWithError(fmt.Errorf("error closing zip file: %w", err))
+				return
+			}
+
+			_ = writer.Close()
+		}()
 
 		fileWriter, err := zipWriter.Create("dump.sql")
 		if err != nil {
-			writer.CloseWithError(fmt.Errorf("error creating zip file: %w", err))
+			_ = writer.CloseWithError(fmt.Errorf("error creating zip file: %w", err))
 			return
 		}
 
 		if _, err := io.Copy(fileWriter, dumpReader); err != nil {
-			writer.CloseWithError(fmt.Errorf("error writing to zip file: %w", err))
+			_ = writer.CloseWithError(fmt.Errorf("error writing to zip file: %w", err))
 			return
 		}
 	}()
 
-	return reader
+	return &cancelableReadCloser{
+		reader: reader,
+		cancel: func() {
+			_ = dumpReader.Close()
+		},
+		done: done,
+	}
 }
 
 // RestoreZip downloads or copies the ZIP from the given url or path, unzips it,

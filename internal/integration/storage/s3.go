@@ -71,10 +71,11 @@ func (Client) S3Test(
 	return nil
 }
 
-// S3Upload uploads a file to S3 from a reader.
+// S3Upload uploads a file to S3 from a reader using the provided context.
 //
 // Returns the file size, in bytes.
 func (Client) S3Upload(
+	ctx context.Context,
 	accessKey, secretKey, region, endpoint, bucketName, key string,
 	fileReader io.Reader,
 ) (int64, error) {
@@ -90,7 +91,7 @@ func (Client) S3Upload(
 
 	uploader := manager.NewUploader(s3Client)
 	_, err = uploader.Upload(
-		context.TODO(),
+		ctx,
 		&s3.PutObjectInput{
 			Bucket:      aws.String(bucketName),
 			Key:         aws.String(key),
@@ -102,8 +103,11 @@ func (Client) S3Upload(
 		return 0, fmt.Errorf("failed to upload file to S3: %w", err)
 	}
 
+	headCtx, cancelHeadCtx := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancelHeadCtx()
+
 	fileHead, err := s3Client.HeadObject(
-		context.TODO(),
+		headCtx,
 		&s3.HeadObjectInput{
 			Bucket: aws.String(bucketName),
 			Key:    aws.String(key),
