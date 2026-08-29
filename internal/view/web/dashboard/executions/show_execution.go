@@ -37,6 +37,33 @@ func (h *handlers) downloadExecutionHandler(c echo.Context) error {
 	return c.Redirect(http.StatusFound, link)
 }
 
+func downloadExecutionLink(
+	executionID uuid.UUID, class string, label string,
+) nodx.Node {
+	return nodx.A(
+		nodx.Href(pathutil.BuildPath(fmt.Sprintf("/dashboard/executions/%s/download", executionID))),
+		nodx.Target("_blank"),
+		nodx.Rel("noopener noreferrer"),
+		nodx.Class(class),
+		component.SpanText(label),
+		lucide.Download(),
+	)
+}
+
+func downloadExecutionDropdownButton(
+	execution dbgen.ExecutionsServicePaginateExecutionsRow,
+) nodx.Node {
+	if execution.Status != "success" || !execution.Path.Valid {
+		return nil
+	}
+
+	return downloadExecutionLink(
+		execution.ID,
+		"btn btn-neutral btn-ghost btn-sm w-full flex justify-start",
+		"Download backup",
+	)
+}
+
 func showExecutionButton(
 	execution dbgen.ExecutionsServicePaginateExecutionsRow,
 ) nodx.Node {
@@ -122,13 +149,7 @@ func showExecutionButton(
 					nodx.Div(
 						nodx.Class("flex justify-end items-center space-x-2"),
 						deleteExecutionButton(execution.ID),
-						nodx.A(
-							nodx.Href(pathutil.BuildPath(fmt.Sprintf("/dashboard/executions/%s/download", execution.ID))),
-							nodx.Target("_blank"),
-							nodx.Class("btn btn-primary"),
-							component.SpanText("Download"),
-							lucide.Download(),
-						),
+						downloadExecutionLink(execution.ID, "btn btn-primary", "Download"),
 					),
 				),
 			),
