@@ -4,8 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
+	"github.com/eduardolat/pgbackweb/internal/service/webhooks"
 	"github.com/google/uuid"
 )
 
@@ -36,19 +38,60 @@ func (s *Service) TestDestinationAndStoreResult(
 		return storeRes(false, fmt.Errorf("error getting destination: %w", err))
 	}
 
+	buildDestinationStatus := func(ok bool, testErr error) webhooks.DestinationStatus {
+		var errMsg string
+		if testErr != nil {
+			errMsg = testErr.Error()
+		}
+
+		var lastTestOk *bool
+		if dest.TestOk.Valid {
+			val := dest.TestOk.Bool
+			lastTestOk = &val
+		}
+
+		var lastTestError *string
+		if dest.TestError.Valid {
+			val := dest.TestError.String
+			lastTestError = &val
+		}
+
+		var lastTestAt *time.Time
+		if dest.LastTestAt.Valid {
+			val := dest.LastTestAt.Time
+			lastTestAt = &val
+		}
+
+		return webhooks.DestinationStatus{
+			ID:               dest.ID,
+			Name:             dest.Name,
+			Healthy:          ok,
+			Error:            errMsg,
+			Timestamp:        time.Now().UTC(),
+			LastCheckedAt:    lastTestAt,
+			LastErrorMessage: lastTestError,
+			LastSuccess:      lastTestOk,
+			Region:           dest.Region,
+			Endpoint:         dest.Endpoint,
+
+			BucketName: dest.BucketName,
+		}
+	}
 	err = s.TestDestination(
 		dest.DecryptedAccessKey, dest.DecryptedSecretKey, dest.Region,
 		dest.Endpoint, dest.BucketName,
 	)
 	if err != nil && dest.TestOk.Valid && dest.TestOk.Bool {
-		s.webhooksService.RunDestinationUnhealthy(dest.ID)
+		destinationStatus := buildDestinationStatus(false, err)
+		s.webhooksService.RunDestinationUnhealthy(dest.ID, destinationStatus)
 	}
 	if err != nil {
 		return storeRes(false, err)
 	}
 
 	if dest.TestOk.Valid && !dest.TestOk.Bool {
-		s.webhooksService.RunDestinationHealthy(dest.ID)
+		destinationStatus := buildDestinationStatus(true, err)
+		s.webhooksService.RunDestinationHealthy(dest.ID, destinationStatus)
 	}
 	return storeRes(true, nil)
 }
