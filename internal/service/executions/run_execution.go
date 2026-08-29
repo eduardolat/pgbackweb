@@ -9,6 +9,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/integration/postgres"
 	"github.com/eduardolat/pgbackweb/internal/logger"
+	"github.com/eduardolat/pgbackweb/internal/metrics"
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/google/uuid"
@@ -16,20 +17,7 @@ import (
 
 // RunExecution runs a backup execution
 func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
-	updateExec := func(params dbgen.ExecutionsServiceUpdateExecutionParams) error {
-		if params.Status.String == "success" {
-			s.webhooksService.RunExecutionSuccess(backupID)
-		}
-
-		if params.Status.String == "failed" {
-			s.webhooksService.RunExecutionFailed(backupID)
-		}
-
-		_, err := s.dbgen.ExecutionsServiceUpdateExecution(
-			ctx, params,
-		)
-		return err
-	}
+	startTime := time.Now()
 
 	logError := func(err error) {
 		logger.Error("error running backup", logger.KV{
@@ -49,6 +37,9 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		return err
 	}
 
+	metrics.BackupsRunning.WithLabelValues(back.BackupName, back.DatabaseName).Inc()
+	defer metrics.BackupsRunning.WithLabelValues(back.BackupName, back.DatabaseName).Dec()
+
 	ex, err := s.CreateExecution(ctx, dbgen.ExecutionsServiceCreateExecutionParams{
 		BackupID: backupID,
 		Status:   "running",
@@ -56,6 +47,56 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 	if err != nil {
 		logError(err)
 		return err
+	}
+
+	logger.Info("execution started", logger.KV{
+		"backup_id":     backupID.String(),
+		"execution_id":  ex.ID.String(),
+		"backup_name":   back.BackupName,
+		"database_name": back.DatabaseName,
+		"destination":   back.DestinationName.String,
+	})
+
+	updateExec := func(params dbgen.ExecutionsServiceUpdateExecutionParams) error {
+		// Update database first
+		_, err := s.dbgen.ExecutionsServiceUpdateExecution(ctx, params)
+		if err != nil {
+			return err
+		}
+
+		// Only emit side effects if database update succeeded
+		if params.Status.String == "success" {
+			s.webhooksService.RunExecutionSuccess(backupID)
+			metrics.BackupsTotal.WithLabelValues("success", back.BackupName, back.DatabaseName).Inc()
+			metrics.LastBackupDuration.WithLabelValues(back.BackupName, back.DatabaseName).Set(time.Since(startTime).Seconds())
+			metrics.LastBackupStatus.WithLabelValues(back.BackupName, back.DatabaseName).Set(1.0)
+			logger.Info("execution completed successfully", logger.KV{
+				"backup_id":     backupID.String(),
+				"execution_id":  ex.ID.String(),
+				"backup_name":   back.BackupName,
+				"database_name": back.DatabaseName,
+				"duration_sec":  time.Since(startTime).Seconds(),
+				"file_size":     params.FileSize.Int64,
+				"path":          params.Path.String,
+			})
+		}
+
+		if params.Status.String == "failed" {
+			s.webhooksService.RunExecutionFailed(backupID)
+			metrics.BackupsTotal.WithLabelValues("failed", back.BackupName, back.DatabaseName).Inc()
+			metrics.LastBackupDuration.WithLabelValues(back.BackupName, back.DatabaseName).Set(time.Since(startTime).Seconds())
+			metrics.LastBackupStatus.WithLabelValues(back.BackupName, back.DatabaseName).Set(0.0)
+			logger.Error("execution failed", logger.KV{
+				"backup_id":     backupID.String(),
+				"execution_id":  ex.ID.String(),
+				"backup_name":   back.BackupName,
+				"database_name": back.DatabaseName,
+				"error_message": params.Message.String,
+				"duration_sec":  time.Since(startTime).Seconds(),
+			})
+		}
+
+		return nil
 	}
 
 	if !back.BackupIsLocal {

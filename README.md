@@ -138,6 +138,47 @@ You only need to configure the following environment variables:
 
 - `TZ`: Optional. Your [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List). Default is `UTC`. This impacts logging, backup filenames and default timezone in the web interface.
 
+## Monitoring with Prometheus
+
+PG Back Web supports native Prometheus metrics. By default, this feature is disabled.
+
+### Enable Metrics
+
+Set the following environment variable to enable the `/metrics` endpoint:
+
+- `PBW_ENABLE_METRICS`: Set to `true` to enable the metrics server.
+
+### Configuration
+
+Optional variables for the metrics server:
+
+- `PBW_METRICS_LISTEN_HOST`: Host for the metrics server to listen on, default `0.0.0.0`.
+- `PBW_METRICS_LISTEN_PORT`: Port for the metrics server to listen on, default `2112`.
+
+### Scrape Configuration
+
+Add the following to your `prometheus.yml`:
+
+```yaml
+scrape_configs:
+  - job_name: 'pgbackweb'
+    static_configs:
+      - targets: ['<pgbackweb-host>:2112']
+```
+
+### Metrics Exposed
+
+- `pgbackweb_backups_total`: Total number of backups executed (success/failed).
+- `pgbackweb_backups_running`: Number of currently active backup operations.
+- `pgbackweb_last_backup_duration_seconds`: Duration of the most recent backup in seconds.
+- `pgbackweb_last_backup_status`: Status of the last backup (1 for success, 0 for failure).
+- `pgbackweb_health_status`: Health status of databases and destinations (1 for healthy, 0 for unhealthy).
+- `pgbackweb_healthy_resources_count`: Number of healthy resources (databases/destinations).
+- `pgbackweb_total_resources_count`: Total number of resources (databases/destinations).
+- `pgbackweb_backup_tasks_status`: Per-task backup status (active/inactive task counts).
+- `pgbackweb_db_stats_*`: Standard database connection pool statistics.
+
+
 ## Screenshot
 
 <img src="https://raw.githubusercontent.com/eduardolat/pgbackweb/main/assets/screenshot.png" />

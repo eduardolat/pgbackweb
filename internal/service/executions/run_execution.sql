@@ -27,7 +27,10 @@ SELECT
     THEN pgp_sym_decrypt(destinations.secret_key, @encryption_key)
     ELSE ''
     END
-  ) AS decrypted_destination_secret_key
+  ) AS decrypted_destination_secret_key,
+  backups.name as backup_name,
+  databases.name as database_name,
+  destinations.name as destination_name
 FROM backups
 INNER JOIN databases ON backups.database_id = databases.id
 LEFT JOIN destinations ON backups.destination_id = destinations.id
