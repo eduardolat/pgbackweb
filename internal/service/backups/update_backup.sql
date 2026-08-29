@@ -12,6 +12,7 @@ SET
   opt_clean = COALESCE(sqlc.narg('opt_clean'), opt_clean),
   opt_if_exists = COALESCE(sqlc.narg('opt_if_exists'), opt_if_exists),
   opt_create = COALESCE(sqlc.narg('opt_create'), opt_create),
-  opt_no_comments = COALESCE(sqlc.narg('opt_no_comments'), opt_no_comments)
+  opt_no_comments = COALESCE(sqlc.narg('opt_no_comments'), opt_no_comments),
+  filter_content = COALESCE(sqlc.narg('filter_content'), filter_content)
 WHERE id = @id
 RETURNING *;

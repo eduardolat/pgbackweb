@@ -181,3 +181,64 @@ func pgDumpOptionsHelp() []nodx.Node {
 		),
 	}
 }
+
+func filterHelp() []nodx.Node {
+	return []nodx.Node{
+		component.H3Text("Backup Filter"),
+		component.PText(`
+			The filter option allows you to selectively include or exclude database objects
+			from your backup using pg_dump's --filter parameter. You can use either Text Mode
+			to write filters manually or Guided Mode for an easier interface.
+		`),
+
+		nodx.Div(
+			nodx.Class("mt-2 alert alert-info"),
+			nodx.Div(
+				nodx.Class("flex items-start"),
+				lucide.Info(nodx.Class("h-5 w-5 mt-0.5 mr-2")),
+				nodx.Div(
+					component.H3Text("PostgreSQL Version Compatibility"),
+					component.PText(`
+						For PostgreSQL 17+, the filter is passed directly to pg_dump using the --filter parameter.
+						For PostgreSQL versions 13-16, filters are automatically converted to legacy arguments 
+						(--table, --schema, --extension for includes; --exclude-table, --exclude-table-data, 
+						--exclude-schema for excludes). Note: some filter types (foreign_data, table_and_children, 
+						table_data_and_children) are only supported in PostgreSQL 17+.
+					`),
+				),
+			),
+		),
+
+		nodx.Div(
+			nodx.Class("mt-2"),
+			component.H3Text("Filter Format"),
+			component.PText(`
+				Each filter line follows the format:
+			`),
+			nodx.Pre(
+				nodx.Class("bg-base-200 p-2 rounded mt-1 text-sm overflow-x-auto"),
+				nodx.Text("{ include | exclude } { extension | foreign_data | table | table_and_children | table_data | table_data_and_children | schema } PATTERN"),
+			),
+		),
+
+		nodx.Div(
+			nodx.Class("mt-2"),
+			component.H3Text("Examples"),
+			nodx.Pre(
+				nodx.Class("bg-base-200 p-2 rounded mt-1 text-sm overflow-x-auto"),
+				nodx.Text("# Include all tables in public schema\ninclude table public.*\n\n# Exclude temporary tables\nexclude table public.temp_*\n\n# Include specific schema\ninclude schema myschema"),
+			),
+		),
+
+		nodx.Div(
+			nodx.Class("mt-4 flex justify-end"),
+			nodx.A(
+				nodx.Class("btn btn-ghost"),
+				nodx.Href("https://www.postgresql.org/docs/current/app-pgdump.html"),
+				nodx.Target("_blank"),
+				component.SpanText("Learn more in pg_dump documentation"),
+				lucide.ExternalLink(nodx.Class("ml-1")),
+			),
+		),
+	}
+}
