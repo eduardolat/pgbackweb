@@ -14,15 +14,13 @@ COPY --from=golangci/golangci-lint:v2.13.1 /usr/bin/golangci-lint /usr/local/bin
 # Install sqlc
 COPY --from=sqlc/sqlc:1.31.1 /workspace/sqlc /usr/local/bin/sqlc
 
-# Install task
-# Change to the official image when it's released
+# Install task - Change to the official image when it's released
 # https://github.com/go-task/task/issues/1801
-COPY --from=ghcr.io/mirceanton/taskfile:3.53.1 /usr/local/bin/task /usr/local/bin/task
+COPY --from=ghcr.io/varavelio/container-tools/task:3.53.1 /usr/local/bin/task /usr/local/bin/task
 
-# Install goose
-# Change to the official image when it's released
+# Install goose - Change to the official image when it's released
 # https://github.com/pressly/goose/issues/1093
-COPY --from=ghcr.io/kukymbr/goose-docker-cmd:3.27.2 /bin/goose /usr/local/bin/goose
+COPY --from=ghcr.io/varavelio/container-tools/goose:3.28.0 /usr/local/bin/goose /usr/local/bin/goose
 
 # Set build time variables
 ARG TARGETPLATFORM=unknown \
@@ -38,15 +36,17 @@ ENV \
 RUN set -e && \
     # Add PostgreSQL APT repository
     # https://www.postgresql.org/download/linux/debian/
-    apt-get update -qq && apt-get install -yqq postgresql-common && \
+    apt-get update -qq && apt-get install -yqq --no-install-recommends postgresql-common && \
     /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \
-    # Install APT packages
-    apt-get update -qq && apt-get install -yqq \
-    curl wget git zip unzip p7zip-full tree tzdata \
-    ripgrep ca-certificates python3 python3-pip \
+    # Install required APT packages
+    apt-get update -qq && apt-get install -yqq --no-install-recommends \
+    wget unzip tzdata ca-certificates \
     postgresql-client-13 postgresql-client-14 \
     postgresql-client-15 postgresql-client-16 \
-    postgresql-client-17 postgresql-client-18 && \
+    postgresql-client-17 postgresql-client-18 \
+    # Install development APT packages
+    curl git zip p7zip-full tree ripgrep \
+    python3 python3-pip && \
     rm -rf /var/lib/apt/lists/* && \
     # Git config
     git config --global --add safe.directory '*' && \
@@ -98,11 +98,11 @@ ENV TZ=Etc/UTC
 RUN set -e && \
     # Add PostgreSQL APT repository
     # https://www.postgresql.org/download/linux/debian/
-    apt-get update -qq && apt-get install -yqq postgresql-common && \
+    apt-get update -qq && apt-get install -yqq --no-install-recommends postgresql-common && \
     /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y && \
-    # Install APT packages
-    apt-get update -qq && apt-get install -yqq \
-    curl wget zip unzip p7zip-full tzdata ca-certificates \
+    # Install required APT packages
+    apt-get update -qq && apt-get install -yqq --no-install-recommends \
+    wget unzip tzdata ca-certificates \
     postgresql-client-13 postgresql-client-14 \
     postgresql-client-15 postgresql-client-16 \
     postgresql-client-17 postgresql-client-18 && \
