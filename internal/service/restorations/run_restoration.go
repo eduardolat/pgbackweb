@@ -131,6 +131,7 @@ func (s *Service) RunRestoration(
 
 	err = s.ints.PGClient.RestoreZip(
 		pgVersion, connString, isLocal, zipURLOrPath,
+		s.env.PBW_FILES_ENCRYPTION_KEY,
 	)
 	if err != nil {
 		logError(err)

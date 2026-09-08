@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/eduardolat/pgbackweb/internal/util/cryptoutil"
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 )
 
@@ -73,16 +74,24 @@ func (Client) S3Test(
 
 // S3Upload uploads a file to S3 from a reader.
 //
+// If encryptionKey is not empty, the file will be encrypted with AES-256-CTR
+// before upload using the given passphrase.
+//
 // Returns the file size, in bytes.
 func (Client) S3Upload(
 	accessKey, secretKey, region, endpoint, bucketName, key string,
-	fileReader io.Reader,
+	fileReader io.Reader, encryptionKey string,
 ) (int64, error) {
 	s3Client, err := createS3Client(
 		accessKey, secretKey, region, endpoint,
 	)
 	if err != nil {
 		return 0, err
+	}
+
+	encryptedReader, err := cryptoutil.EncryptReader(fileReader, encryptionKey)
+	if err != nil {
+		return 0, fmt.Errorf("failed to encrypt file: %w", err)
 	}
 
 	key = strutil.RemoveLeadingSlash(key)
@@ -94,7 +103,7 @@ func (Client) S3Upload(
 		&s3.PutObjectInput{
 			Bucket:      aws.String(bucketName),
 			Key:         aws.String(key),
-			Body:        fileReader,
+			Body:        encryptedReader,
 			ContentType: aws.String(contentType),
 		},
 	)

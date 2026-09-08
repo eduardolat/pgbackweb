@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/eduardolat/pgbackweb/internal/util/cryptoutil"
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 	"github.com/orsinium-labs/enum"
 )
@@ -224,8 +225,10 @@ func (c *Client) DumpZip(
 //   - connString: connection string to the database
 //   - isLocal: whether the ZIP file is local or a URL
 //   - zipURLOrPath: URL or path to the ZIP file
+//   - encryptionKey: passphrase for decrypting the file (empty = no encryption)
 func (Client) RestoreZip(
 	version PGVersion, connString string, isLocal bool, zipURLOrPath string,
+	encryptionKey string,
 ) error {
 	workDir, err := os.MkdirTemp("", "pbw-restore-*")
 	if err != nil {
@@ -253,6 +256,12 @@ func (Client) RestoreZip(
 
 	if _, err := os.Stat(zipPath); os.IsNotExist(err) {
 		return fmt.Errorf("zip file not found: %s", zipPath)
+	}
+
+	if encryptionKey != "" {
+		if err := cryptoutil.DecryptFile(zipPath, encryptionKey); err != nil {
+			return fmt.Errorf("error decrypting dump file: %w", err)
+		}
 	}
 
 	cmd := exec.Command("unzip", "-o", zipPath, "dump.sql", "-d", workDir)
