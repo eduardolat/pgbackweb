@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 	"github.com/orsinium-labs/enum"
@@ -105,6 +106,61 @@ func (Client) Test(version PGVersion, connString string) error {
 	return nil
 }
 
+// convertFilterToLegacyArgs converts filter content to legacy pg_dump arguments
+// for PostgreSQL versions < 17 that don't support the --filter parameter.
+// It parses filter lines and converts them to equivalent legacy arguments.
+func convertFilterToLegacyArgs(filterContent string) []string {
+	var args []string
+	lines := strings.Split(filterContent, "\n")
+
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		// Skip empty lines and comments
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		// Parse filter line: {include|exclude} {type} PATTERN
+		parts := strings.Fields(line)
+		if len(parts) < 3 {
+			continue // Invalid format, skip
+		}
+
+		action := parts[0]
+		filterType := parts[1]
+		pattern := strings.Join(parts[2:], " ")
+
+		// Map filter types to legacy pg_dump arguments
+		switch action {
+		case "include":
+			switch filterType {
+			case "table":
+				args = append(args, "--table="+pattern)
+			case "schema":
+				args = append(args, "--schema="+pattern)
+			case "extension":
+				args = append(args, "--extension="+pattern)
+				// Note: table_and_children, table_data, table_data_and_children, and foreign_data
+				// don't have direct legacy include equivalents
+			}
+		case "exclude":
+			switch filterType {
+			case "table":
+				args = append(args, "--exclude-table="+pattern)
+			case "table_data":
+				args = append(args, "--exclude-table-data="+pattern)
+			case "schema":
+				args = append(args, "--exclude-schema="+pattern)
+				// Note: table_and_children, table_data_and_children, extension, and foreign_data
+				// don't have direct legacy exclude equivalents
+				// (extension has no exclude option in legacy mode)
+			}
+		}
+	}
+
+	return args
+}
+
 // DumpParams contains the parameters for the pg_dump command
 type DumpParams struct {
 	// DataOnly (--data-only): Dump only the data, not the schema (data definitions).
@@ -135,6 +191,10 @@ type DumpParams struct {
 
 	// NoComments (--no-comments): Do not dump comments.
 	NoComments bool
+
+	// FilterContent (--filter): Filter content in the format specified by pg_dump.
+	// Each line should follow: { include | exclude } { extension | foreign_data | table | table_and_children | table_data | table_data_and_children | schema } PATTERN
+	FilterContent string
 }
 
 // Dump runs the pg_dump command with the given parameters. It returns the SQL
@@ -169,12 +229,50 @@ func (Client) Dump(
 
 	errorBuffer := &bytes.Buffer{}
 	reader, writer := io.Pipe()
+
+	// Handle filter content
+	var filterFile *os.File
+	var filterFileCleanup func()
+	if pickedParams.FilterContent != "" {
+		// For PostgreSQL 17+, use the --filter parameter with a temp file
+		// For older versions, convert to legacy arguments
+		if version.Value.Version >= "17" {
+			var err error
+			filterFile, err = os.CreateTemp("", "pgdump-filter-*.txt")
+			if err != nil {
+				writer.CloseWithError(fmt.Errorf("failed to create filter temp file: %w", err))
+				return reader
+			}
+
+			filterFileCleanup = func() {
+				filterFile.Close()
+				os.Remove(filterFile.Name())
+			}
+
+			if _, err := filterFile.WriteString(pickedParams.FilterContent); err != nil {
+				filterFileCleanup()
+				writer.CloseWithError(fmt.Errorf("failed to write filter content: %w", err))
+				return reader
+			}
+
+			args = append(args, fmt.Sprintf("--filter=%s", filterFile.Name()))
+		} else {
+			// For PostgreSQL < 17, convert filter content to legacy arguments
+			legacyArgs := convertFilterToLegacyArgs(pickedParams.FilterContent)
+			args = append(args, legacyArgs...)
+		}
+	}
+
 	cmd := exec.Command(version.Value.PGDump, args...)
 	cmd.Stdout = writer
 	cmd.Stderr = errorBuffer
 
 	go func() {
 		defer writer.Close()
+		if filterFileCleanup != nil {
+			defer filterFileCleanup()
+		}
+
 		if err := cmd.Run(); err != nil {
 			writer.CloseWithError(fmt.Errorf(
 				"error running pg_dump v%s: %s",
