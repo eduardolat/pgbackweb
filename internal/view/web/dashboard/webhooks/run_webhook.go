@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/eduardolat/pgbackweb/internal/logger"
+	"github.com/eduardolat/pgbackweb/internal/service/webhooks"
 	"github.com/eduardolat/pgbackweb/internal/util/pathutil"
 	"github.com/eduardolat/pgbackweb/internal/view/web/component"
 	"github.com/eduardolat/pgbackweb/internal/view/web/respondhtmx"
@@ -31,7 +32,9 @@ func (h *handlers) runWebhookHandler(c echo.Context) error {
 			})
 			return
 		}
-		err = h.servs.WebhooksService.SendWebhookRequest(ctx, webhook)
+		err = h.servs.WebhooksService.SendWebhookRequest(ctx, webhook, webhooks.WebhookPayload{
+			EventType: "test_webhook",
+			Msg:       "Webhook test event"})
 		if err != nil {
 			logger.Error("error sending webhook request", logger.KV{
 				"webhook_id": webhook.ID,

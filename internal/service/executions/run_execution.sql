@@ -12,8 +12,12 @@ SELECT
 
   pgp_sym_decrypt(databases.connection_string, @encryption_key) AS decrypted_database_connection_string,
   databases.pg_version as database_pg_version,
+  databases.name as database_name,
+  databases.id as database_id,
 
   destinations.bucket_name as destination_bucket_name,
+  destinations.name as destination_name,
+  destinations.id as destination_id,
   destinations.region as destination_region,
   destinations.endpoint as destination_endpoint,
   (

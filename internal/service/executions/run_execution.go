@@ -9,6 +9,7 @@ import (
 	"github.com/eduardolat/pgbackweb/internal/database/dbgen"
 	"github.com/eduardolat/pgbackweb/internal/integration/postgres"
 	"github.com/eduardolat/pgbackweb/internal/logger"
+	"github.com/eduardolat/pgbackweb/internal/service/webhooks"
 	"github.com/eduardolat/pgbackweb/internal/util/strutil"
 	"github.com/eduardolat/pgbackweb/internal/util/timeutil"
 	"github.com/google/uuid"
@@ -16,18 +17,63 @@ import (
 
 // RunExecution runs a backup execution
 func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
+	back, err := s.dbgen.ExecutionsServiceGetBackupData(
+		ctx, dbgen.ExecutionsServiceGetBackupDataParams{
+			BackupID:      backupID,
+			EncryptionKey: s.env.PBW_ENCRYPTION_KEY,
+		},
+	)
 	updateExec := func(params dbgen.ExecutionsServiceUpdateExecutionParams) error {
+
+		info, err_parser := webhooks.ParsePostgresURL(back.DecryptedDatabaseConnectionString)
+		if err_parser != nil {
+			logger.Error("Error parsing URL", logger.KV{"error": err})
+		}
+
+		databaseStatus := webhooks.DatabaseStatus{
+			ID:        back.DatabaseID,
+			Name:      back.DatabaseName,
+			PgVersion: back.DatabasePgVersion,
+			User:      info.User,
+			Host:      info.Host,
+			Port:      info.Port,
+			DBName:    info.DBName,
+			Healthy:   true,
+		}
+		destinationStatus := webhooks.DestinationStatus{
+			ID:         back.DestinationID.UUID,
+			Name:       back.DestinationName.String,
+			Region:     back.DestinationRegion.String,
+			Endpoint:   back.DestinationEndpoint.String,
+			BucketName: back.DestinationBucketName.String,
+			Healthy:    true,
+		}
+		executed_data, err := s.dbgen.ExecutionsServiceUpdateExecution(
+			ctx, params,
+		)
+		executionDetails := webhooks.ExecutionDetails{
+			ID:         params.ID,
+			Status:     executed_data.Status,
+			Message:    executed_data.Message.String,
+			Path:       executed_data.Path.String,
+			StartedAt:  executed_data.StartedAt,
+			IsLocal:    back.BackupIsLocal,
+			FinishedAt: executed_data.FinishedAt.Time,
+			FileSize:   executed_data.FileSize.Int64,
+		}
+		webhookPayload := webhooks.WebhookPayload{
+			Database:    databaseStatus,
+			Destination: destinationStatus,
+			Execution:   executionDetails,
+		}
 		if params.Status.String == "success" {
-			s.webhooksService.RunExecutionSuccess(backupID)
+			s.webhooksService.RunExecutionSuccess(backupID, webhookPayload)
 		}
 
 		if params.Status.String == "failed" {
-			s.webhooksService.RunExecutionFailed(backupID)
+			s.webhooksService.RunExecutionFailed(backupID, webhookPayload)
 		}
 
-		_, err := s.dbgen.ExecutionsServiceUpdateExecution(
-			ctx, params,
-		)
 		return err
 	}
 
@@ -38,12 +84,6 @@ func (s *Service) RunExecution(ctx context.Context, backupID uuid.UUID) error {
 		})
 	}
 
-	back, err := s.dbgen.ExecutionsServiceGetBackupData(
-		ctx, dbgen.ExecutionsServiceGetBackupDataParams{
-			BackupID:      backupID,
-			EncryptionKey: s.env.PBW_ENCRYPTION_KEY,
-		},
-	)
 	if err != nil {
 		logError(err)
 		return err

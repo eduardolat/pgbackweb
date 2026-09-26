@@ -17,14 +17,21 @@ import (
 // SendWebhookRequest sends a webhook request to the given webhook and
 // stores the result in the database.
 func (s *Service) SendWebhookRequest(
-	ctx context.Context, webhook dbgen.Webhook,
+	ctx context.Context, webhook dbgen.Webhook, payload WebhookPayload,
 ) error {
 	timeStart := time.Now()
 
 	if !webhook.Body.Valid || webhook.Body.String == "" {
 		webhook.Body = sql.NullString{String: "{}", Valid: true}
 	}
-	bodyReader := strings.NewReader(webhook.Body.String)
+	// bodyReader := strings.NewReader(webhook.Body.String)
+	bodyStr, fmt_error := RenderWebhookBody(payload, webhook.Body.String)
+	if fmt_error != nil {
+		logger.Error("failed to render template body", logger.KV{"error": fmt_error.Error(), "body": bodyStr})
+	}
+
+	fmt.Println(bodyStr)
+	bodyReader := strings.NewReader(bodyStr)
 
 	if !webhook.Headers.Valid || webhook.Headers.String == "" {
 		webhook.Headers = sql.NullString{String: "{}", Valid: true}
