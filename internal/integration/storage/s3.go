@@ -88,7 +88,11 @@ func (Client) S3Upload(
 	key = strutil.RemoveLeadingSlash(key)
 	contentType := strutil.GetContentTypeFromFileName(key)
 
-	uploader := manager.NewUploader(s3Client)
+	// The body is a stream of unknown size, so the SDK cannot size the parts
+	// itself. The 5 MiB default caps an object at 10000 parts, about 52 GB.
+	uploader := manager.NewUploader(s3Client, func(u *manager.Uploader) {
+		u.PartSize = 32 * 1024 * 1024
+	})
 	_, err = uploader.Upload(
 		context.TODO(),
 		&s3.PutObjectInput{
